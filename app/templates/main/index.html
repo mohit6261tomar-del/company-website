@@ -1,0 +1,4464 @@
+{% extends "base.html" %}
+{% block title %}{% if company %}{{ company.name }}{% else %}KodesMind - Home{% endif %}{% endblock %}
+{% block extra_css %}
+<style>
+/* Enhanced Hero Slider Styles */
+.hero-slider-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    overflow: hidden;
+}
+.hero-slider {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+/* Slide Items */
+.slide-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+    z-index: 1;
+    will-change: transform, opacity;
+}
+.slide-item.transitioning {
+    visibility: visible;
+}
+.slide-item.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    z-index: 2;
+}
+/* Slide direction animations */
+.slide-item.next {
+    transform: translateX(100%);
+    opacity: 0;
+}
+.slide-item.prev {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+.slide-item.active.next,
+.slide-item.active.prev {
+    transform: translateX(0);
+    opacity: 1;
+}
+/* Progress bar styles */
+.slider-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 10;
+}
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    transition: width 0.1s linear;
+}
+/* Slide Background */
+.slide-bg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+}
+/* Slide Content */
+.slide-content {
+    z-index: 3;
+    color: white;
+    text-align: center;
+}
+.hero-slider .slide-content {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end !important;
+    padding-bottom: clamp(3rem, 8vh, 6rem);
+}
+.hero-slide-stacked .hero-slide-stacked-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1.25rem, 3vh, 1.75rem);
+}
+.hero-slide-stacked .hero-title {
+    margin-bottom: 0.75rem;
+}
+.hero-slide-stacked .hero-subtitle {
+    margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+@media (max-width: 991.98px) {
+    .hero-slide-intro-body {
+        padding-top: clamp(5rem, 18vh, 8rem);
+        padding-bottom: clamp(2.5rem, 9vh, 5rem);
+    }
+    .hero-slide-top-tagline .hero-badge {
+        top: clamp(1rem, 7vh, 3rem);
+    }
+}
+.hero-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeInUp 0.8s ease-out;
+}
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+    /* Semi-transparent box styling */
+    background: rgba(0, 0, 0, 0.6);
+    color: white !important;
+    padding: 1.5rem 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    display: inline-block;
+    max-width: 90%;
+}
+
+/* Slider-specific override to ensure white text with dark backdrop */
+.hero-slider .hero-title {
+    background: transparent !important;
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    display: inline-block;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.35);
+}
+.hero-subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
+    font-weight: 400;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+.hero-actions {
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+/* Navigation Arrows */
+.slider-nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    z-index: 4;
+    font-size: 1.2rem;
+}
+.slider-nav-arrow:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-50%) scale(1.1);
+}
+.slider-nav-prev {
+    left: 2rem;
+}
+.slider-nav-next {
+    right: 2rem;
+}
+/* Indicator Dots */
+.slider-indicators {
+    z-index: 4;
+}
+.indicator-dots {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    align-items: center;
+}
+.indicator-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+.indicator-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.indicator-dot.active,
+.indicator-dot:hover {
+    border-color: white;
+    transform: scale(1.2);
+}
+.indicator-dot.active::after {
+    opacity: 1;
+}
+/* Progress Bar */
+.slider-progress {
+    z-index: 4;
+}
+.progress-bar {
+    background: rgba(255, 255, 255, 0.3);
+    height: 3px;
+    position: relative;
+    overflow: hidden;
+}
+.progress-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: white;
+    transition: width 0.1s linear;
+    border-radius: 0 2px 2px 0;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-slider-wrapper {
+        height: 100vh;
+        min-height: 500px;
+    }
+    .hero-title {
+        font-size: clamp(2rem, 8vw, 3rem);
+        margin-bottom: 1rem;
+        padding: 1.2rem 1.8rem;
+        max-width: 95%;
+    }
+    .hero-subtitle {
+        font-size: clamp(1rem, 4vw, 1.1rem);
+        margin-bottom: 1.5rem;
+    }
+    .slider-nav-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    .slider-nav-prev {
+        left: 1rem;
+    }
+    .slider-nav-next {
+        right: 1rem;
+    }
+    .indicator-dot {
+        width: 10px;
+        height: 10px;
+    }
+    .indicator-dot::after {
+        width: 4px;
+        height: 4px;
+    }
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    .hero-actions .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+@media (max-width: 480px) {
+    .hero-slider-wrapper {
+        height: 100vh;
+        min-height: 450px;
+    }
+    .hero-badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 1rem;
+    }
+    .hero-title {
+        padding: 1rem 1.5rem;
+        max-width: 98%;
+        border-radius: 0.75rem;
+    }
+    .slider-nav-arrow {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    .slider-nav-prev {
+        left: 0.5rem;
+    }
+    .slider-nav-next {
+        right: 0.5rem;
+    }
+}
+/* Animation Classes */
+.animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+.animate-delay-1 {
+    animation-delay: 0.2s;
+}
+.animate-delay-2 {
+    animation-delay: 0.4s;
+}
+.animate-delay-3 {
+    animation-delay: 0.6s;
+}
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* Home Page Specific Styles */
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: white;
+    margin-bottom: 2rem;
+}
+.hero-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.particle-bg {
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+/* Floating Elements */
+.floating-element {
+    animation: float 6s ease-in-out infinite;
+    position: absolute;
+}
+.floating-element:nth-child(2) {
+    animation-delay: 2s;
+}
+.floating-element:nth-child(3) {
+    animation-delay: 4s;
+}
+/* About Section */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+/* Stats Cards */
+.stat-card {
+    transition: all 0.3s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Value Items */
+.value-item {
+    transition: all 0.3s ease;
+}
+.value-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.value-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.value-item:hover .value-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Image Container */
+.main-image-container {
+    position: relative;
+}
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.main-image-container:hover .image-overlay {
+    opacity: 1;
+}
+/* Value Cards */
+.value-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+.value-card:hover::before {
+    left: 100%;
+}
+.value-icon-container {
+    position: relative;
+}
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.value-card:hover .icon-glow {
+    opacity: 1;
+}
+/* Team Cards */
+.team-image {
+    transition: transform 0.3s ease;
+}
+.team-card:hover .team-image {
+    transform: scale(1.05);
+}
+.team-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.team-card:hover .team-overlay {
+    opacity: 1;
+}
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.social-link:hover {
+    transform: scale(1.1);
+}
+.skill-tag {
+    transition: all 0.3s ease;
+}
+.skill-tag:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+/* Process Section */
+.process-timeline {
+    position: relative;
+    padding-left: 100px;
+}
+.timeline-connector {
+    position: absolute;
+    left: 100px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+    border-radius: 2px;
+}
+.process-marker {
+    position: absolute;
+    left: -100px;
+    top: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(13, 110, 253, 0.3);
+    z-index: 2;
+}
+.process-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+.process-content {
+    transition: all 0.3s ease;
+    margin-left: 30px;
+}
+.process-content:hover {
+    transform: translateX(15px);
+}
+.process-bg-pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(13, 110, 253, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(102, 16, 242, 0.05) 0%, transparent 50%);
+    background-size: 300px 300px, 400px 400px;
+    animation: patternMove 25s linear infinite;
+}
+/* Technology Cards */
+.tech-card {
+    background: white;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.tech-icon-container {
+    position: relative;
+}
+.tech-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+.tech-card:hover .tech-icon {
+    transform: scale(1.1);
+}
+.tech-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.tech-card:hover .tech-glow {
+    opacity: 1;
+}
+/* Featured Projects */
+.featured-project {
+    transition: all 0.3s ease;
+}
+.featured-image {
+    position: relative;
+    overflow: hidden;
+}
+.featured-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.featured-project:hover .featured-overlay {
+    opacity: 1;
+}
+.featured-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+}
+/* Timeline */
+.timeline-container {
+    position: relative;
+    padding-left: 50px;
+}
+.timeline-line {
+    position: absolute;
+    left: 50px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+}
+.timeline-marker {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(13, 110, 253, 0.3);
+    animation: pulse 2s infinite;
+}
+.timeline-content {
+    margin-left: 30px;
+    transition: all 0.3s ease;
+}
+.timeline-content:hover {
+    transform: translateX(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.timeline-year {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+/* Newsletter */
+.newsletter-form-main .input-group {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+    overflow: hidden;
+}
+.newsletter-form-main .form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+}
+.newsletter-form-main .btn {
+    border-radius: 0 2rem 2rem 0;
+    padding: 1rem 1.5rem;
+}
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(13, 110, 253, 0.6); }
+}
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+.hover-lift {
+    transition: all 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .timeline-container {
+        padding-left: 0;
+    }
+    .timeline-line {
+        left: 25px;
+    }
+    .timeline-marker {
+        left: -25px;
+        width: 40px;
+        height: 40px;
+    }
+    .timeline-content {
+        margin-left: 20px;
+    }
+    .process-timeline {
+        padding-left: 0;
+    }
+    .timeline-connector {
+        left: 40px;
+    }
+    .process-marker {
+        left: -40px;
+        width: 60px;
+        height: 60px;
+    }
+    .process-number {
+        font-size: 1.2rem;
+    }
+    .process-content {
+        margin-left: 20px;
+    }
+}
+</style>
+{% endblock %}
+<!-- Home Page Specific Styles -->
+<!-- Hero Section -->
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: white;
+    margin-bottom: 2rem;
+}
+.hero-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.particle-bg {
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+/* Floating Elements */
+.floating-element {
+    animation: float 6s ease-in-out infinite;
+    position: absolute;
+}
+.floating-element:nth-child(2) {
+    animation-delay: 2s;
+}
+.floating-element:nth-child(3) {
+    animation-delay: 4s;
+}
+/* About Section */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+/* Stats Cards */
+.stat-card {
+    transition: all 0.3s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Value Items */
+.value-item {
+    transition: all 0.3s ease;
+}
+.value-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.value-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.value-item:hover .value-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Image Container */
+.main-image-container {
+    position: relative;
+}
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.main-image-container:hover .image-overlay {
+    opacity: 1;
+}
+/* Value Cards */
+.value-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+.value-card:hover::before {
+    left: 100%;
+}
+.value-icon-container {
+    position: relative;
+}
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.value-card:hover .icon-glow {
+    opacity: 1;
+}
+/* Team Cards */
+.team-image {
+    transition: transform 0.3s ease;
+}
+.team-card:hover .team-image {
+    transform: scale(1.05);
+}
+.team-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.team-card:hover .team-overlay {
+    opacity: 1;
+}
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.social-link:hover {
+    transform: scale(1.1);
+}
+.skill-tag {
+    transition: all 0.3s ease;
+}
+.skill-tag:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+/* Process Section */
+.process-timeline {
+    position: relative;
+    padding-left: 100px;
+}
+.timeline-connector {
+    position: absolute;
+    left: 100px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+    border-radius: 2px;
+}
+.process-marker {
+    position: absolute;
+    left: -100px;
+    top: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(13, 110, 253, 0.3);
+    z-index: 2;
+}
+.process-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+.process-content {
+    transition: all 0.3s ease;
+    margin-left: 30px;
+}
+.process-content:hover {
+    transform: translateX(15px);
+}
+.process-bg-pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(13, 110, 253, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(102, 16, 242, 0.05) 0%, transparent 50%);
+    background-size: 300px 300px, 400px 400px;
+    animation: patternMove 25s linear infinite;
+}
+/* Technology Cards */
+.tech-card {
+    background: white;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.tech-icon-container {
+    position: relative;
+}
+.tech-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+.tech-card:hover .tech-icon {
+    transform: scale(1.1);
+}
+.tech-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.tech-card:hover .tech-glow {
+    opacity: 1;
+}
+/* Featured Projects */
+.featured-project {
+    transition: all 0.3s ease;
+}
+.featured-image {
+    position: relative;
+    overflow: hidden;
+}
+.featured-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.featured-project:hover .featured-overlay {
+    opacity: 1;
+}
+.featured-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+}
+/* Timeline */
+.timeline-container {
+    position: relative;
+    padding-left: 50px;
+}
+.timeline-line {
+    position: absolute;
+    left: 50px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+}
+.timeline-marker {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(13, 110, 253, 0.3);
+    animation: pulse 2s infinite;
+}
+.timeline-content {
+    margin-left: 30px;
+    transition: all 0.3s ease;
+}
+.timeline-content:hover {
+    transform: translateX(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.timeline-year {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+/* Newsletter */
+.newsletter-form-main .input-group {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+    overflow: hidden;
+}
+.newsletter-form-main .form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+}
+.newsletter-form-main .btn {
+    border-radius: 0 2rem 2rem 0;
+    padding: 1rem 1.5rem;
+}
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(13, 110, 253, 0.6); }
+}
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+.hover-lift {
+    transition: all 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .timeline-container {
+        padding-left: 0;
+    }
+    .timeline-line {
+        left: 25px;
+    }
+    .timeline-marker {
+        left: -25px;
+        width: 40px;
+        height: 40px;
+    }
+    .timeline-content {
+        margin-left: 20px;
+    }
+    .process-timeline {
+        padding-left: 0;
+    }
+    .timeline-connector {
+        left: 40px;
+    }
+    .process-marker {
+        left: -40px;
+        width: 60px;
+        height: 60px;
+    }
+    .process-number {
+        font-size: 1.2rem;
+    }
+    .process-content {
+        margin-left: 20px;
+    }
+}
+</style>
+<!-- Home Page Specific Styles -->
+<!-- Hero Section -->
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: white;
+    margin-bottom: 2rem;
+}
+.hero-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.particle-bg {
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+/* Floating Elements */
+.floating-element {
+    animation: float 6s ease-in-out infinite;
+    position: absolute;
+}
+.floating-element:nth-child(2) {
+    animation-delay: 2s;
+}
+.floating-element:nth-child(3) {
+    animation-delay: 4s;
+}
+/* About Section */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+/* Stats Cards */
+.stat-card {
+    transition: all 0.3s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Value Items */
+.value-item {
+    transition: all 0.3s ease;
+}
+.value-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.value-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.value-item:hover .value-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Image Container */
+.main-image-container {
+    position: relative;
+}
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.main-image-container:hover .image-overlay {
+    opacity: 1;
+}
+/* Value Cards */
+.value-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+.value-card:hover::before {
+    left: 100%;
+}
+.value-icon-container {
+    position: relative;
+}
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.value-card:hover .icon-glow {
+    opacity: 1;
+}
+/* Team Cards */
+.team-image {
+    transition: transform 0.3s ease;
+}
+.team-card:hover .team-image {
+    transform: scale(1.05);
+}
+.team-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.team-card:hover .team-overlay {
+    opacity: 1;
+}
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.social-link:hover {
+    transform: scale(1.1);
+}
+.skill-tag {
+    transition: all 0.3s ease;
+}
+.skill-tag:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+/* Process Section */
+.process-timeline {
+    position: relative;
+    padding-left: 100px;
+}
+.timeline-connector {
+    position: absolute;
+    left: 100px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+    border-radius: 2px;
+}
+.process-marker {
+    position: absolute;
+    left: -100px;
+    top: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(13, 110, 253, 0.3);
+    z-index: 2;
+}
+.process-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+.process-content {
+    transition: all 0.3s ease;
+    margin-left: 30px;
+}
+.process-content:hover {
+    transform: translateX(15px);
+}
+.process-bg-pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(13, 110, 253, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(102, 16, 242, 0.05) 0%, transparent 50%);
+    background-size: 300px 300px, 400px 400px;
+    animation: patternMove 25s linear infinite;
+}
+/* Technology Cards */
+.tech-card {
+    background: white;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.tech-icon-container {
+    position: relative;
+}
+.tech-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+.tech-card:hover .tech-icon {
+    transform: scale(1.1);
+}
+.tech-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.tech-card:hover .tech-glow {
+    opacity: 1;
+}
+/* Featured Projects */
+.featured-project {
+    transition: all 0.3s ease;
+}
+.featured-image {
+    position: relative;
+    overflow: hidden;
+}
+.featured-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.featured-project:hover .featured-overlay {
+    opacity: 1;
+}
+.featured-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+}
+/* Timeline */
+.timeline-container {
+    position: relative;
+    padding-left: 50px;
+}
+.timeline-line {
+    position: absolute;
+    left: 50px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+}
+.timeline-marker {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(13, 110, 253, 0.3);
+    animation: pulse 2s infinite;
+}
+.timeline-content {
+    margin-left: 30px;
+    transition: all 0.3s ease;
+}
+.timeline-content:hover {
+    transform: translateX(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.timeline-year {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+/* Newsletter */
+.newsletter-form-main .input-group {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+    overflow: hidden;
+}
+.newsletter-form-main .form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+}
+.newsletter-form-main .btn {
+    border-radius: 0 2rem 2rem 0;
+    padding: 1rem 1.5rem;
+}
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(13, 110, 253, 0.6); }
+}
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+.hover-lift {
+    transition: all 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .timeline-container {
+        padding-left: 0;
+    }
+    .timeline-line {
+        left: 25px;
+    }
+    .timeline-marker {
+        left: -25px;
+        width: 40px;
+        height: 40px;
+    }
+    .timeline-content {
+        margin-left: 20px;
+    }
+    .process-timeline {
+        padding-left: 0;
+    }
+    .timeline-connector {
+        left: 40px;
+    }
+    .process-marker {
+        left: -40px;
+        width: 60px;
+        height: 60px;
+    }
+    .process-number {
+        font-size: 1.2rem;
+    }
+    .process-content {
+        margin-left: 20px;
+    }
+}
+</style>
+<!-- Home Page Specific Styles -->
+<!-- Hero Section -->
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: white;
+    margin-bottom: 2rem;
+}
+.hero-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.particle-bg {
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+/* Floating Elements */
+.floating-element {
+    animation: float 6s ease-in-out infinite;
+    position: absolute;
+}
+.floating-element:nth-child(2) {
+    animation-delay: 2s;
+}
+.floating-element:nth-child(3) {
+    animation-delay: 4s;
+}
+/* About Section */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+/* Stats Cards */
+.stat-card {
+    transition: all 0.3s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Value Items */
+.value-item {
+    transition: all 0.3s ease;
+}
+.value-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.value-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.value-item:hover .value-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Image Container */
+.main-image-container {
+    position: relative;
+}
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.main-image-container:hover .image-overlay {
+    opacity: 1;
+}
+/* Value Cards */
+.value-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+.value-card:hover::before {
+    left: 100%;
+}
+.value-icon-container {
+    position: relative;
+}
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.value-card:hover .icon-glow {
+    opacity: 1;
+}
+/* Team Cards */
+.team-image {
+    transition: transform 0.3s ease;
+}
+.team-card:hover .team-image {
+    transform: scale(1.05);
+}
+.team-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.team-card:hover .team-overlay {
+    opacity: 1;
+}
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.social-link:hover {
+    transform: scale(1.1);
+}
+.skill-tag {
+    transition: all 0.3s ease;
+}
+.skill-tag:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+/* Process Section */
+.process-timeline {
+    position: relative;
+    padding-left: 100px;
+}
+.timeline-connector {
+    position: absolute;
+    left: 100px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+    border-radius: 2px;
+}
+.process-marker {
+    position: absolute;
+    left: -100px;
+    top: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(13, 110, 253, 0.3);
+    z-index: 2;
+}
+.process-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+.process-content {
+    transition: all 0.3s ease;
+    margin-left: 30px;
+}
+.process-content:hover {
+    transform: translateX(15px);
+}
+.process-bg-pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(13, 110, 253, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(102, 16, 242, 0.05) 0%, transparent 50%);
+    background-size: 300px 300px, 400px 400px;
+    animation: patternMove 25s linear infinite;
+}
+/* Technology Cards */
+.tech-card {
+    background: white;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.tech-icon-container {
+    position: relative;
+}
+.tech-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+.tech-card:hover .tech-icon {
+    transform: scale(1.1);
+}
+.tech-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.tech-card:hover .tech-glow {
+    opacity: 1;
+}
+/* Featured Projects */
+.featured-project {
+    transition: all 0.3s ease;
+}
+.featured-image {
+    position: relative;
+    overflow: hidden;
+}
+.featured-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.featured-project:hover .featured-overlay {
+    opacity: 1;
+}
+.featured-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+}
+/* Timeline */
+.timeline-container {
+    position: relative;
+    padding-left: 50px;
+}
+.timeline-line {
+    position: absolute;
+    left: 50px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+}
+.timeline-marker {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(13, 110, 253, 0.3);
+    animation: pulse 2s infinite;
+}
+.timeline-content {
+    margin-left: 30px;
+    transition: all 0.3s ease;
+}
+.timeline-content:hover {
+    transform: translateX(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.timeline-year {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+/* Newsletter */
+.newsletter-form-main .input-group {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+    overflow: hidden;
+}
+.newsletter-form-main .form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+}
+.newsletter-form-main .btn {
+    border-radius: 0 2rem 2rem 0;
+    padding: 1rem 1.5rem;
+}
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(13, 110, 253, 0.6); }
+}
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+.hover-lift {
+    transition: all 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .timeline-container {
+        padding-left: 0;
+    }
+    .timeline-line {
+        left: 25px;
+    }
+    .timeline-marker {
+        left: -25px;
+        width: 40px;
+        height: 40px;
+    }
+    .timeline-content {
+        margin-left: 20px;
+    }
+    .process-timeline {
+        padding-left: 0;
+    }
+    .timeline-connector {
+        left: 40px;
+    }
+    .process-marker {
+        left: -40px;
+        width: 60px;
+        height: 60px;
+    }
+    .process-number {
+        font-size: 1.2rem;
+    }
+    .process-content {
+        margin-left: 20px;
+    }
+}
+</style>
+<!-- Home Page Specific Styles -->
+<!-- Hero Section -->
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: white;
+    margin-bottom: 2rem;
+}
+.hero-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.particle-bg {
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+/* Floating Elements */
+.floating-element {
+    animation: float 6s ease-in-out infinite;
+    position: absolute;
+}
+.floating-element:nth-child(2) {
+    animation-delay: 2s;
+}
+.floating-element:nth-child(3) {
+    animation-delay: 4s;
+}
+/* About Section */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+/* Stats Cards */
+.stat-card {
+    transition: all 0.3s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Value Items */
+.value-item {
+    transition: all 0.3s ease;
+}
+.value-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.value-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.value-item:hover .value-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Image Container */
+.main-image-container {
+    position: relative;
+}
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.main-image-container:hover .image-overlay {
+    opacity: 1;
+}
+/* Value Cards */
+.value-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+.value-card:hover::before {
+    left: 100%;
+}
+.value-icon-container {
+    position: relative;
+}
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.value-card:hover .icon-glow {
+    opacity: 1;
+}
+/* Team Cards */
+.team-image {
+    transition: transform 0.3s ease;
+}
+.team-card:hover .team-image {
+    transform: scale(1.05);
+}
+.team-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.team-card:hover .team-overlay {
+    opacity: 1;
+}
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.social-link:hover {
+    transform: scale(1.1);
+}
+.skill-tag {
+    transition: all 0.3s ease;
+}
+.skill-tag:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+/* Process Section */
+.process-timeline {
+    position: relative;
+    padding-left: 100px;
+}
+.timeline-connector {
+    position: absolute;
+    left: 100px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+    border-radius: 2px;
+}
+.process-marker {
+    position: absolute;
+    left: -100px;
+    top: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(13, 110, 253, 0.3);
+    z-index: 2;
+}
+.process-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+.process-content {
+    transition: all 0.3s ease;
+    margin-left: 30px;
+}
+.process-content:hover {
+    transform: translateX(15px);
+}
+.process-bg-pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(13, 110, 253, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(102, 16, 242, 0.05) 0%, transparent 50%);
+    background-size: 300px 300px, 400px 400px;
+    animation: patternMove 25s linear infinite;
+}
+/* Technology Cards */
+.tech-card {
+    background: white;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.tech-icon-container {
+    position: relative;
+}
+.tech-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+.tech-card:hover .tech-icon {
+    transform: scale(1.1);
+}
+.tech-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.tech-card:hover .tech-glow {
+    opacity: 1;
+}
+/* Featured Projects */
+.featured-project {
+    transition: all 0.3s ease;
+}
+.featured-image {
+    position: relative;
+    overflow: hidden;
+}
+.featured-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.featured-project:hover .featured-overlay {
+    opacity: 1;
+}
+.featured-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+}
+/* Timeline */
+.timeline-container {
+    position: relative;
+    padding-left: 50px;
+}
+.timeline-line {
+    position: absolute;
+    left: 50px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+}
+.timeline-marker {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(13, 110, 253, 0.3);
+    animation: pulse 2s infinite;
+}
+.timeline-content {
+    margin-left: 30px;
+    transition: all 0.3s ease;
+}
+.timeline-content:hover {
+    transform: translateX(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.timeline-year {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+/* Newsletter */
+.newsletter-form-main .input-group {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+    overflow: hidden;
+}
+.newsletter-form-main .form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+}
+.newsletter-form-main .btn {
+    border-radius: 0 2rem 2rem 0;
+    padding: 1rem 1.5rem;
+}
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(13, 110, 253, 0.6); }
+}
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+.hover-lift {
+    transition: all 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .timeline-container {
+        padding-left: 0;
+    }
+    .timeline-line {
+        left: 25px;
+    }
+    .timeline-marker {
+        left: -25px;
+        width: 40px;
+        height: 40px;
+    }
+    .timeline-content {
+        margin-left: 20px;
+    }
+    .process-timeline {
+        padding-left: 0;
+    }
+    .timeline-connector {
+        left: 40px;
+    }
+    .process-marker {
+        left: -40px;
+        width: 60px;
+        height: 60px;
+    }
+    .process-number {
+        font-size: 1.2rem;
+    }
+    .process-content {
+        margin-left: 20px;
+    }
+}
+</style>
+<!-- Home Page Specific Styles -->
+<!-- Hero Section -->
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.2;
+    color: white;
+    margin-bottom: 2rem;
+}
+.hero-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.particle-bg {
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+/* Floating Elements */
+.floating-element {
+    animation: float 6s ease-in-out infinite;
+    position: absolute;
+}
+.floating-element:nth-child(2) {
+    animation-delay: 2s;
+}
+.floating-element:nth-child(3) {
+    animation-delay: 4s;
+}
+/* About Section */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+/* Stats Cards */
+.stat-card {
+    transition: all 0.3s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.stat-card:hover .stat-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Value Items */
+.value-item {
+    transition: all 0.3s ease;
+}
+.value-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.value-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.value-item:hover .value-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+/* Image Container */
+.main-image-container {
+    position: relative;
+}
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.main-image-container:hover .image-overlay {
+    opacity: 1;
+}
+/* Value Cards */
+.value-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.value-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+.value-card:hover::before {
+    left: 100%;
+}
+.value-icon-container {
+    position: relative;
+}
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.value-card:hover .icon-glow {
+    opacity: 1;
+}
+/* Team Cards */
+.team-image {
+    transition: transform 0.3s ease;
+}
+.team-card:hover .team-image {
+    transform: scale(1.05);
+}
+.team-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.team-card:hover .team-overlay {
+    opacity: 1;
+}
+.social-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.social-link:hover {
+    transform: scale(1.1);
+}
+.skill-tag {
+    transition: all 0.3s ease;
+}
+.skill-tag:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+/* Process Section */
+.process-timeline {
+    position: relative;
+    padding-left: 100px;
+}
+.timeline-connector {
+    position: absolute;
+    left: 100px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+    border-radius: 2px;
+}
+.process-marker {
+    position: absolute;
+    left: -100px;
+    top: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(13, 110, 253, 0.3);
+    z-index: 2;
+}
+.process-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+.process-content {
+    transition: all 0.3s ease;
+    margin-left: 30px;
+}
+.process-content:hover {
+    transform: translateX(15px);
+}
+.process-bg-pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(13, 110, 253, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(102, 16, 242, 0.05) 0%, transparent 50%);
+    background-size: 300px 300px, 400px 400px;
+    animation: patternMove 25s linear infinite;
+}
+/* Technology Cards */
+.tech-card {
+    background: white;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.tech-icon-container {
+    position: relative;
+}
+.tech-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+.tech-card:hover .tech-icon {
+    transform: scale(1.1);
+}
+.tech-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.tech-card:hover .tech-glow {
+    opacity: 1;
+}
+/* Featured Projects */
+.featured-project {
+    transition: all 0.3s ease;
+}
+.featured-image {
+    position: relative;
+    overflow: hidden;
+}
+.featured-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.featured-project:hover .featured-overlay {
+    opacity: 1;
+}
+.featured-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+}
+/* Timeline */
+.timeline-container {
+    position: relative;
+    padding-left: 50px;
+}
+.timeline-line {
+    position: absolute;
+    left: 50px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+}
+.timeline-item {
+    position: relative;
+    margin-bottom: 3rem;
+}
+.timeline-marker {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(13, 110, 253, 0.3);
+    animation: pulse 2s infinite;
+}
+.timeline-content {
+    margin-left: 30px;
+    transition: all 0.3s ease;
+}
+.timeline-content:hover {
+    transform: translateX(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.timeline-year {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+/* Newsletter */
+.newsletter-form-main .input-group {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+    overflow: hidden;
+}
+.newsletter-form-main .form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+}
+.newsletter-form-main .btn {
+    border-radius: 0 2rem 2rem 0;
+    padding: 1rem 1.5rem;
+}
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(13, 110, 253, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(13, 110, 253, 0.6); }
+}
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+.hover-lift {
+    transition: all 0.3s ease;
+}
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    .timeline-container {
+        padding-left: 0;
+    }
+    .timeline-line {
+        left: 25px;
+    }
+    .timeline-marker {
+        left: -25px;
+        width: 40px;
+        height: 40px;
+    }
+    .timeline-content {
+        margin-left: 20px;
+    }
+    .process-timeline {
+        padding-left: 0;
+    }
+    .timeline-connector {
+        left: 40px;
+    }
+    .process-marker {
+        left: -40px;
+        width: 60px;
+        height: 60px;
+    }
+    .process-number {
+        font-size: 1.2rem;
+    }
+    .process-content {
+        margin-left: 20px;
+    }
+}
+</style>
+{% block content %}
+<!-- Enhanced Hero Slider Section -->
+<section class="hero-slider-wrapper position-relative">
+    <div class="hero-slider position-relative overflow-hidden">
+        <!-- Slide 1 -->
+        <div class="slide-item active" data-bg="COMP 1.jpg">
+            <div class="slide-bg position-absolute top-0 start-0 w-100 h-100"
+                 style="background: linear-gradient(135deg, rgba(206, 191, 191, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%), url('{{ url_for('static', filename='img/COMP 1.jpg') }}') center/cover no-repeat;"></div>
+            <div class="slide-content position-relative d-flex align-items-center h-100">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-8 col-lg-10 text-center">
+                            <h1 class="hero-title display-0 fw-bold mb-4 animate-fade-in-up animate-delay-1"
+                             style="color: rgb(204, 86, 86) !important; text-shadow: 0 2px 10px rgba(199, 79, 79, 0.5);">
+                             {{ company.tagline if company else 'Innovative Solutions for Your Business' }}
+                            </h1>
+                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                                We help businesses transform their ideas into reality with cutting-edge technology and creative solutions.
+                                Our team of experts is dedicated to delivering exceptional results that drive growth and success.
+                            </p>
+                            <div class="hero-actions d-flex flex-column flex-sm-row justify-content-center gap-3 animate-fade-in-up animate-delay-3">
+                                <a href="{{ url_for('main.contact') }}" class="btn btn-gradient btn-lg px-5 py-3 fw-semibold hover-scale">
+                                    Get Started Today
+                                </a>
+                                <a href="{{ url_for('main.portfolio') }}" class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold hover-lift">
+                                    View Our Work
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="slide-item" data-bg="COMP 7.jpg">
+            <div class="slide-bg position-absolute top-0 start-0 w-0 h-0"
+                 style="background: url('{{ url_for('static', filename='img/COMP 7.jpg') }}') center/cover no-repeat;"></div>
+            <div class="slide-content position-relative d-flex align-items-center h-100">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-8 col-lg-10 text-center">
+                            <div class="hero-badge mb-4 animate-fade-in-up">🚀 Next-Generation Technology</div>
+                            <h1 class="hero-title display-3 fw-bold mb-4 animate-fade-in-up animate-delay-1" style="color: white !important;">
+                                Transform Your Digital Presence
+                            </h1>
+                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                                Leverage cutting-edge technologies to create stunning digital experiences that captivate your audience
+                                and drive meaningful business results across all platforms.
+                            </p>
+                            <div class="hero-actions d-flex flex-column flex-sm-row justify-content-center gap-3 animate-fade-in-up animate-delay-3">
+                                <a href="{{ url_for('main.services') }}" class="btn btn-gradient btn-lg px-5 py-3 fw-semibold hover-scale">
+                                    Explore Services
+                                </a>
+                                <a href="{{ url_for('main.contact') }}" class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold hover-lift">
+                                    Start Project
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 3 -->
+        <div class="slide-item" data-bg="COMP 3.jpg">
+            <div class="slide-bg position-absolute top-0 start-0 w-0 h-0"
+                 style="background: url('{{ url_for('static', filename='img/COMP 9.png') }}') center/cover no-repeat;"></div>
+            <div class="slide-content position-relative d-flex align-items-center h-100">
+
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-8 col-lg-10 text-center">
+                            <div class="hero-badge mb-4 animate-fade-in-up">💡 Creative Excellence</div>
+                            <h1 class="hero-title display-3 fw-bold mb-4 animate-fade-in-up animate-delay-1" style="color: white !important;">
+                                Build Something Extraordinary
+                            </h1>
+                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                                From concept to deployment, we craft digital solutions that not only meet your needs
+                                but exceed expectations and set new standards in your industry.
+                            </p>
+                            <div class="hero-actions d-flex flex-column flex-sm-row justify-content-center gap-3 animate-fade-in-up animate-delay-3">
+                                <a href="{{ url_for('main.portfolio') }}" class="btn btn-gradient btn-lg px-5 py-3 fw-semibold hover-scale">
+                                    See Portfolio
+                                </a>
+                                <a href="{{ url_for('main.about') }}" class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold hover-lift">
+                                    Learn More
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 4 -->
+        <div class="slide-item hero-slide-stacked" data-bg="COMP4.jpg">
+            <div class="slide-bg position-absolute top-0 start-0 w-100 h-100"
+                 style="background: url('{{ url_for('static', filename='img/COMP4.jpg') }}') center/cover no-repeat;"></div>
+            <div class="slide-content position-relative d-flex align-items-center h-100">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-8 col-lg-10 text-center">
+                            <div class="hero-slide-stacked-body">
+                                <div class="hero-badge mb-4 animate-fade-in-up">⚡ Performance Driven</div>
+                                <h1 class="hero-title display-3 fw-bold animate-fade-in-up animate-delay-1" style="color: white !important;">
+                                    Fast, Reliable, Scalable
+                                </h1>
+                                <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                                    Experience lightning-fast performance with enterprise-grade reliability.
+                                    Our solutions scale effortlessly to handle any workload or traffic demands.
+                                </p>
+                                <div class="hero-actions d-flex flex-column flex-sm-row justify-content-center gap-3 animate-fade-in-up animate-delay-3">
+                                    <a href="{{ url_for('main.contact') }}" class="btn btn-gradient btn-lg px-5 py-3 fw-semibold hover-scale">
+                                        Get Quote
+                                    </a>
+                                    <a href="{{ url_for('main.services') }}" class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold hover-lift">
+                                        Our Services
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 5 -->
+        <div class="slide-item hero-slide-stacked" data-bg="COMP 5.jpg">
+            <div class="slide-bg position-absolute top-0 start-0 w-100 h-100"
+                 style="background: url('{{ url_for('static', filename='img/COMP 5.jpg') }}') center/cover no-repeat;"></div>
+            <div class="slide-content position-relative d-flex align-items-center h-100">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-8 col-lg-10 text-center">
+                            <div class="hero-slide-stacked-body">
+                                <div class="hero-badge mb-4 animate-fade-in-up">🔥 Passionate Innovation</div>
+                                <h1 class="hero-title display-3 fw-bold animate-fade-in-up animate-delay-1" style="color: white !important;">
+                                    Driven by Excellence
+                                </h1>
+                                <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                                    We're passionate about creating digital experiences that make a difference.
+                                    Every project is an opportunity to push boundaries and deliver exceptional results.
+                                </p>
+                                <div class="hero-actions d-flex flex-column flex-sm-row justify-content-center gap-3 animate-fade-in-up animate-delay-3">
+                                    <a href="{{ url_for('main.contact') }}" class="btn btn-gradient btn-lg px-5 py-3 fw-semibold hover-scale">
+                                        Start Journey
+                                    </a>
+                                    <a href="{{ url_for('main.about') }}" class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold hover-lift">
+                                        About Us
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Slide 6 -->
+        <div class="slide-item" data-bg="COMP6.jpg">
+            <div class="slide-bg position-absolute top-0 start-0 w-100 h-100"
+                 style="background: url('{{ url_for('static', filename='img/COMP6.jpg') }}') center/cover no-repeat;"></div>
+            <div class="slide-content position-relative d-flex align-items-center h-100">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-8 col-lg-10 text-center">
+                            <div class="hero-badge mb-4 animate-fade-in-up">🌟 Future-Ready Solutions</div>
+                            <h1 class="hero-title display-3 fw-bold mb-4 animate-fade-in-up animate-delay-1" style="color: white !important;">
+                                Tomorrow's Technology Today
+                            </h1>
+                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                                Stay ahead of the curve with future-proof solutions built on emerging technologies.
+                                We prepare your business for the digital landscape of tomorrow.
+                            </p>
+                            <div class="hero-actions d-flex flex-column flex-sm-row justify-content-center gap-3 animate-fade-in-up animate-delay-3">
+                                <a href="{{ url_for('main.contact') }}" class="btn btn-gradient btn-lg px-5 py-3 fw-semibold hover-scale">
+                                    Get Started
+                                </a>
+                                <a href="{{ url_for('main.services') }}" class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold hover-lift">
+                                    View Services
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Navigation Arrows -->
+    <button class="slider-nav-arrow slider-nav-prev position-absolute top-50 start-0 translate-middle-y" aria-label="Previous slide">
+        <i class="fas fa-chevron-left fa-lg"></i>
+    </button>
+    <button class="slider-nav-arrow slider-nav-next position-absolute top-50 end-0 translate-middle-y" aria-label="Next slide">
+        <i class="fas fa-chevron-right fa-lg"></i>
+    </button>
+    <!-- Indicator Dots -->
+    <div class="slider-indicators position-absolute bottom-0 start-50 translate-middle-x mb-4">
+        <div class="indicator-dots d-flex gap-2">
+            <button class="indicator-dot active" data-slide="0" aria-label="Go to slide 1"></button>
+            <button class="indicator-dot" data-slide="1" aria-label="Go to slide 2"></button>
+            <button class="indicator-dot" data-slide="2" aria-label="Go to slide 3"></button>
+            <button class="indicator-dot" data-slide="3" aria-label="Go to slide 4"></button>
+            <button class="indicator-dot" data-slide="4" aria-label="Go to slide 5"></button>
+            <button class="indicator-dot" data-slide="5" aria-label="Go to slide 6"></button>
+        </div>
+    </div>
+    <!-- Slide Progress Bar -->
+    <div class="slider-progress position-absolute bottom-0 start-0 w-100">
+        <div class="progress-bar bg-white bg-opacity-50" style="height: 3px;">
+            <div class="progress-fill bg-white" style="height: 100%; width: 0%;"></div>
+        </div>
+    </div>
+</section>
+<!-- About Us Section -->
+<section class="py-5 position-relative" id="about">
+    <!-- Background Pattern -->
+    <div class="animated-pattern position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
+    <div class="container position-relative">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-10 col-xl-8 mb-5 mb-lg-0">
+                <div class="animate-fade-in-up">
+                    <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Story</span>
+                    <h2 class="fw-bold mb-4 text-gradient animate-slide-in-left">Who We Are</h2>
+                    {% if company and company.about_us %}
+                        <div class="content animate-fade-in-up" data-delay="1">
+                            {{ company.about_us|safe }}
+                        </div>
+                    {% else %}
+                        <div class="content animate-fade-in-up" data-delay="1">
+                            <p class="lead text-muted mb-4">Welcome to {{ company.name if company else 'our company' }}, a leading software development company dedicated to delivering innovative solutions that help businesses thrive in the digital age.</p>
+                            <p class="mb-4">Founded in 2020, we've grown from a small team of passionate developers to a full-service digital agency serving clients worldwide. Our mission is to empower businesses through cutting-edge technology, creative design, and strategic thinking.</p>
+                            <p class="mb-4">We believe in building long-term partnerships with our clients, understanding their unique challenges, and delivering tailored solutions that drive real results. With a team of experienced professionals and a commitment to excellence, we've helped hundreds of businesses transform their ideas into successful digital products.</p>
+                        </div>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Our Core Values Section -->
+<section class="py-5 bg-light position-relative">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="shape-divider"></div>
+    </div>
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Why Choose Us</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Core Values</h2>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We are committed to delivering exceptional value to our clients through our core principles and values that guide everything we do.</h4>
+        </div>
+        <div class="row g-4 stagger-children">
+            <div class="col-md-6 col-lg-4">
+                <div class="value-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="1">
+                    <div class="card-body p-4 text-center">
+                        <div class="value-icon-container mb-4 position-relative">
+                            <div class="value-icon bg-primary bg-opacity-10 text-primary animate-pulse">
+                                <i class="fas fa-lightbulb fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Innovation</h5>
+                        <p class="card-text text-muted">We embrace creativity and are constantly exploring new ideas and technologies to solve complex problems and stay ahead of the curve.</p>
+                        <div class="card-footer bg-transparent border-0 pt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="value-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="2">
+                    <div class="card-body p-4 text-center">
+                        <div class="value-icon-container mb-4 position-relative">
+                            <div class="value-icon bg-success bg-opacity-10 text-success animate-pulse">
+                                <i class="fas fa-handshake fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Integrity</h5>
+                        <p class="card-text text-muted">We believe in honesty, transparency, and doing what's right for our clients and team members in every interaction and decision.</p>
+                        <div class="card-footer bg-transparent border-0 pt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="value-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="3">
+                    <div class="card-body p-4 text-center">
+                        <div class="value-icon-container mb-4 position-relative">
+                            <div class="value-icon bg-info bg-opacity-10 text-info animate-pulse">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Collaboration</h5>
+                        <p class="card-text text-muted">We work closely with our clients as partners, ensuring their vision is at the heart of every solution we create together.</p>
+                        <div class="card-footer bg-transparent border-0 pt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="value-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="4">
+                    <div class="card-body p-4 text-center">
+                        <div class="value-icon-container mb-4 position-relative">
+                            <div class="value-icon bg-warning bg-opacity-10 text-warning animate-pulse">
+                                <i class="fas fa-crown fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Excellence</h5>
+                        <p class="card-text text-muted">We are committed to delivering the highest quality work and exceeding expectations in every project we undertake.</p>
+                        <div class="card-footer bg-transparent border-0 pt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-warning" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="value-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="5">
+                    <div class="card-body p-4 text-center">
+                        <div class="value-icon-container mb-4 position-relative">
+                            <div class="value-icon bg-danger bg-opacity-10 text-danger animate-pulse">
+                                <i class="fas fa-shield-alt fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Accountability</h5>
+                        <p class="card-text text-muted">We take responsibility for our actions and are committed to delivering on our promises and maintaining trust.</p>
+                        <div class="card-footer bg-transparent border-0 pt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="value-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="6">
+                    <div class="card-body p-4 text-center">
+                        <div class="value-icon-container mb-4 position-relative">
+                            <div class="value-icon bg-secondary bg-opacity-10 text-secondary animate-pulse">
+                                <i class="fas fa-heart fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h5 class="card-title fw-bold mb-3">Passion</h5>
+                        <p class="card-text text-muted">We love what we do, and it shows in the quality of our work and our dedication to our clients' success.</p>
+                        <div class="card-footer bg-transparent border-0 pt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Static Cards Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Our Key Features</h2>
+            <h4 class="text-muted">Discover what makes us stand out</h4>
+        </div>
+        <div class="row g-4">
+            {% with title='Innovative Solutions', description='We create cutting-edge software tailored to your business needs.', icon='fas fa-lightbulb', color='primary' %}
+              {% include "components/static_card.html" %}
+            {% endwith %}
+            {% with title='Expert Team', description='Our team of experienced developers delivers top-quality results.', icon='fas fa-users', color='success' %}
+              {% include "components/static_card.html" %}
+            {% endwith %}
+            {% with title='Timely Delivery', description='We ensure projects are completed on time and within budget.', icon='fas fa-clock', color='info' %}
+              {% include "components/static_card.html" %}
+            {% endwith %}
+        </div>
+    </div>
+</section>
+<!-- Services Section -->
+<section class="py-5 my-5 position-relative" id="services">
+    <!-- Animated Background Pattern -->
+    <div class="animated-pattern position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Services</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">What We Offer</h2>
+            <h4 class="text-muted w-lg-100 mx-auto animate-fade-in-up" data-delay="1">We provide a wide range of services to help your business grow and succeed in the digital world.</h4>
+        </div>
+        <div class="row g-4 stagger-children">
+            {% if services %}
+                {% for service in services %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card card-hover-advanced">
+                        <div class="card-body p-4 text-center">
+                            <div class="service-icon mb-4 animate-bounce-in" data-delay="{{ loop.index }}">
+                                <i class="fas {{ service.icon if service.icon else 'fa-cog' }} fa-2x"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">{{ service.title }}</h5>
+                            <p class="card-text text-muted">{{ service.description|truncate(150) }}</p>
+                            <a href="{{ url_for('main.services') }}" class="btn btn-link p-0 text-primary text-decoration-none hover-lift-enhanced">
+                               
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                {% for i in range(6) %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card card-hover-advanced">
+                        <div class="card-body p-4 text-center">
+                            <div class="service-icon mb-4 animate-bounce-in" data-delay="{{ loop.index }}">
+                                <i class="fas fa-{{ ['laptop-code', 'mobile-alt', 'chart-line', 'palette', 'server', 'bullhorn'][i] }} fa-2x"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Service {{ i+1 }}</h5>
+                            <p class="card-text text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            <a href="#" class="btn btn-link p-0 text-primary text-decoration-none hover-lift-enhanced">
+                                Learn More <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="text-center mt-5 animate-fade-in-up animate-delay-6">
+            <a href="{{ url_for('main.services') }}" class="btn btn-gradient hover-scale animate-bounce-in">View All Services</a>
+        </div>
+    </div>
+</section>
+<!-- Comprehensive Services Section -->
+<section class="py-5 bg-light position-relative">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="process-bg-pattern"></div>
+    </div>
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Process</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">How We Work</h2>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We follow a proven, collaborative process to ensure the success of every project we undertake, from concept to deployment.</h4>
+        </div>
+        <div class="process-timeline position-relative">
+            <div class="timeline-connector"></div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="process-step-card animate-fade-in-left" data-delay="1">
+                        <div class="process-marker bg-primary animate-pulse">
+                            <span class="process-number">1</span>
+                        </div>
+                        <div class="process-content bg-white p-4 rounded-3 shadow-sm h-100 hover-lift">
+                            <div class="process-icon mb-3">
+                                <i class="fas fa-search fa-2x text-primary"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-3">Discovery & Analysis</h4>
+                            <p class="text-muted mb-0">We dive deep into understanding your business goals, target audience, and project requirements through comprehensive research and analysis.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="process-step-card animate-fade-in-right" data-delay="2">
+                        <div class="process-marker bg-success animate-pulse">
+                            <span class="process-number">2</span>
+                        </div>
+                        <div class="process-content bg-white p-4 rounded-3 shadow-sm h-100 hover-lift">
+                            <div class="process-icon mb-3">
+                                <i class="fas fa-lightbulb fa-2x text-success"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-3">Strategy & Planning</h4>
+                            <p class="text-muted mb-0">We create a detailed project roadmap with clear milestones, deliverables, and success metrics tailored to your specific needs.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="process-step-card animate-fade-in-left" data-delay="3">
+                        <div class="process-marker bg-info animate-pulse">
+                            <span class="process-number">3</span>
+                        </div>
+                        <div class="process-content bg-white p-4 rounded-3 shadow-sm h-100 hover-lift">
+                            <div class="process-icon mb-3">
+                                <i class="fas fa-code fa-2x text-info"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-3">Development & Testing</h4>
+                            <p class="text-muted mb-0">Our expert team builds your solution using cutting-edge technologies with rigorous testing and quality assurance processes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="process-step-card animate-fade-in-right" data-delay="4">
+                        <div class="process-marker bg-warning animate-pulse">
+                            <span class="process-number">4</span>
+                        </div>
+                        <div class="process-content bg-white p-4 rounded-3 shadow-sm h-100 hover-lift">
+                            <div class="process-icon mb-3">
+                                <i class="fas fa-rocket fa-2x text-warning"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-3">Launch & Support</h4>
+                            <p class="text-muted mb-0">We deploy your solution with ongoing support, monitoring, and optimization to ensure long-term success and growth.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Technology Stack Section -->
+<section class="py-5 position-relative">
+    <!-- Particle Background -->
+    <div class="particle-bg position-absolute top-0 start-0 w-100 h-100"></div>
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Technologies</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Technology Stack</h2>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We leverage cutting-edge technologies and modern frameworks to deliver high-performance, scalable solutions that drive business growth.</h4>
+        </div>
+        <div class="row g-4 justify-content-center stagger-children">
+            {% for tech in [
+                {'name': 'Python', 'icon': 'fab fa-python', 'color': 'success', 'description': 'Backend Development'},
+                {'name': 'JavaScript', 'icon': 'fab fa-js', 'color': 'warning', 'description': 'Frontend & Backend'},
+                {'name': 'React', 'icon': 'fab fa-react', 'color': 'info', 'description': 'UI Framework'},
+                {'name': 'Node.js', 'icon': 'fab fa-node-js', 'color': 'success', 'description': 'Server Runtime'},
+                {'name': 'Docker', 'icon': 'fab fa-docker', 'color': 'primary', 'description': 'Containerization'},
+                {'name': 'AWS', 'icon': 'fab fa-aws', 'color': 'secondary', 'description': 'Cloud Platform'},
+                {'name': 'PostgreSQL', 'icon': 'fas fa-database', 'color': 'info', 'description': 'Database'},
+                {'name': 'MongoDB', 'icon': 'fas fa-database', 'color': 'success', 'description': 'NoSQL Database'},
+                {'name': 'Git', 'icon': 'fab fa-git-alt', 'color': 'dark', 'description': 'Version Control'},
+                {'name': 'Kubernetes', 'icon': 'fas fa-dharmachakra', 'color': 'primary', 'description': 'Orchestration'},
+                {'name': 'TypeScript', 'icon': 'fab fa-js-square', 'color': 'info', 'description': 'JavaScript Superset'},
+                {'name': 'GraphQL', 'icon': 'fas fa-project-diagram', 'color': 'warning', 'description': 'Query Language'}
+            ] %}
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="tech-card text-center p-4 h-100 hover-lift animate-bounce-in" data-delay="{{ loop.index }}">
+                    <div class="tech-icon-container mb-3 position-relative">
+                        <div class="tech-icon bg-{{ tech.color }} bg-opacity-10 text-{{ tech.color }} animate-pulse">
+                            <i class="{{ tech.icon }} fa-2x"></i>
+                        </div>
+                        <div class="tech-glow bg-{{ tech.color }} bg-opacity-20"></div>
+                    </div>
+                    <h6 class="fw-bold mb-2">{{ tech.name }}</h6>
+                    <p class="text-muted small mb-0">{{ tech.description }}</p>
+                    <!-- Usage Indicator -->
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small text-muted">Usage</span>
+                            <span class="small fw-bold text-{{ tech.color }}">{{ [95, 90, 85, 92, 88, 94, 91, 87, 96, 89, 93, 86][loop.index-1] }}%</span>
+                        </div>
+                        <div class="progress" style="height: 3px;">
+                            <div class="progress-bar bg-{{ tech.color }}" role="progressbar" style="width: {{ [95, 90, 85, 92, 88, 94, 91, 87, 96, 89, 93, 86][loop.index-1] }}%;" aria-valuenow="{{ [95, 90, 85, 92, 88, 94, 91, 87, 96, 89, 93, 86][loop.index-1] }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Portfolio Section -->
+{% if featured_portfolio %}
+<section class="py-5 bg-light position-relative">
+    <!-- Gradient Overlay -->
+    <div class="gradient-overlay-light position-absolute top-0 start-0 w-100 h-100"></div>
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0 animate-slide-in-left animate-delay-1">
+                <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Featured Project</span>
+                <h2 class="fw-bold mb-3 text-gradient animate-fade-in-up">{{ featured_portfolio.project_name }}</h2>
+                <h4 class="text-muted mb-4 animate-fade-in-up animate-delay-2">{{ featured_portfolio.description|truncate(250) }}</h4>
+                <ul class="list-unstyled mb-4 animate-fade-in-up animate-delay-3">
+                    {% if featured_portfolio.client %}
+                    <li class="mb-2 hover-lift-enhanced">
+                        <i class="fas fa-user-tie text-primary me-2"></i> <strong>Client:</strong> {{ featured_portfolio.client }}
+                    </li>
+                    {% endif %}
+                    {% if featured_portfolio.project_date %}
+                    <li class="mb-2 hover-lift-enhanced">
+                        <i class="far fa-calendar-alt text-primary me-2"></i> <strong>Date:</strong> {{ featured_portfolio.project_date.strftime('%B %Y') }}
+                    </li>
+                    {% endif %}
+                    {% if featured_portfolio.project_url %}
+                    <li class="mb-2 hover-lift-enhanced">
+                        <i class="fas fa-link text-primary me-2"></i> <strong>Website:</strong>
+                        <a href="{{ featured_portfolio.project_url }}" target="_blank" class="text-decoration-none hover-scale">
+                            {{ featured_portfolio.project_url|replace('https://', '')|replace('http://', '') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <a href="{{ url_for('main.portfolio_detail', portfolio_id=featured_portfolio.id) }}" class="btn btn-gradient hover-scale animate-bounce-in">
+                    View Project
+                </a>
+            </div>
+            <div class="col-lg-6 animate-slide-in-right animate-delay-2">
+                {% if featured_portfolio.images %}
+                    {% set primary_image = featured_portfolio.images|selectattr('is_primary', 'equalto', True)|first or featured_portfolio.images[0] %}
+                    <div class="position-relative rounded-3 overflow-hidden shadow-strong hover-lift-enhanced">
+                        <img src="{{ url_for('static', filename=primary_image.image_path) }}" alt="{{ featured_portfolio.project_name }}" class="img-fluid w-100">
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary bg-opacity-10 d-flex align-items-center justify-content-center opacity-0 hover:opacity-100 transition-all duration-300">
+                            <a href="{{ url_for('main.portfolio_detail', portfolio_id=featured_portfolio.id) }}" class="btn btn-primary btn-lg rounded-circle animate-pulse">
+                                <i class="fas fa-search-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="bg-light rounded-3 d-flex align-items-center justify-content-center hover-lift-enhanced" style="height: 400px;">
+                        <i class="fas fa-image fa-4x text-muted animate-bounce-in"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+<!-- Portfolio Showcase Section -->
+<section class="py-5 position-relative">
+    <!-- Background Pattern -->
+    <div class="animated-pattern position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Featured Work</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Featured Projects</h2>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Explore our most successful and innovative projects that showcase our expertise and creative excellence.</h4>
+        </div>
+        <div class="row g-4">
+            <!-- Featured Project 1 -->
+<!-- Blog Section -->
+{% if recent_blogs %}
+<section class="py-5 my-5 position-relative">
+    <!-- Animated Background -->
+    <div class="position-absolute top-50 start-50 translate-middle animate-pulse opacity-25">
+        <div class="blob" style="width: 300px; height: 300px;"></div>
+    </div>
+    <div class="container position-relative">
+        <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in-up">
+            <div>
+                <span class="badge bg-primary bg-opacity-10 text-primary mb-2 animate-bounce-in">Latest News</span>
+                <h2 class="fw-bold mb-0 text-gradient animate-slide-in-left">From Our Blog</h2>
+            </div>
+            <a href="{{ url_for('main.blog') }}" class="btn btn-outline-primary hover-scale animate-bounce-in">View All Posts</a>
+        </div>
+        <div class="row g-4 stagger-children">
+            {% for post in recent_blogs %}
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-strong card-hover-advanced">
+                    <div class="position-relative overflow-hidden">
+                        {% if post.featured_image %}
+                        <img src="{{ url_for('static', filename=post.featured_image) }}" alt="{{ post.title }}" class="card-img-top image-hover-zoom" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center image-hover-zoom" style="height: 200px;">
+                            <i class="fas fa-image fa-3x text-muted animate-bounce-in"></i>
+                        </div>
+                        {% endif %}
+                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient opacity-0 hover:opacity-100 transition-all duration-300 d-flex align-items-center justify-content-center">
+                            <a href="{{ url_for('main.blog_post', slug=post.slug) }}" class="btn btn-primary btn-lg rounded-circle animate-pulse">
+                                <i class="fas fa-link"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3 text-muted small">
+                            <span class="animate-fade-in-up">
+                                <i class="far fa-calendar-alt me-1"></i> {{ post.created_at.strftime('%B %d, %Y') }}
+                            </span>
+                            <span class="mx-2">•</span>
+                            <span class="animate-fade-in-up animate-delay-1">
+                                <i class="far fa-user me-1"></i> {{ post.author.username }}
+                            </span>
+                        </div>
+                        <h5 class="card-title fw-bold animate-fade-in-up animate-delay-2">
+                            <a href="{{ url_for('main.blog_post', slug=post.slug) }}" class="text-decoration-none text-dark hover-lift-enhanced">
+                                {{ post.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted animate-fade-in-up animate-delay-3">{{ post.excerpt|default(post.content|striptags|truncate(100)) }}</p>
+                        <a href="{{ url_for('main.blog_post', slug=post.slug) }}" class="btn btn-link p-0 text-primary text-decoration-none hover-lift-enhanced animate-fade-in-up animate-delay-4">
+                            Read More <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+<!-- Team Section -->
+<section class="py-5 position-relative">
+    <!-- Particle Background -->
+    <div class="particle-bg position-absolute top-0 start-0 w-100 h-100"></div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Team</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Experts</h2>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Our team of talented professionals is dedicated to helping your business succeed with passion and expertise.</h4>
+        </div>
+
+        {% if team %}
+        <div class="row g-4 stagger-children">
+            {% for member in team %}
+            <div class="col-md-6 col-lg-3">
+                <div class="team-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="{{ loop.index }}">
+                    <div class="position-relative overflow-hidden">
+                        {% if member.photo_path %}
+                        <img src="{{ url_for('static', filename=member.photo_path.replace('\\', '/')) }}" class="card-img-top team-image" alt="{{ member.name }}" style="height: 250px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-gradient-primary d-flex align-items-center justify-content-center team-image" style="height: 250px;">
+                            <i class="fas fa-user-circle fa-5x text-white"></i>
+                        </div>
+                        {% endif %}
+
+                        <!-- Social Links Overlay -->
+                        <div class="team-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                            <div class="social-links">
+                                {% if member.linkedin_url %}
+                                <a href="{{ member.linkedin_url }}" class="social-link bg-primary text-white me-2 animate-pulse" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>
+                                {% endif %}
+                                {% if member.twitter_url %}
+                                <a href="{{ member.twitter_url }}" class="social-link bg-info text-white me-2 animate-pulse" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>
+                                {% endif %}
+                                {% if member.facebook_url %}
+                                <a href="{{ member.facebook_url }}" class="social-link bg-primary text-white animate-pulse" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold mb-1">{{ member.name }}</h5>
+                        <p class="text-primary mb-2">{{ member.position }}</p>
+                        {% if member.bio %}
+                        <p class="card-text text-muted small">{{ member.bio|truncate(80) }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Placeholder if no team data -->
+        <div class="row g-4 stagger-children">
+            {% for i in range(4) %}
+            <div class="col-md-6 col-lg-3">
+                <div class="team-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="{{ loop.index }}">
+                    <div class="position-relative overflow-hidden">
+                        <div class="bg-gradient-primary d-flex align-items-center justify-content-center team-image" style="height: 250px;">
+                            <i class="fas fa-user-circle fa-5x text-white"></i>
+                        </div>
+                    </div>
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold mb-1">Team Member {{ i+1 }}</h5>
+                        <p class="text-primary mb-2">Software Developer</p>
+                        <p class="card-text text-muted small">Passionate developer dedicated to creating innovative solutions.</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Career Section -->
+<section class="py-5 bg-light position-relative">
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Join Our Team</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Build the Future with Us</h2>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Join our passionate team of innovators and help shape the future of technology</h4>
+        </div>
+        <!-- Career Stats -->
+        <div class="row justify-content-center mt-5 animate-fade-in-up" data-delay="3">
+            <div class="col-lg-10">
+                <div class="career-stats bg-white bg-opacity-10 backdrop-blur-sm rounded-3 p-4">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="stat-item">
+                                <div class="counter text-white" data-target="50">0</div>
+                                <p class="text-white-50 small mb-0">Team Members</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="stat-item">
+                                <div class="counter text-white" data-target="15">0</div>
+                                <p class="text-white-50 small mb-0">Countries</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3 mb-md-0">
+                            <div class="stat-item">
+                                <div class="counter text-white" data-target="100">0</div>
+                                <p class="text-white-50 small mb-0">Projects Completed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-item">
+                                <div class="counter text-white" data-target="98">0</div>
+                                <p class="text-white-50 small mb-0">Employee Satisfaction %</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Career Benefits Section -->
+<section class="py-5 position-relative">
+    <div class="container">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Why Choose Us</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Perks & Benefits</h2>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We take care of our team with a comprehensive benefits package and a great work environment.</h4>
+        </div>
+        <div class="row g-4 stagger-children">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all animate-bounce-in" data-delay="1">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4">
+                            <i class="fas fa-laptop-house fa-2x"></i>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Remote Work</h4>
+                        <p class="text-muted mb-0">Work from anywhere with our flexible remote work policy.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all animate-bounce-in" data-delay="2">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4">
+                            <i class="fas fa-heartbeat fa-2x"></i>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Health & Wellness</h4>
+                        <p class="text-muted mb-0">Comprehensive health, dental, and vision insurance.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all animate-bounce-in" data-delay="3">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4">
+                            <i class="fas fa-graduation-cap fa-2x"></i>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Learning & Growth</h4>
+                        <p class="text-muted mb-0">Annual learning budget and professional development opportunities.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all animate-bounce-in" data-delay="4">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4">
+                            <i class="fas fa-umbrella-beach fa-2x"></i>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Paid Time Off</h4>
+                        <p class="text-muted mb-0">Generous vacation policy and paid holidays.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all animate-bounce-in" data-delay="5">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4">
+                            <i class="fas fa-baby-carriage fa-2x"></i>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Parental Leave</h4>
+                        <p class="text-muted mb-0">Paid parental leave for all new parents.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm hover-shadow transition-all animate-bounce-in" data-delay="6">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4">
+                            <i class="fas fa-dumbbell fa-2x"></i>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Wellness Stipend</h4>
+                        <p class="text-muted mb-0">Monthly wellness stipend for gym memberships or fitness apps.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5 animate-fade-in-up" data-delay="7">
+            <a href="{{ url_for('main.careers') }}" class="btn btn-primary btn-lg px-5 animate-bounce-in">View Open Positions</a>
+        </div>
+    </div>
+</section>
+<!-- Contact Section -->
+<section class="py-5 bg-blue text-white position-relative overflow-hidden" id="contact" style="background-color: #007bff;">
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="cta-bg-animation"></div>
+    </div>
+    <div class="container position-relative">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8 animate-fade-in-up">
+                <div class="icon-box bg-blue bg-opacity-20 text-white d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                    <i class="fas fa-rocket fa-2x"></i>
+                </div>
+                <h2 class="fw-bold mb-4 animate-slide-in-left" data-delay="1">Ready to Start Your Project?</h2>
+                <p class="lead mb-5 animate-fade-in-up" data-delay="2">Let's work together to bring your ideas to life. Contact us today for a free consultation.</p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 animate-fade-in-up" data-delay="3">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg px-5 animate-bounce-in">Start Your Project</a>
+                    <a href="{{ url_for('main.services') }}" class="btn btn-outline-light btn-lg px-5 animate-bounce-in" data-delay="1">View Services</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Enhanced Contact Information Section -->
+<section class="py-5 position-relative">
+    <div class="container">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                <i class="fas fa-paper-plane fa-2x"></i>
+            </div>
+            <h2 class="fw-bold mb-3 animate-slide-in-left">Get in Touch</h2>
+            <h4 class="text-muted animate-fade-in-up" data-delay="1">Have questions about working with us? Send us a message and we'll get back to you soon.</h4>
+        </div>
+        <form class="animate-fade-in-up" data-delay="2">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="name" placeholder="Your Full Name" required>
+                        <label for="name">Full Name *</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="email" class="form-control" id="email" placeholder="your.email@example.com" required>
+                        <label for="email">Email Address *</label>
+                    </div>
+                </div>
+                <!-- Phone Number Field -->
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input type="tel" class="form-control" id="phone" placeholder="+1 (555) 123-4567">
+                        <label for="phone">Phone Number</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <select class="form-select" id="position">
+                            <option value="" selected disabled>Select a position</option>
+                            <option value="frontend">Frontend Developer</option>
+                            <option value="backend">Backend Developer</option>
+                            <option value="designer">UI/UX Designer</option>
+                            <option value="marketing">Marketing Specialist</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <label for="position">Position of Interest</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating">
+                        <textarea class="form-control" id="message" placeholder="Tell us about yourself and why you're interested in joining our team..." style="height: 150px" required></textarea>
+                        <label for="message">Message *</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating">
+                        <input class="form-control" type="file" id="resume" accept=".pdf,.doc,.docx">
+                        <label for="resume">Upload Resume (PDF, DOC, DOCX)</label>
+                    </div>
+                    <div class="form-text">Maximum file size: 5MB</div>
+                </div>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="privacy" required>
+                        <label class="form-check-label" for="privacy">
+                            I agree to the <a href="#" class="text-decoration-none">Privacy Policy</a> and
+                            <a href="#" class="text-decoration-none">Terms of Service</a>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-12 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5 w-100 animate-bounce-in">
+                        <i class="fas fa-paper-plane me-2"></i> Send Message
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<!-- Contact Information Cards -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4">
+                            <i class="fas fa-map-marker-alt fa-2x"></i>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Our Location</h4>
+                        <address class="text-muted mb-0">
+                            {{ company.address if company and company.address else '123 Startup Street\nSan Francisco, CA 94107\nUnited States' }}
+                        </address>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4">
+                            <i class="fas fa-envelope fa-2x"></i>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Email Us</h4>
+                        <p class="text-muted mb-1">General Inquiries:</p>
+                        <p class="mb-0">
+                            <a href="mailto:{{ company.email if company and company.email else 'info@startup.com' }}" class="text-decoration-none">
+                                {{ company.email if company and company.email else 'info@startup.com' }}
+                            </a>
+                        </p>
+                        <p class="text-muted mt-3 mb-1">Support:</p>
+                        <p class="mb-0">
+                            <a href="mailto:support@startup.com" class="text-decoration-none">support@startup.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 hover-lift">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4">
+                            <i class="fas fa-phone-alt fa-2x"></i>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Call Us</h4>
+                        <p class="text-muted mb-1">Phone:</p>
+                        <p class="mb-0">
+                            <a href="tel:+11234567890" class="text-decoration-none">
+                                {{ company.phone if company and company.phone else '+1 (123) 456-7890' }}
+                            </a>
+                        </p>
+                        <p class="text-muted mt-3 mb-1">Hours:</p>
+                        <p class="mb-0">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                        <p class="mb-0">Saturday - Sunday: Closed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Company Journey Timeline -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <h2 class="fw-bold mb-3 text-gradient">Our Journey</h2>
+            <h4 class="text-muted w-lg-50 mx-auto">Discover the milestones that have shaped our company's growth and success.</h4>
+        </div>
+        <div class="timeline-container position-relative">
+            <div class="timeline-line"></div>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="timeline-item animate-fade-in-left" data-delay="1">
+                        <div class="timeline-marker bg-primary">
+                            <i class="fas fa-rocket text-white"></i>
+                        </div>
+                        <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
+                            <div class="timeline-year text-primary fw-bold">2020</div>
+                            <h5 class="fw-bold mb-2">Company Founded</h5>
+                            <p class="text-muted mb-0">Started with a vision to revolutionize digital solutions for businesses worldwide.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="timeline-item animate-fade-in-right" data-delay="2">
+                        <div class="timeline-marker bg-success">
+                            <i class="fas fa-users text-white"></i>
+                        </div>
+                        <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
+                            <div class="timeline-year text-success fw-bold">2021</div>
+                            <h5 class="fw-bold mb-2">Team Expansion</h5>
+                            <p class="text-muted mb-0">Grew our team to 25 talented professionals across multiple disciplines.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="timeline-item animate-fade-in-left" data-delay="3">
+                        <div class="timeline-marker bg-info">
+                            <i class="fas fa-trophy text-white"></i>
+                        </div>
+                        <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
+                            <div class="timeline-year text-info fw-bold">2022</div>
+                            <h5 class="fw-bold mb-2">100 Projects Milestone</h5>
+                            <p class="text-muted mb-0">Celebrated completing 100 successful projects for clients globally.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="timeline-item animate-fade-in-right" data-delay="4">
+                        <div class="timeline-marker bg-warning">
+                            <i class="fas fa-globe text-white"></i>
+                        </div>
+                        <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
+                            <div class="timeline-year text-warning fw-bold">2023</div>
+                            <h5 class="fw-bold mb-2">Global Expansion</h5>
+                            <p class="text-muted mb-0">Expanded operations to serve clients in 25+ countries worldwide.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Newsletter Section -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="newsletter-bg-animation"></div>
+    </div>
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center animate-fade-in-up">
+                <div class="icon-box bg-white bg-opacity-20 text-white d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                    <i class="fas fa-bell fa-2x"></i>
+                </div>
+                <h2 class="fw-bold mb-3 animate-slide-in-left" data-delay="1">Never Miss an Update</h2>
+                <p class="lead mb-4 animate-fade-in-up" data-delay="2">Subscribe to our newsletter and get the latest articles, insights, and industry trends delivered directly to your inbox.</p>
+                <form class="newsletter-form-main row g-3 justify-content-center animate-fade-in-up" data-delay="3">
+                    <div class="col-md-8">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="fas fa-envelope text-muted"></i>
+                            </span>
+                            <input type="email" class="form-control border-start-0" placeholder="Enter your email address" required>
+                            <button class="btn btn-light" type="submit">
+                                <i class="fas fa-paper-plane me-2"></i>Subscribe Now
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="newsletter-benefits d-flex justify-content-center gap-4 mt-4 animate-fade-in-up" data-delay="4">
+                    <div class="benefit-item text-center">
+                        <i class="fas fa-check-circle text-white mb-2"></i>
+                        <p class="small mb-0 opacity-90">Weekly Digest</p>
+                    </div>
+                    <div class="benefit-item text-center">
+                        <i class="fas fa-check-circle text-white mb-2"></i>
+                        <p class="small mb-0 opacity-90">Exclusive Content</p>
+                    </div>
+                    <div class="benefit-item text-center">
+                        <i class="fas fa-check-circle text-white mb-2"></i>
+                        <p class="small mb-0 opacity-90">Unsubscribe Anytime</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Testimonials Section -->
+<section class="py-5 bg-light position-relative">
+    <!-- Background Pattern -->
+    <div class="bg-dots position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Testimonials</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">What Our Clients Say</h2>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up animate-delay-1">Don't just take our word for it. Here's what our clients have to say about working with us.</h4>
+        </div>
+        <div class="row g-4 stagger-children">
+            {% for i in range(3) %}
+            <div class="col-md-4">
+                <div class="testimonial-card card-hover-advanced">
+                    <div class="card-body p-4 text-center">
+                        <div class="mb-4 animate-bounce-in" data-delay="{{ loop.index }}">
+                            {% for star in range(5) %}
+                                <i class="fas fa-star text-warning animate-pulse"></i>
+                            {% endfor %}
+                        </div>
+                        <p class="card-text text-muted mb-4 animate-fade-in-up animate-delay-2">"{{ [
+                            'Working with this team was an absolute pleasure. They delivered exceptional results and were a true partner throughout the entire process.',
+                            'Their attention to detail and commitment to quality is unmatched. We saw immediate results after launching our new website.',
+                            'Professional, responsive, and delivered beyond our expectations. Highly recommend their services to anyone looking for top-notch development.'
+                        ][i] }}"</p>
+                        <div class="d-flex align-items-center justify-content-center animate-fade-in-up animate-delay-3">
+                            <div class="position-relative">
+                                <img src="https://randomuser.me/api/portraits/{{ ['men', 'women'][i%2] }}/{{ i+10 }}.jpg" alt="Client" class="rounded-circle me-3 border border-primary border-3" width="60" height="60">
+                                <div class="position-absolute -bottom-2 -right-2 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center animate-bounce-in" style="width: 24px; height: 24px;">
+                                    <i class="fas fa-check fa-xs"></i>
+                                </div>
+                            </div>
+                            <div class="text-start">
+                                <h6 class="mb-0 fw-bold">{{ ['Mr. Udaykrishna', 'Kanishka pillai', 'Abhay Sharma'][i] }}</h6>
+                                <p class="text-muted small mb-0">{{ ['CEO, TechCorp', 'Marketing Director, InnoSoft', 'Founder, StartUpX'][i] }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Final CTA Section -->
+<section class="py-5 bg-primary text-white position-relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="cta-bg-animation"></div>
+    </div>
+    <div class="container position-relative">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8 animate-fade-in-up">
+                <h2 class="fw-bold mb-4 text-gradient animate-bounce-in">Ready to Transform Your Business?</h2>
+                <p class="lead mb-5 animate-fade-in-up animate-delay-1">Let's discuss your project and discover how our expert team can help you achieve your digital transformation goals with innovative solutions.</p>
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 animate-fade-in-up animate-delay-2">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg px-4 hover-scale animate-bounce-in">Start Your Project</a>
+                    <a href="{{ url_for('main.services') }}" class="btn btn-outline-light btn-lg px-4 hover-scale animate-bounce-in" style="animation-delay: 0.2s;">View Services</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Enhanced Hero Slider Functionality
+    initEnhancedHeroSlider();
+    function initEnhancedHeroSlider() {
+        const slideItems = document.querySelectorAll('.slide-item');
+        const indicatorDots = document.querySelectorAll('.indicator-dot');
+        const prevBtn = document.querySelector('.slider-nav-prev');
+        const nextBtn = document.querySelector('.slider-nav-next');
+        const progressBar = document.querySelector('.progress-fill');
+        let currentSlide = 0;
+        const totalSlides = slideItems.length;
+        let isAutoPlaying = true;
+        let autoPlayInterval;
+        let progressInterval;
+        let isTransitioning = false;
+        // Initialize slider
+        if (slideItems.length === 0) return;
+        // Set initial active states
+        slideItems[0].classList.add('active');
+        if (indicatorDots.length > 0) indicatorDots[0].classList.add('active');
+        // Auto-advance slides every 6 seconds
+        function startAutoPlay() {
+            if (!isAutoPlaying || isTransitioning) return;
+            stopAutoPlay();
+            autoPlayInterval = setInterval(() => {
+                nextSlide();
+            }, 6000);
+        }
+        function stopAutoPlay() {
+            clearInterval(autoPlayInterval);
+            clearInterval(progressInterval);
+        }
+        function startProgressBar() {
+            if (!progressBar) return;
+            
+            resetProgressBar();
+            let progress = 0;
+            progressInterval = setInterval(() => {
+                progress += 100 / 60; // 60 steps for 6 seconds
+                progressBar.style.width = `${Math.min(progress, 100)}%`;
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                }
+            }, 100);
+        }
+        function resetProgressBar() {
+            if (progressBar) {
+                progressBar.style.width = '0%';
+            }
+            clearInterval(progressInterval);
+        }
+        // Slide transition function
+        function goToSlide(slideIndex, direction = 'next') {
+            if (isTransitioning || slideIndex === currentSlide) return;
+            
+            isTransitioning = true;
+            
+            // Get current and next slide elements
+            const currentSlideEl = slideItems[currentSlide];
+            const nextSlideEl = slideItems[slideIndex];
+            
+            // Update active state for slides and indicators
+            currentSlideEl.classList.remove('active');
+            nextSlideEl.classList.add('active');
+            
+            // Update indicators if they exist
+            if (indicatorDots.length > 0) {
+                indicatorDots[currentSlide].classList.remove('active');
+                indicatorDots[slideIndex].classList.add('active');
+            }
+            
+            // Add transition class based on direction
+            nextSlideEl.classList.add(direction);
+            
+            // Force reflow to ensure the transition is applied
+            void nextSlideEl.offsetWidth;
+            
+            // Start the transition
+            nextSlideEl.classList.add('transitioning');
+            
+            // Update current slide index
+            const prevSlide = currentSlide;
+            currentSlide = slideIndex;
+            
+            // After transition completes
+            setTimeout(() => {
+                nextSlideEl.classList.remove(direction, 'transitioning');
+                isTransitioning = false;
+                
+                // Reset and start progress bar
+                resetProgressBar();
+                startProgressBar();
+                
+                // Restart autoplay if it was running
+                if (isAutoPlaying) {
+                    startAutoPlay();
+                }
+            }, 800); // Match this with your CSS transition duration
+        }
+        // Next slide function
+        function nextSlide() {
+            const nextIndex = (currentSlide + 1) % totalSlides;
+            goToSlide(nextIndex, 'next');
+        }
+        // Previous slide function
+        function prevSlide() {
+            const prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+            goToSlide(prevIndex, 'prev');
+        }
+        // Manual navigation with dots
+        indicatorDots.forEach((dot, index) => {
+            dot.addEventListener('click', function() {
+                if (index !== currentSlide) {
+                    stopAutoPlay();
+                    goToSlide(index, index > currentSlide ? 'next' : 'prev');
+                    setTimeout(startAutoPlay, 3000); // Resume autoplay after 3 seconds
+                }
+            });
+        });
+        // Navigation arrows
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function() {
+                stopAutoPlay();
+                prevSlide();
+                setTimeout(startAutoPlay, 3000);
+            });
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function() {
+                stopAutoPlay();
+                nextSlide();
+                setTimeout(startAutoPlay, 3000);
+            });
+        }
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                stopAutoPlay();
+                prevSlide();
+                setTimeout(startAutoPlay, 3000);
+            } else if (e.key === 'ArrowRight') {
+                stopAutoPlay();
+                nextSlide();
+                setTimeout(startAutoPlay, 3000);
+            }
+        });
+        // Touch/Swipe support for mobile
+        let startX = 0;
+        let endX = 0;
+        const minSwipeDistance = 50;
+        const slider = document.querySelector('.hero-slider');
+        if (slider) {
+            slider.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientX;
+            });
+            slider.addEventListener('touchend', function(e) {
+                endX = e.changedTouches[0].clientX;
+                const swipeDistance = Math.abs(endX - startX);
+                if (swipeDistance > minSwipeDistance) {
+                    stopAutoPlay();
+                    if (endX < startX) {
+                        nextSlide(); // Swipe left = next slide
+                    } else {
+                        prevSlide(); // Swipe right = previous slide
+                    }
+                    setTimeout(startAutoPlay, 3000);
+                }
+            });
+        }
+        // Pause on hover (desktop only)
+        const sliderWrapper = document.querySelector('.hero-slider-wrapper');
+        if (sliderWrapper && window.innerWidth > 768) {
+            sliderWrapper.addEventListener('mouseenter', function() {
+                stopAutoPlay();
+            });
+            sliderWrapper.addEventListener('mouseleave', function() {
+                startAutoPlay();
+            });
+        }
+        // Pause on focus (accessibility)
+        if (prevBtn) prevBtn.addEventListener('focus', stopAutoPlay);
+        if (nextBtn) nextBtn.addEventListener('focus', stopAutoPlay);
+        if (prevBtn) prevBtn.addEventListener('blur', () => setTimeout(startAutoPlay, 100));
+        if (nextBtn) nextBtn.addEventListener('blur', () => setTimeout(startAutoPlay, 100));
+        // Handle visibility change (pause when tab is not active)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        });
+        // Initialize
+        startAutoPlay();
+        startProgressBar();
+        // Preload next/previous slides for smooth transitions
+        function preloadSlides() {
+            for (let i = 0; i < totalSlides; i++) {
+                if (i !== currentSlide) {
+                    const slide = slideItems[i];
+                    const bgImage = window.getComputedStyle(slide.querySelector('.slide-bg')).backgroundImage;
+                    if (bgImage && bgImage !== 'none') {
+                        const img = new Image();
+                        img.src = bgImage.slice(5, -2); // Extract URL from background-image property
+                    }
+                }
+            }
+        }
+        preloadSlides();
+    }
+    // Counter Animation
+    function animateCounter() {
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / 100;
+            let current = 0;
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    counter.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+            // Check if element is in viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCounter();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+            observer.observe(counter);
+        });
+    }
+    // Parallax effect for floating elements
+    function initParallax() {
+        const floatingElements = document.querySelectorAll('.floating-element');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            floatingElements.forEach((element, index) => {
+                const speed = (index + 1) * 0.3;
+                element.style.transform = `translateY(${rate * speed}px)`;
+            });
+        });
+    }
+    // Interactive value cards (only initialize if not already done)
+    if (typeof window.valueCardsInitialized === 'undefined') {
+        window.valueCardsInitialized = true;
+        
+        const valueCards = document.querySelectorAll('.value-card');
+        valueCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-15px) scale(1.02)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        // Team card interactions
+        const teamCards = document.querySelectorAll('.team-card');
+        teamCards.forEach(card => {
+            const overlay = card.querySelector('.team-overlay');
+            const socialLinks = card.querySelectorAll('.social-link');
+            card.addEventListener('mouseenter', function() {
+                if (overlay) overlay.style.opacity = '1';
+                socialLinks.forEach((link, index) => {
+                    setTimeout(() => {
+                        if (link) link.style.transform = 'translateY(0) scale(1)';
+                    }, index * 100);
+                });
+            });
+            card.addEventListener('mouseleave', function() {
+                if (overlay) overlay.style.opacity = '0';
+                socialLinks.forEach(link => {
+                    if (link) link.style.transform = 'translateY(20px) scale(0.8)';
+                });
+            });
+        });
+    }
+    // Initialize animations
+    animateCounter();
+    initParallax();
+    // Newsletter form submission
+    const newsletterForms = document.querySelectorAll('.newsletter-form-main, .newsletter-form');
+    newsletterForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Show success message
+            const button = this.querySelector('button[type="submit"]');
+            if (button) {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check me-2"></i>Subscribed!';
+                button.classList.add('btn-success');
+                button.classList.remove('btn-light');
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-light');
+                    if (this.reset) this.reset();
+                }, 2000);
+            }
+        });
+    });
+    // Contact form submission
+    const contactForm = document.querySelector('#contact form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Show success message
+            const button = this.querySelector('button[type="submit"]');
+            if (button) {
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check me-2"></i>Message Sent!';
+                button.classList.add('btn-success');
+                button.classList.remove('btn-primary');
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-primary');
+                    if (this.reset) this.reset();
+                }, 2000);
+            }
+        });
+    }
+    // Enhanced smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    // Add loading state management
+    window.addEventListener('load', function() {
+        document.body.classList.add('loaded');
+        // Trigger any load-based animations
+        const loadElements = document.querySelectorAll('.animate-on-load');
+        loadElements.forEach((element, index) => {
+            setTimeout(() => {
+                element.classList.add('animate');
+            }, index * 100);
+        });
+    });
+    // Performance optimization: Lazy load background images
+    function lazyLoadBackgrounds() {
+        const lazyElements = document.querySelectorAll('[data-bg]');
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const element = entry.target;
+                    const bgImage = element.getAttribute('data-bg');
+                    if (bgImage) {
+                        element.style.backgroundImage = `url('${bgImage}')`;
+                        element.removeAttribute('data-bg');
+                        imageObserver.unobserve(element);
+                    }
+                }
+            });
+        });
+        lazyElements.forEach(element => {
+            imageObserver.observe(element);
+        });
+    }
+    // Initialize lazy loading
+    lazyLoadBackgrounds();
+    // Parallax effect for floating elements
+    function initParallax() {
+        const floatingElements = document.querySelectorAll('.floating-element');
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            floatingElements.forEach((element, index) => {
+                const speed = (index + 1) * 0.3;
+                element.style.transform = `translateY(${rate * speed}px) rotate(${scrolled * 0.01}deg)`;
+            });
+        });
+    }
+    // Interactive value cards
+    const valueCards = document.querySelectorAll('.value-card');
+    valueCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-15px) scale(1.02)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    // Team card interactions
+    const teamCards = document.querySelectorAll('.team-card');
+    teamCards.forEach(card => {
+        const overlay = card.querySelector('.team-overlay');
+        const socialLinks = card.querySelectorAll('.social-link');
+        card.addEventListener('mouseenter', function() {
+            overlay.style.opacity = '1';
+            socialLinks.forEach((link, index) => {
+                setTimeout(() => {
+                    link.style.transform = 'translateY(0) scale(1)';
+                }, index * 100);
+            });
+        });
+        card.addEventListener('mouseleave', function() {
+            overlay.style.opacity = '0';
+            socialLinks.forEach(link => {
+                link.style.transform = 'translateY(20px) scale(0.8)';
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

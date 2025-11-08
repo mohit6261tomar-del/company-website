@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %} - {{ company.name if company else 'Startup Company' }}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="admin-dashboard">
+    <!-- Sidebar -->
+        <!-- Sidebar -->
+        <div class="bg-dark border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading text-white py-4 px-3">
+                <a href="{{ url_for('admin.dashboard') }}" class="text-white text-decoration-none">
+                    {% if company and company.logo_path %}
+                    <img src="{{ url_for('static', filename=company.logo_path) }}" alt="{{ company.name }}" class="me-2">
+                    {% else %}
+                    <i class="fas fa-rocket me-2"></i>
+                    {% endif %}
+                    <span class="fw-bold">{{ company.name if company else 'KodesMind' }}</span>
+                    <small class="d-block text-muted">Admin Panel</small>
+                </a>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('admin.dashboard') }}" class="list-group-item list-group-item-action {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                </a>
+                
+                <div class="sidebar-dropdown">
+                    <a href="#contentSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-file-alt me-2"></i> Content</span>
+                        <i class="fas fa-chevron-down small"></i>
+                    </a>
+                    <div class="collapse {% if request.endpoint in ['admin.blog_posts', 'admin.add_blog_post', 'admin.edit_blog_post', 'admin.portfolio', 'admin.add_portfolio', 'admin.edit_portfolio', 'admin.team', 'admin.add_team_member', 'admin.edit_team_member', 'admin.careers', 'admin.add_career', 'admin.edit_career'] %}show{% endif %}" id="contentSubmenu">
+                        <a href="{{ url_for('admin.blog_posts') }}" class="list-group-item list-group-item-action ps-5 {% if request.endpoint in ['admin.blog_posts', 'admin.add_blog_post', 'admin.edit_blog_post'] %}active{% endif %}">
+                            <i class="far fa-newspaper me-2"></i> Blog Posts
+                        </a>
+                        <a href="{{ url_for('admin.portfolio') }}" class="list-group-item list-group-item-action ps-5 {% if request.endpoint in ['admin.portfolio', 'admin.add_portfolio', 'admin.edit_portfolio'] %}active{% endif %}">
+                            <i class="fas fa-briefcase me-2"></i> Portfolio
+                        </a>
+                        <a href="{{ url_for('admin.team') }}" class="list-group-item list-group-item-action ps-5 {% if request.endpoint in ['admin.team', 'admin.add_team_member', 'admin.edit_team_member', 'admin.delete_team_member'] %}active{% endif %}">
+                            <i class="fas fa-users me-2"></i> Team Members
+                        </a>
+                        <a href="{{ url_for('admin.careers') }}" class="list-group-item list-group-item-action ps-5 {% if request.endpoint in ['admin.careers', 'admin.add_career', 'admin.edit_career', 'admin.toggle_career', 'admin.delete_career'] %}active{% endif %}">
+                            <i class="fas fa-briefcase me-2"></i> Careers
+                        </a>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('admin.services') }}" class="list-group-item list-group-item-action {% if request.endpoint in ['admin.services', 'admin.add_service', 'admin.edit_service'] %}active{% endif %}">
+                    <i class="fas fa-briefcase me-2"></i> Services
+                </a>
+                
+                
+                <div class="sidebar-dropdown">
+                    <a href="#settingsSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-cog me-2"></i> Settings</span>
+                        <i class="fas fa-chevron-down small"></i>
+                    </a>
+                    <div class="collapse {% if request.endpoint in ['admin.company_info', 'admin.manage_users', 'admin.profile', 'admin.messages', 'admin.view_message'] %}show{% endif %}" id="settingsSubmenu">
+                        <a href="{{ url_for('admin.company_info') }}" class="list-group-item list-group-item-action ps-5 {% if request.endpoint == 'admin.company_info' %}active{% endif %}">
+                            <i class="fas fa-building me-2"></i> Company Info
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action ps-5">
+                            <i class="fas fa-sliders-h me-2"></i> General Settings
+                        </a>
+                        <a href="{{ url_for('admin.manage_users') }}" class="list-group-item list-group-item-action ps-5 {% if request.endpoint in ['admin.manage_users', 'admin.add_user', 'admin.edit_user', 'admin.profile'] %}active{% endif %}">
+                            <i class="fas fa-users-cog me-2"></i> Users & Permissions
+                        </a>
+                        <a href="{{ url_for('admin.messages') }}" class="list-group-item list-group-item-action ps-5 {% if request.endpoint in ['admin.messages', 'admin.view_message'] %}active{% endif %}">
+                            <i class="fas fa-envelope me-2"></i> Messages
+                            {% set unread_count = get_unread_messages_count() %}
+                            {% if unread_count > 0 %}
+                                <span class="badge bg-danger rounded-pill float-end">{{ unread_count }}</span>
+                            {% endif %}
+                        </a>
+                        <a href="{{ url_for('admin.applications') }}" class="list-group-item list-group-item-action ps-5 {% if request.endpoint in ['admin.applications', 'admin.view_application', 'admin.update_application_status'] %}active{% endif %}">
+                            <i class="fas fa-briefcase me-2"></i> Job Applications
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="sidebar-dropdown">
+                    <a href="#marketingSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-bullhorn me-2"></i> Marketing</span>
+                        <i class="fas fa-chevron-down small"></i>
+                    </a>
+                    <div class="collapse" id="marketingSubmenu">
+                        <a href="#" class="list-group-item list-group-item-action ps-5">
+                            <i class="fas fa-envelope me-2"></i> Email Campaigns
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action ps-5">
+                            <i class="fas fa-bell me-2"></i> Notifications
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action ps-5">
+                            <i class="fas fa-chart-line me-2"></i> Analytics
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer p-3">
+                <div class="d-flex align-items-center text-muted">
+                    <i class="fas fa-circle text-success me-2" style="font-size: 8px;"></i>
+                    <small>Admin Online</small>
+                </div>
+                <div class="text-muted small">
+                    <small>Last login: {{ current_user.last_login_at.strftime('%b %d, %Y %I:%M %p') if current_user.last_login_at else 'First login' }}</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+                <div class="container-fluid">
+                    <button class="btn btn-link" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="d-flex align-items-center ms-auto">
+                        <!-- Messages Dropdown -->
+                        <div class="dropdown me-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-envelope fa-lg"></i>
+                                {% set unread_count = get_unread_messages_count() %}
+                                {% if unread_count > 0 %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ unread_count }}
+                                    <span class="visually-hidden">unread messages</span>
+                                </span>
+                                {% endif %}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">New Messages</h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="flex-shrink-0 me-2">
+                                        <img src="https://ui-avatars.com/api/?name=John+Doe" alt="User" class="rounded-circle" width="40">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>John Doe</strong>
+                                            <small class="text-muted">3 mins ago</small>
+                                        </div>
+                                        <p class="small text-muted mb-0">Hey there! I'm interested in your services...</p>
+                                    </div>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-center" href="#">View all messages</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Notifications Dropdown -->
+                        <div class="dropdown me-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell fa-lg"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                                    5
+                                    <span class="visually-hidden">unread notifications</span>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="notificationsDropdown">
+                                <h6 class="dropdown-header">Notifications</h6>
+                                <a class="dropdown-item" href="#">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-box bg-primary bg-opacity-10 text-primary rounded-circle me-3">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                        <div>
+                                            <div class="small text-muted">5 mins ago</div>
+                                            <span class="fw-bold">New user registered</span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-center" href="#">View all notifications</a>
+                            </div>
+                        </div>
+                        
+                        <!-- User Dropdown -->
+                        <div class="dropdown
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="https://ui-avatars.com/api/?name={{ current_user.username }}" alt="{{ current_user.username }}" class="rounded-circle me-2" width="32" height="32">
+                                <span class="d-none d-md-inline">{{ current_user.username }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('admin.profile') }}"><i class="fas fa-user me-2"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Main Content -->
+            <div class="container-fluid px-4">
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+                    <h1 class="h3 mb-0">{% block page_header %}{% endblock %}</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Home</a></li>
+                            {% block breadcrumbs %}{% endblock %}
+                        </ol>
+                    </nav>
+                </div>
+                
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Page Content -->
+                {% block content %}{% endblock %}
+                
+                <!-- Footer -->
+                <footer class="py-3 mt-5 border-top">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                            <div class="mb-3 mb-md-0">
+                                <p class="mb-0 text-muted">&copy; {{ now.year }} {{ company.name if company else 'KodesMind' }}. All rights reserved.</p>
+                            </div>
+                            <div class="d-flex
+                            <div class="d-flex">
+                                <p class="mb-0 text-muted me-3">Version 1.0.0</p>
+                                <a href="#" class="text-muted me-3">Help</a>
+                                <a href="#" class="text-muted">Privacy</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- CSRF Token Setup -->
+    <script>
+        // Set up AJAX to include CSRF token in all requests
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                }
+            }
+        });
+    </script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

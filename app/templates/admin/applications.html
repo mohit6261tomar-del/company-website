@@ -1,0 +1,257 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Job Applications - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Job Applications</h1>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Applications Stats -->
+    <div class="row mb-4">
+        <div class="col-md-2">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ applications.total }}</h4>
+                            <p class="mb-0">Total</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ applications.items | selectattr('status', 'equalto', 'pending') | list | length }}</h4>
+                            <p class="mb-0">Pending</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ applications.items | selectattr('status', 'equalto', 'reviewed') | list | length }}</h4>
+                            <p class="mb-0">Reviewed</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-eye fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ applications.items | selectattr('status', 'equalto', 'shortlisted') | list | length }}</h4>
+                            <p class="mb-0">Shortlisted</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-star fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ applications.items | selectattr('status', 'equalto', 'rejected') | list | length }}</h4>
+                            <p class="mb-0">Rejected</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-times fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">{{ applications.items | selectattr('status', 'equalto', 'hired') | list | length }}</h4>
+                            <p class="mb-0">Hired</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check fa-2x opacity-75"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <label for="status_filter" class="form-label">Filter by Status</label>
+                    <select class="form-select" id="status_filter" name="status">
+                        <option value="">All Status</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="reviewed" {% if status_filter == 'reviewed' %}selected{% endif %}>Reviewed</option>
+                        <option value="shortlisted" {% if status_filter == 'shortlisted' %}selected{% endif %}>Shortlisted</option>
+                        <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+                        <option value="hired" {% if status_filter == 'hired' %}selected{% endif %}>Hired</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">&nbsp;</label>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a href="{{ url_for('admin.applications') }}" class="btn btn-outline-secondary">Clear</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Applications Table -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">All Applications</h5>
+        </div>
+        <div class="card-body">
+            {% if applications.items %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Position</th>
+                            <th>Resume</th>
+                            <th>Applied</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in applications.items %}
+                        <tr class="{% if application.status == 'pending' %}table-warning{% elif application.status == 'shortlisted' %}table-success{% elif application.status == 'rejected' %}table-danger{% endif %}">
+                            <td>
+                                {% if application.status == 'pending' %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% elif application.status == 'reviewed' %}
+                                    <span class="badge bg-info">Reviewed</span>
+                                {% elif application.status == 'shortlisted' %}
+                                    <span class="badge bg-success">Shortlisted</span>
+                                {% elif application.status == 'rejected' %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                {% elif application.status == 'hired' %}
+                                    <span class="badge bg-dark">Hired</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ application.name }}</td>
+                            <td>{{ application.email }}</td>
+                            <td>{{ application.phone or '-' }}</td>
+                            <td>{{ application.career.job_title }}</td>
+                            <td>
+                                {% if application.resume_path %}
+                                    <a href="{{ url_for('static', filename=application.resume_path) }}" 
+                                       target="_blank" 
+                                       class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-download"></i> Resume
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">No Resume</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ application.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ url_for('admin.view_application', application_id=application.id) }}" 
+                                       class="btn btn-sm btn-outline-primary" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <form method="POST" 
+                                          action="{{ url_for('admin.delete_application', application_id=application.id) }}" 
+                                          class="d-inline"
+                                          onsubmit="return confirm('Are you sure you want to delete this application?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if applications.pages > 1 %}
+            <nav aria-label="Applications pagination">
+                <ul class="pagination justify-content-center">
+                    {% if applications.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('admin.applications', page=applications.prev_num, status=status_filter) }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for page_num in applications.iter_pages() %}
+                        {% if page_num %}
+                            {% if page_num != applications.page %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.applications', page=page_num, status=status_filter) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ page_num }}</span>
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if applications.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('admin.applications', page=applications.next_num, status=status_filter) }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-briefcase fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No applications found</h5>
+                <p class="text-muted">When candidates apply for positions, their applications will appear here.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

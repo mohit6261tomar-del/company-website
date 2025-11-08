@@ -1,0 +1,386 @@
+{% extends "base.html" %}
+
+{% block title %}{{ career.job_title }} - Career Detail{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="fw-bold">{{ career.job_title }}</h1>
+                <p class="lead text-muted">{{ career.job_type|default('Full-time') }} Position</p>
+                <nav aria-label="breadcrumb" class="d-inline-block">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.careers') }}">Careers</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ career.job_title }}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Job Details -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-5">
+                <!-- Job Overview -->
+                <div class="card border-0 shadow-sm mb-5">
+                    <div class="card-body p-4">
+                        <h2 class="h3 fw-bold mb-4">Job Overview</h2>
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary me-3">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Job Type</h6>
+                                        <p class="text-muted mb-0">{{ career.job_type|default('Full-time') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if career.location %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary me-3">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Location</h6>
+                                        <p class="text-muted mb-0">{{ career.location }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if career.salary_range %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary me-3">
+                                        <i class="fas fa-dollar-sign"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Salary Range</h6>
+                                        <p class="text-muted mb-0">{{ career.salary_range }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary me-3">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Posted Date</h6>
+                                        <p class="text-muted mb-0">{{ career.created_at.strftime('%B %d, %Y') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Job Description -->
+                        <div class="job-description">
+                            <h3 class="h4 fw-bold mb-3">Job Description</h3>
+                            <div class="content mb-4">
+                                {{ career.description|safe }}
+                            </div>
+                        </div>
+
+                        <!-- Requirements -->
+                        {% if career.requirements %}
+                        <div class="job-requirements">
+                            <h3 class="h4 fw-bold mb-3">Requirements</h3>
+                            <div class="content mb-4">
+                                {{ career.requirements|safe }}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Responsibilities -->
+                        {% if career.responsibilities %}
+                        <div class="job-responsibilities">
+                            <h3 class="h4 fw-bold mb-3">Responsibilities</h3>
+                            <div class="content mb-4">
+                                {{ career.responsibilities|safe }}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Benefits -->
+                        {% if career.benefits %}
+                        <div class="job-benefits">
+                            <h3 class="h4 fw-bold mb-3">Benefits & Perks</h3>
+                            <div class="content">
+                                {{ career.benefits|safe }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Application Form -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="h4 fw-bold mb-4">Apply for This Position</h3>
+                        <form method="POST" enctype="multipart/form-data">
+                            {{ form.hidden_tag() }}
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        {{ form.name(class="form-control", placeholder="Your Full Name") }}
+                                        {{ form.name.label }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        {{ form.email(class="form-control", placeholder="your.email@example.com") }}
+                                        {{ form.email.label }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                {{ form.phone(class="form-control", placeholder="+1 (555) 123-4567") }}
+                                {{ form.phone.label }}
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                {{ form.cover_letter(class="form-control", placeholder="Tell us why you're interested in this position...", style="height: 150px") }}
+                                {{ form.cover_letter.label }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="resume" class="form-label">Upload Resume/CV *</label>
+                                <input class="form-control" type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+                                <div class="form-text">Accepted formats: PDF, DOC, DOCX (Max size: 5MB)</div>
+                            </div>
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="privacy" required>
+                                <label class="form-check-label" for="privacy">
+                                    I agree to the <a href="#" class="text-decoration-none">Privacy Policy</a> and
+                                    <a href="#" class="text-decoration-none">Terms of Service</a>
+                                </label>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i> Submit Application
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Job Summary Card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-4">Job Summary</h4>
+                        <div class="job-summary">
+                            <div class="summary-item d-flex justify-content-between mb-3">
+                                <span class="text-muted">Position:</span>
+                                <span class="fw-medium">{{ career.job_title }}</span>
+                            </div>
+                            <div class="summary-item d-flex justify-content-between mb-3">
+                                <span class="text-muted">Department:</span>
+                                <span class="fw-medium">{{ career.department|default('General') }}</span>
+                            </div>
+                            {% if career.experience_level %}
+                            <div class="summary-item d-flex justify-content-between mb-3">
+                                <span class="text-muted">Experience:</span>
+                                <span class="fw-medium">{{ career.experience_level }}</span>
+                            </div>
+                            {% endif %}
+                            {% if career.remote_work %}
+                            <div class="summary-item d-flex justify-content-between mb-3">
+                                <span class="text-muted">Remote Work:</span>
+                                <span class="fw-medium">{{ 'Yes' if career.remote_work else 'No' }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="summary-item d-flex justify-content-between">
+                                <span class="text-muted">Application Deadline:</span>
+                                <span class="fw-medium">{{ career.application_deadline.strftime('%B %d, %Y') if career.application_deadline else 'Open until filled' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Why Join Us Card -->
+                <div class="card border-0 shadow-sm bg-primary text-white mb-4">
+                    <div class="card-body p-4 text-center">
+                        <h5 class="fw-bold mb-3">Why Join Our Team?</h5>
+                        <ul class="list-unstyled text-start mb-4">
+                            <li class="mb-2"><i class="fas fa-check me-2"></i> Competitive salary and benefits</li>
+                            <li class="mb-2"><i class="fas fa-check me-2"></i> Flexible work arrangements</li>
+                            <li class="mb-2"><i class="fas fa-check me-2"></i> Professional development opportunities</li>
+                            <li class="mb-2"><i class="fas fa-check me-2"></i> Collaborative work environment</li>
+                            <li class="mb-2"><i class="fas fa-check me-2"></i> Latest tools and technologies</li>
+                        </ul>
+                        <a href="{{ url_for('main.about') }}" class="btn btn-light btn-sm px-3">Learn More About Us</a>
+                    </div>
+                </div>
+
+                <!-- Share Card -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Share This Job</h5>
+                        <div class="d-flex gap-2">
+                            <a href="#" class="btn btn-outline-primary btn-sm flex-fill">
+                                <i class="fab fa-facebook-f me-2"></i>Facebook
+                            </a>
+                            <a href="#" class="btn btn-outline-info btn-sm flex-fill">
+                                <i class="fab fa-twitter me-2"></i>Twitter
+                            </a>
+                            <a href="#" class="btn btn-outline-primary btn-sm flex-fill">
+                                <i class="fab fa-linkedin-in me-2"></i>LinkedIn
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Similar Jobs -->
+{% if careers %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Similar Positions</h2>
+            <p class="text-muted w-lg-50 mx-auto">Check out other opportunities that might interest you.</p>
+        </div>
+
+        <div class="row g-4">
+            {% for similar_job in careers[:3] %}
+                {% if similar_job.id != career.id %}
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 hover-shadow transition-all">
+                        <div class="card-body p-4">
+                            <h5 class="fw-bold mb-2">
+                                <a href="{{ url_for('main.career_detail', career_id=similar_job.id) }}" class="text-decoration-none text-dark">
+                                    {{ similar_job.job_title }}
+                                </a>
+                            </h5>
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="badge bg-primary bg-opacity-10 text-primary">{{ similar_job.job_type|default('Full-time') }}</span>
+                                {% if similar_job.location %}
+                                <span class="badge bg-light text-dark">{{ similar_job.location }}</span>
+                                {% endif %}
+                            </div>
+                            <p class="text-muted mb-3">{{ similar_job.description|truncate(100) }}</p>
+                            <a href="{{ url_for('main.career_detail', career_id=similar_job.id) }}" class="btn btn-outline-primary btn-sm">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <h2 class="fw-bold mb-3">Don't See the Right Position?</h2>
+                <p class="lead mb-0">We're always looking for talented people to join our team. Send us your resume and we'll keep you in mind for future opportunities.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg px-4 me-2">Send Your Resume</a>
+                <a href="{{ url_for('main.careers') }}" class="btn btn-outline-light btn-lg px-4">View All Jobs</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.icon-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.job-summary .summary-item {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.job-summary .summary-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: #0d6efd;
+    opacity: 0.8;
+}
+
+.form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary {
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.1);
+}
+
+.hover-shadow {
+    transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .btn-light, .btn-outline-light {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .col-lg-4.text-lg-end {
+        text-align: center !important;
+    }
+}
+</style>
+{% endblock %}

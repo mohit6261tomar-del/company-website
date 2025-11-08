@@ -1,0 +1,2213 @@
+{% extends "base.html" %}
+
+{% block title %}Our Services - Professional Digital Solutions{% endblock %}
+
+{% block content %}
+<style>
+/* Enhanced Service Card Styling with Premium Design */
+.service-card {
+    background: linear-gradient(145deg, #ffffff 0%, #fafbfc 100%);
+    border: 2px solid transparent;
+    border-radius: 28px;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Staggered animation for cards */
+.service-card:nth-child(1) { animation-delay: 0.1s; }
+.service-card:nth-child(2) { animation-delay: 0.2s; }
+.service-card:nth-child(3) { animation-delay: 0.3s; }
+.service-card:nth-child(4) { animation-delay: 0.4s; }
+.service-card:nth-child(5) { animation-delay: 0.5s; }
+.service-card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animated gradient border */
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 24px;
+    padding: 2px;
+    background: linear-gradient(135deg, #667eea, #764ba2, #f093fb, #4facfe);
+    background-size: 300% 300%;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    animation: gradientShift 3s ease infinite;
+    z-index: 0;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.service-card:hover::before {
+    opacity: 1;
+}
+
+/* Shine effect on hover - using a different pseudo element approach */
+.service-card .shine-effect {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 70%
+    );
+    transform: rotate(45deg);
+    transition: all 0.6s ease;
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.service-card:hover .shine-effect {
+    opacity: 1;
+    left: 100%;
+}
+
+.service-card:hover {
+    transform: translateY(-16px) scale(1.04);
+    box-shadow: 
+        0 25px 70px rgba(102, 126, 234, 0.35),
+        0 12px 28px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(102, 126, 234, 0.4);
+}
+
+.service-card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+    border-radius: 24px;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    filter: brightness(0.8);
+}
+
+.service-card:hover .service-card-bg {
+    transform: scale(1.08);
+    filter: brightness(0.9);
+}
+
+/* Default background for cards without images */
+.service-card-bg-default {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Fallback backgrounds for demo cards */
+.service-card-bg-fallback {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.service-card-bg-fallback-0 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.service-card-bg-fallback-1 {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.service-card-bg-fallback-2 {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.service-card-bg-fallback-3 {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.service-card-bg-fallback-4 {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.service-card-bg-fallback-5 {
+    background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+}
+
+.service-card .card-body {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+    border-radius: 0;
+    margin: 0;
+    padding: 40px 32px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: none;
+    transition: all 0.4s ease;
+}
+
+.service-card:hover .card-body {
+    background: transparent;
+    transform: translateY(0);
+}
+
+/* Decorative corner accent */
+.service-card::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+    border-radius: 50%;
+    z-index: 3;
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.service-card:hover::after {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* Page Header Background */
+.page-header-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-image: url("{{ url_for('static', filename='img/soft 1.png') }}");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
+}
+
+/* Enhanced Progress Bar */
+.progress {
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    overflow: visible;
+    position: relative;
+    box-shadow: 
+        inset 0 2px 6px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #ffffff 0%, #f0f0f0 100%);
+    border-radius: 15px;
+    transition: width 1.8s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    box-shadow: 
+        0 2px 10px rgba(255, 255, 255, 0.5),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    animation: shimmer 2.5s infinite;
+    border-radius: 15px;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Enhanced Service Features */
+.service-features {
+    margin-top: 20px;
+}
+
+.feature-item {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    border-left: 4px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    transition: width 0.4s ease;
+    z-index: 0;
+}
+
+.feature-item:hover::before {
+    width: 100%;
+}
+
+.feature-item:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-left-color: #667eea;
+    transform: translateX(8px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.feature-item i {
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    z-index: 1;
+}
+
+.feature-item:hover i {
+    transform: scale(1.3) rotate(5deg);
+    color: #667eea !important;
+}
+
+.feature-item span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Enhanced Service Card Button */
+.service-card .btn {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50px;
+    padding: 18px 36px;
+    font-weight: 800;
+    font-size: 1rem;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    box-shadow: 
+        0 8px 25px rgba(16, 185, 129, 0.4),
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    color: #ffffff !important;
+    z-index: 10;
+}
+
+.service-card .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.service-card .btn:hover::before {
+    left: 100%;
+}
+
+.service-card .btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+    z-index: -1;
+}
+
+.service-card .btn:hover::after {
+    width: 400px;
+    height: 400px;
+}
+
+.service-card .btn:hover {
+    transform: translateY(-6px) scale(1.1);
+    box-shadow: 
+        0 15px 40px rgba(245, 158, 11, 0.5),
+        0 6px 20px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.service-card .btn i {
+    transition: transform 0.4s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.service-card .btn:hover i {
+    transform: translateX(5px);
+    color: #ffffff !important;
+}
+
+.service-card .btn span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Service Icon with Premium Styling */
+.service-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 
+        0 8px 24px rgba(255, 255, 255, 0.2),
+        0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.service-icon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.service-card:hover .service-icon {
+    transform: translateY(-8px) rotate(5deg) scale(1.1);
+    box-shadow: 
+        0 12px 32px rgba(255, 255, 255, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.service-card:hover .service-icon::before {
+    left: 100%;
+}
+
+.service-icon i {
+    color: #ffffff;
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.service-card:hover .service-icon i {
+    transform: scale(1.2);
+}
+
+/* Enhanced Service Card Typography */
+.service-card .card-body .service-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #000000;
+    margin-bottom: 20px;
+    line-height: 1.3;
+    transition: all 0.3s ease;
+    letter-spacing: 0.8px;
+    text-transform: capitalize;
+    text-shadow: none;
+    filter: none;
+}
+
+.service-card:hover .card-body .service-title,
+.service-card:focus-within .card-body .service-title,
+.service-card:active .card-body .service-title {
+    color: #ffffff !important;
+    transform: translateX(5px);
+}
+
+.service-card .card-body .service-text {
+    color: #000000;
+    transition: color 0.3s ease;
+    text-shadow: none;
+    filter: none;
+}
+
+.service-card:hover .card-body .service-text,
+.service-card:focus-within .card-body .service-text,
+.service-card:active .card-body .service-text {
+    color: #ffffff !important;
+}
+
+.service-card .card-body .service-dynamic {
+    color: #000000;
+    transition: color 0.3s ease;
+    text-shadow: none;
+    filter: none;
+}
+
+.service-card:hover .card-body .service-dynamic,
+.service-card:focus-within .card-body .service-dynamic,
+.service-card:active .card-body .service-dynamic {
+    color: #ffffff !important;
+}
+
+/* Service card headings - h4 variant */
+.service-card h4 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #000000 !important;
+    text-shadow: none;
+    letter-spacing: 0.8px;
+    filter: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: color 0.3s ease;
+}
+
+.service-card:hover h4,
+.service-card:focus-within h4,
+.service-card:active h4 {
+    color: #ffffff !important;
+}
+
+/* Service card h3 headings */
+.service-card h3 {
+    color: #000000 !important;
+    text-shadow: none;
+    filter: none;
+    transition: color 0.3s ease;
+}
+
+.service-card:hover h3,
+.service-card:focus-within h3,
+.service-card:active h3 {
+    color: #ffffff !important;
+}
+
+/* Service Progress Section */
+.service-progress {
+    margin-bottom: 20px;
+}
+
+.service-progress .small {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #000000;
+    text-shadow: none;
+    transition: color 0.3s ease;
+}
+
+.service-card:hover .service-progress .small,
+.service-card:focus-within .service-progress .small,
+.service-card:active .service-progress .small {
+    color: #ffffff !important;
+}
+
+/* All paragraph text in service cards */
+.service-card p {
+    color: #000000 !important;
+    text-shadow: none;
+    filter: none;
+    transition: color 0.3s ease;
+}
+
+.service-card:hover p,
+.service-card:focus-within p,
+.service-card:active p {
+    color: #ffffff !important;
+}
+
+/* All span text in service cards */
+.service-card span {
+    transition: color 0.3s ease;
+}
+
+/* Small text elements */
+.service-card .small {
+    color: #333333;
+    text-shadow: none;
+    transition: color 0.3s ease;
+}
+
+.service-card:hover .small,
+.service-card:focus-within .small,
+.service-card:active .small {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Scroll-triggered animations */
+.service-card.aos-animate {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Services Grid Layout - 3 Cards Per Row */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Ensure equal height cards */
+.service-card-wrapper {
+    display: flex;
+    height: 100%;
+}
+
+.service-card {
+    width: 100%;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card .position-relative {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Card Overlay for better text readability */
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    z-index: 1;
+    transition: all 0.5s ease;
+}
+
+.service-card:hover .card-overlay,
+.service-card:focus-within .card-overlay,
+.service-card:active .card-overlay {
+    background: linear-gradient(
+        135deg, 
+        rgba(15, 23, 42, 0.92) 0%,
+        rgba(109, 40, 217, 0.92) 50%,
+        rgba(15, 23, 42, 0.92) 100%
+    );
+}
+
+/* Text colors for better contrast */
+.service-card .text-white {
+    color: #000000 !important;
+    text-shadow: none;
+    font-weight: 700;
+    filter: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: color 0.3s ease;
+}
+
+.service-card:hover .text-white,
+.service-card:focus-within .text-white,
+.service-card:active .text-white {
+    color: #ffffff !important;
+}
+
+.service-card .text-white-75 {
+    color: #000000 !important;
+    text-shadow: none;
+    font-weight: 400;
+    line-height: 1.9;
+    filter: none;
+    -webkit-font-smoothing: antialiased;
+    transition: color 0.3s ease;
+}
+
+.service-card:hover .text-white-75,
+.service-card:focus-within .text-white-75,
+.service-card:active .text-white-75 {
+    color: #ffffff !important;
+}
+
+.service-card .text-white-50 {
+    color: #333333 !important;
+    text-shadow: none;
+    font-weight: 500;
+    filter: none;
+    -webkit-font-smoothing: antialiased;
+    transition: color 0.3s ease;
+}
+
+.service-card:hover .text-white-50,
+.service-card:focus-within .text-white-50,
+.service-card:active .text-white-50 {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Feature items styling for service cards */
+.service-card .feature-item {
+    background: rgba(0, 0, 0, 0.05);
+    backdrop-filter: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.service-card .feature-item span,
+.service-card .feature-item i {
+    color: #000000 !important;
+    font-weight: 600;
+    text-shadow: none;
+    transition: color 0.3s ease;
+}
+
+.service-card .feature-item i {
+    font-size: 1rem;
+}
+
+.service-card:hover .feature-item,
+.service-card:focus-within .feature-item,
+.service-card:active .feature-item {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.service-card:hover .feature-item span,
+.service-card:hover .feature-item i,
+.service-card:focus-within .feature-item span,
+.service-card:focus-within .feature-item i,
+.service-card:active .feature-item span,
+.service-card:active .feature-item i {
+    color: #ffffff !important;
+}
+
+/* Responsive Design Enhancements */
+@media (max-width: 1200px) {
+    .services-grid {
+        gap: 1.5rem;
+    }
+    
+    .service-card {
+        min-height: 480px;
+    }
+}
+
+@media (max-width: 992px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .service-card {
+        margin-bottom: 0;
+        min-height: 450px;
+    }
+    
+    .service-card .card-body h3 {
+        font-size: 1.35rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .service-card {
+        border-radius: 20px;
+        margin-bottom: 0;
+        min-height: 420px;
+    }
+    
+    .service-card .card-body {
+        margin: 10px;
+        padding: 24px 20px;
+    }
+    
+    .service-icon {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+    }
+    
+    .service-icon i {
+        font-size: 1.75rem;
+    }
+    
+    .service-card .card-body h3 {
+        font-size: 1.25rem;
+        margin-bottom: 14px;
+    }
+    
+    .service-card .card-body p {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    
+    .service-card .btn {
+        padding: 14px 28px;
+        font-size: 0.85rem;
+    }
+    
+    .feature-item {
+        padding: 12px 16px;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .services-grid {
+        gap: 1.25rem;
+    }
+    
+    .service-card {
+        border-radius: 18px;
+        min-height: 400px;
+    }
+    
+    .service-card .card-body {
+        margin: 8px;
+        padding: 20px 16px;
+    }
+    
+    .service-icon {
+        width: 65px;
+        height: 65px;
+        margin-bottom: 18px;
+    }
+    
+    .service-card .card-body h3 {
+        font-size: 1.15rem;
+    }
+    
+    .service-card:hover {
+        transform: translateY(-8px) scale(1.02);
+    }
+}
+
+/* Technology Cards */
+.tech-card {
+    background: white;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    height: 100%;
+}
+
+.tech-icon-container {
+    position: relative;
+}
+
+.tech-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.tech-card:hover .tech-icon {
+    transform: scale(1.1);
+}
+
+.tech-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tech-card:hover .tech-glow {
+    opacity: 1;
+}
+
+/* Progress Bar Animation */
+@keyframes progressFill {
+    0% { width: 0%; }
+    100% { width: var(--progress-width, 100%); }
+}
+
+.animate-progress .progress-bar {
+    animation: progressFill 2s ease-out forwards;
+}
+
+/* Chart Bars */
+.chart-bar {
+    transition: height 0.5s ease;
+}
+
+/* Dashboard Mockup */
+.dashboard-mockup {
+    position: relative;
+}
+
+.mockup-browser {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+.browser-dots {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+}
+
+.metric-card {
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: scale(1.05);
+}
+
+/* Floating Elements */
+.floating-badge {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .service-card .card-body {
+        margin: 10px;
+        padding: 25px 20px 20px 20px;
+    }
+
+    .service-card .card-body h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Enhanced Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(1deg); }
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Dynamic Backgrounds - These will be set via JavaScript if needed */
+.service-card-bg-dynamic {
+    /* Background will be set dynamically if service has image */
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.4) 100%);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+/* Fallback backgrounds */
+.service-card-bg-default {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.4) 100%);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+</style>
+
+<!-- Page Header -->
+<section class="page-header position-relative bg-gradient-primary py-5 overflow-hidden page-header-bg" style="min-height: 400px;">
+    <!-- Animated Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="floating-element-1"></div>
+        <div class="floating-element-2"></div>
+        <div class="floating-element-3"></div>
+        <div class="particle-bg"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="animate-fade-in-up">
+                    <span class="badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 animate-bounce-in">Our Expertise</span>
+                    <h1 class="fw-bold text-black mb-4 display-4 animate-slide-in-left" data-delay="1">Our Services</h1>
+                    <h4 class="lead text-black-100 mb-0 animate-slide-in-right" data-delay="2";>Comprehensive digital solutions tailored to transform your business and drive exceptional results</h4>
+                </div>
+
+                <!-- Stats Preview -->
+                <div class="row justify-content-center mt-5 animate-fade-in-up" data-delay="3">
+                    <div class="col-md-8">
+                        <div class="stats-preview bg-white bg-opacity-10 backdrop-blur-sm rounded-3 p-4">
+                            <div class="row text-center">
+                                <div class="col-6 col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="500">0</div>
+                                        <h5 class="text-white-100 small mb-0">Projects Delivered</h5>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="98">0</div>
+                                        <h5 class="text-black-100 small mb-0">Client Satisfaction %</h5>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="50">0</div>
+                                        <h5 class="text-black-100 small mb-0">Expert Team</h5>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="24">0</div>
+                                        <h5 class="text-black-100 small mb-0">Support Hours</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5 position-relative">
+    <!-- Background Pattern -->
+    <div class="animated-pattern position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">What We Offer</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Comprehensive Services</h2>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We provide a wide range of professional services to help your business grow and succeed in the digital world with cutting-edge technology and innovative solutions.</h4>
+        </div>
+
+        <div class="services-grid">
+            {% if services %}
+                {% for service in services %}
+                <div class="service-card-wrapper">
+                    <div class="service-card card border-0 overflow-hidden shadow-hover" 
+                         data-aos="fade-up" 
+                         data-aos-delay="{{ loop.index * 100 }}"
+                         data-aos-duration="800">
+                        
+                        <!-- Background Image with Overlay -->
+                        <div class="position-relative h-100">
+                            {% if service.image_path %}
+                            <div class="service-card-bg service-card-bg-dynamic" 
+                                 style="background-image: url('{{ url_for('static', filename=service.image_path) }}')">
+                                <div class="card-overlay"></div>
+                            </div>
+                            {% else %}
+                            <div class="service-card-bg service-card-bg-default">
+                                <div class="card-overlay"></div>
+                            </div>
+                            {% endif %}
+
+                            <div class="card-body p-4 position-relative h-100 d-flex flex-column">
+                                <!-- Service Icon -->
+                                <div class="service-icon mb-3">
+                                    <i class="fas {{ service.icon|default('fa-cog') }} fa-2x text-primary"></i>
+                                </div>
+                                
+                                <!-- Service Title & Description -->
+                                <h3 class="h4 fw-bold mb-3 text-white">{{ service.title }}</h3>
+                                <p class="text-white-75 mb-4 flex-grow-1">{{ service.description }}</p>
+
+                                <!-- Progress Bar -->
+                                <div class="service-progress mb-4">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="small text-white-50">Service Quality</span>
+                                        <span class="small fw-bold text-white">{{ service.rating|default('95') }}%</span>
+                                    </div>
+                                <div class="progress" style="height: 4px;">
+                                    <div class="progress-bar bg-primary animate-progress" role="progressbar" style="width: 0%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+
+                            <!-- Service Features -->
+                            <div class="service-features mb-4">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2 small"></i>
+                                            <span class="small">Expert Team</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2 small"></i>
+                                            <span class="small">Fast Delivery</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2 small"></i>
+                                            <span class="small">24/7 Support</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2 small"></i>
+                                            <span class="small">Quality Assured</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="{{ url_for('main.contact') }}" class="btn btn-primary w-100 animate-bounce-in">
+                                <i class="fas fa-envelope me-2"></i>Get Quote
+                            </a>
+                        </div>
+
+                        <!-- Card Hover Effect Overlay (only when no background image) -->
+                        {% if not service.image_path %}
+                        <div class="card-overlay"></div>
+                        {% endif %}
+                    </div>
+                </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                {% for i in range(6) %}
+                <div class="service-card-wrapper">
+                    <div class="service-card card border-0 shadow-sm hover-lift animate-bounce-in" data-delay="{{ i+1 }}">
+                        <!-- Background with Overlay -->
+                        <div class="position-relative h-100">
+                            <div class="service-card-bg service-card-bg-fallback service-card-bg-fallback-{{ i }}"></div>
+                            <div class="card-overlay"></div>
+
+                            <div class="card-body p-4 position-relative h-100 d-flex flex-column">
+                                <!-- Service Icon -->
+                                <div class="service-icon mb-3">
+                                    <i class="fas {{ ['fa-code', 'fa-mobile-alt', 'fa-bullhorn', 'fa-paint-brush', 'fa-cloud', 'fa-chart-line'][i] }} fa-2x"></i>
+                                </div>
+                                
+                                <h3 class="h4 fw-bold mb-3 text-white">{{ [
+                                    'Web Development', 'Mobile App Development', 'Digital Marketing',
+                                    'UI/UX Design', 'Cloud Solutions', 'Consulting Services'
+                                ][i] }}</h3>
+                                <p class="text-white-75 mb-4 flex-grow-1">Professional service delivering exceptional results with cutting-edge technology and innovative approaches to help your business thrive in the digital landscape.</p>
+
+                            <!-- Progress Bar -->
+                            <div class="service-progress mb-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="small text-white-50">Service Quality</span>
+                                    <span class="small fw-bold text-white">{{ [95, 90, 98, 92, 96, 94][i] }}%</span>
+                                </div>
+                                <div class="progress" style="height: 4px;">
+                                    <div class="progress-bar bg-primary animate-progress" role="progressbar" style="width: 0%" aria-valuenow="{{ [95, 90, 98, 92, 96, 94][i] }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+
+                            <!-- Service Features -->
+                            <div class="service-features mb-4">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2 small"></i>
+                                            <span class="small">Expert Team</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2 small"></i>
+                                            <span class="small">Fast Delivery</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2 small"></i>
+                                            <span class="small">24/7 Support</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="feature-item d-flex align-items-center">
+                                            <i class="fas fa-check-circle text-success me-2 small"></i>
+                                            <span class="small">Quality Assured</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a href="{{ url_for('main.contact') }}" class="btn btn-primary w-100 animate-bounce-in">
+                                <i class="fas fa-envelope me-2"></i>Get Quote
+                            </a>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Interactive Process Section -->
+<section class="py-5 bg-light position-relative">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="process-bg-pattern"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Process</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">How We Work</h2>
+            <p class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We follow a proven, collaborative process to ensure the success of every project we undertake, from concept to deployment.</p>
+        </div>
+
+        <div class="process-timeline position-relative">
+            <div class="timeline-connector"></div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="process-step-card animate-fade-in-left" data-delay="1">
+                        <div class="process-marker bg-primary animate-pulse">
+                            <span class="process-number">1</span>
+                        </div>
+                        <div class="process-content bg-white p-4 rounded-3 shadow-sm h-100 hover-lift">
+                            <div class="process-icon mb-3">
+                                <i class="fas fa-search fa-2x text-primary"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-3">Discovery & Analysis</h4>
+                            <p class="text-muted mb-0">We dive deep into understanding your business goals, target audience, and project requirements through comprehensive research and analysis.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="process-step-card animate-fade-in-right" data-delay="2">
+                        <div class="process-marker bg-success animate-pulse">
+                            <span class="process-number">2</span>
+                        </div>
+                        <div class="process-content bg-white p-4 rounded-3 shadow-sm h-100 hover-lift">
+                            <div class="process-icon mb-3">
+                                <i class="fas fa-lightbulb fa-2x text-success"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-3">Strategy & Planning</h4>
+                            <p class="text-muted mb-0">We create a detailed project roadmap with clear milestones, deliverables, and success metrics tailored to your specific needs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="process-step-card animate-fade-in-left" data-delay="3">
+                        <div class="process-marker bg-info animate-pulse">
+                            <span class="process-number">3</span>
+                        </div>
+                        <div class="process-content bg-white p-4 rounded-3 shadow-sm h-100 hover-lift">
+                            <div class="process-icon mb-3">
+                                <i class="fas fa-code fa-2x text-info"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-3">Development & Testing</h4>
+                            <p class="text-muted mb-0">Our expert team builds your solution using cutting-edge technologies with rigorous testing and quality assurance processes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="process-step-card animate-fade-in-right" data-delay="4">
+                        <div class="process-marker bg-warning animate-pulse">
+                            <span class="process-number">4</span>
+                        </div>
+                        <div class="process-content bg-white p-4 rounded-3 shadow-sm h-100 hover-lift">
+                            <div class="process-icon mb-3">
+                                <i class="fas fa-rocket fa-2x text-warning"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-3">Launch & Support</h4>
+                            <p class="text-muted mb-0">We deploy your solution with ongoing support, monitoring, and optimization to ensure long-term success and growth.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Technology Stack Showcase -->
+<section class="py-5 position-relative">
+    <!-- Particle Background -->
+    <div class="particle-bg position-absolute top-0 start-0 w-100 h-100"></div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Technologies</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Technology Stack</h2>
+            <p class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We leverage cutting-edge technologies and modern frameworks to deliver high-performance, scalable solutions that drive business growth.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center stagger-children">
+            {% for tech in [
+                {'name': 'Python', 'icon': 'fab fa-python', 'color': 'success', 'description': 'Backend Development'},
+                {'name': 'JavaScript', 'icon': 'fab fa-js', 'color': 'warning', 'description': 'Frontend & Backend'},
+                {'name': 'React', 'icon': 'fab fa-react', 'color': 'info', 'description': 'UI Framework'},
+                {'name': 'Node.js', 'icon': 'fab fa-node-js', 'color': 'success', 'description': 'Server Runtime'},
+                {'name': 'Docker', 'icon': 'fab fa-docker', 'color': 'primary', 'description': 'Containerization'},
+                {'name': 'AWS', 'icon': 'fab fa-aws', 'color': 'secondary', 'description': 'Cloud Platform'},
+                {'name': 'PostgreSQL', 'icon': 'fas fa-database', 'color': 'info', 'description': 'Database'},
+                {'name': 'MongoDB', 'icon': 'fas fa-database', 'color': 'success', 'description': 'NoSQL Database'},
+                {'name': 'Git', 'icon': 'fab fa-git-alt', 'color': 'dark', 'description': 'Version Control'},
+                {'name': 'Kubernetes', 'icon': 'fas fa-dharmachakra', 'color': 'primary', 'description': 'Orchestration'},
+                {'name': 'TypeScript', 'icon': 'fab fa-js-square', 'color': 'info', 'description': 'JavaScript Superset'},
+                {'name': 'GraphQL', 'icon': 'fas fa-project-diagram', 'color': 'warning', 'description': 'Query Language'}
+            ] %}
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="tech-card text-center p-4 h-100 hover-lift animate-bounce-in" data-delay="{{ loop.index }}">
+                    <div class="tech-icon-container mb-3 position-relative">
+                        <div class="tech-icon bg-{{ tech.color }} bg-opacity-10 text-{{ tech.color }} animate-pulse">
+                            <i class="{{ tech.icon }} fa-2x"></i>
+                        </div>
+                        <div class="tech-glow bg-{{ tech.color }} bg-opacity-20"></div>
+                    </div>
+                    <h6 class="fw-bold mb-2">{{ tech.name }}</h6>
+                    <p class="text-muted small mb-0">{{ tech.description }}</p>
+
+                    <!-- Usage Indicator -->
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="small text-muted">Usage</span>
+                            <span class="small fw-bold text-{{ tech.color }}">{{ [95, 90, 85, 92, 88, 94, 91, 87, 96, 89, 93, 86][loop.index-1] }}%</span>
+                        </div>
+                        <div class="progress" style="height: 3px;">
+                            <div class="progress-bar bg-{{ tech.color }} progress-bar-dynamic progress-bar-{{ loop.index }}" role="progressbar" style="width: 0%;" aria-valuenow="{{ [95, 90, 85, 92, 88, 94, 91, 87, 96, 89, 93, 86][loop.index-1] }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Interactive Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="animate-fade-in-left">
+                    <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Why Choose Us</span>
+                    <h2 class="fw-bold mb-4 text-gradient">What Sets Us Apart</h2>
+                    <p class="lead text-muted mb-4">We combine technical expertise with creative innovation to deliver solutions that not only meet but exceed expectations.</p>
+
+                    <div class="features-list">
+                        <div class="feature-item d-flex align-items-start mb-4 animate-fade-in-up" data-delay="1">
+                            <div class="feature-icon bg-primary bg-opacity-10 text-primary me-3 mt-1">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-2">Lightning-Fast Delivery</h6>
+                                <p class="text-muted mb-0">We pride ourselves on delivering projects on time without compromising quality, ensuring your business stays ahead of the competition.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item d-flex align-items-start mb-4 animate-fade-in-up" data-delay="2">
+                            <div class="feature-icon bg-success bg-opacity-10 text-success me-3 mt-1">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-2">100% Secure & Reliable</h6>
+                                <p class="text-muted mb-0">Our solutions are built with security as a priority, ensuring your data and applications are protected against modern threats.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-item d-flex align-items-start mb-4 animate-fade-in-up" data-delay="3">
+                            <div class="feature-icon bg-info bg-opacity-10 text-info me-3 mt-1">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-2">24/7 Premium Support</h6>
+                                <p class="text-muted mb-0">Our dedicated support team is available round-the-clock to ensure your applications run smoothly and issues are resolved quickly.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="position-relative animate-fade-in-right">
+                    <!-- Interactive Dashboard Mockup -->
+                    <div class="dashboard-mockup position-relative">
+                        <div class="mockup-browser bg-white rounded-3 shadow-lg p-3">
+                            <div class="browser-header d-flex align-items-center mb-3 pb-2 border-bottom">
+                                <div class="browser-dots me-3">
+                                    <span class="dot bg-danger rounded-circle me-1"></span>
+                                    <span class="dot bg-warning rounded-circle me-1"></span>
+                                    <span class="dot bg-success rounded-circle"></span>
+                                </div>
+                                <div class="browser-url bg-light px-2 py-1 rounded flex-fill mx-2">
+                                    <small class="text-muted">yoursite.com/dashboard</small>
+                                </div>
+                            </div>
+                            <div class="mockup-content">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <div class="metric-card bg-primary bg-opacity-10 p-2 rounded text-center">
+                                            <div class="text-primary fw-bold">2.4K</div>
+                                            <small class="text-muted">Active Users</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="metric-card bg-success bg-opacity-10 p-2 rounded text-center">
+                                            <div class="text-success fw-bold">98.5%</div>
+                                            <small class="text-muted">Uptime</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="chart-area bg-light p-3 rounded">
+                                            <div class="d-flex justify-content-between align-items-end h-100">
+                                                {% for i in range(12) %}
+                                                <div class="chart-bar bg-primary bg-opacity-{{ [20, 40, 60, 80, 100, 90, 70, 85, 95, 75, 55, 35][i] }} animate-pulse chart-bar-{{ i }}" style="width: 8px; border-radius: 2px;"></div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Elements -->
+                        <div class="position-absolute top-0 end-0 translate-middle animate-bounce-in" data-delay="4">
+                            <div class="floating-badge bg-success text-white px-3 py-2 rounded-3 shadow-sm">
+                                <i class="fas fa-check-circle me-2"></i>Live
+                            </div>
+                        </div>
+
+                        <div class="position-absolute bottom-0 start-0 translate-middle animate-bounce-in" data-delay="5">
+                            <div class="floating-badge bg-primary text-white px-3 py-2 rounded-3 shadow-sm">
+                                <i class="fas fa-chart-line me-2"></i>Analytics
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="cta-bg-animation"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8 animate-fade-in-up">
+                <div class="icon-box bg-blue bg-opacity-20 text-white d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                    <i class="fas fa-rocket fa-2x"></i>
+                </div>
+                <h2 class="fw-bold mb-4 animate-slide-in-left" data-delay="1">Ready to Start Your Project?</h2>
+                <p class="lead mb-5 animate-fade-in-up" data-delay="2">Let's discuss your vision and create something amazing together. Our team is ready to bring your ideas to life.</p>
+                <div class="d-flex gap-3 justify-content-center flex-column flex-sm-row animate-fade-in-up" data-delay="3">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg px-5 animate-bounce-in">Start Your Project</a>
+                    <a href="{{ url_for('main.services') }}" class="btn btn-outline-light btn-lg px-5 animate-bounce-in" style="animation-delay: 0.2s;">View Services</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Service Modals -->
+{% if services %}
+    {% for service in services %}
+    <div class="modal fade" id="service-{{ service.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h3 class="modal-title fw-bold">{{ service.title }}</h3>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <div class="col-lg-6">
+                            <div class="service-modal-image p-4 bg-light">
+                                {% if service.image_path %}
+                                <img src="{{ url_for('static', filename=service.image_path) }}" alt="{{ service.title }}" class="img-fluid rounded-3">
+                                {% else %}
+                                <img src="{{ url_for('static', filename='img/soft 3.png') }}" alt="{{ service.title }}" class="img-fluid rounded-3">
+                                {% endif %}
+                                <div class="image-overlay-modal"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="p-4">
+                                <h4 class="fw-bold mb-3">Service Overview</h4>
+                                <p class="text-muted mb-4">{{ service.description }}</p>
+
+                                <h5 class="fw-bold mb-3">Key Features & Benefits</h5>
+                                <div class="features-list-modal">
+                                    <div class="feature-item-modal d-flex align-items-start mb-3">
+                                        <i class="fas fa-check-circle text-primary me-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Expert Development Team</h6>
+                                            <p class="text-muted small mb-0">Experienced professionals dedicated to delivering exceptional results.</p>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item-modal d-flex align-items-start mb-3">
+                                        <i class="fas fa-check-circle text-primary me-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Cutting-Edge Technology</h6>
+                                            <p class="text-muted small mb-0">Built with the latest frameworks and best practices for optimal performance.</p>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item-modal d-flex align-items-start mb-3">
+                                        <i class="fas fa-check-circle text-primary me-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Scalable Solutions</h6>
+                                            <p class="text-muted small mb-0">Designed to grow with your business and handle increasing demands.</p>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item-modal d-flex align-items-start mb-3">
+                                        <i class="fas fa-check-circle text-primary me-3 mt-1"></i>
+                                        <div>
+                                            <h6 class="fw-bold mb-1">Ongoing Support</h6>
+                                            <p class="text-muted small mb-0">Comprehensive maintenance and support to ensure long-term success.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2 mt-4">
+                                    <a href="{{ url_for('main.contact') }}" class="btn btn-primary flex-fill">
+                                        <i class="fas fa-calendar-alt me-2"></i>Schedule Consultation
+                                    </a>
+                                    <button type="button" class="btn btn-outline-secondary flex-fill" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+
+{% block extra_css %}
+<style>
+/* Page Header Enhancements */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.floating-element-1,
+.floating-element-2,
+.floating-element-3 {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-element-1 {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.floating-element-2 {
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+}
+
+.floating-element-3 {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    top: 30%;
+    right: 20%;
+    animation-delay: 4s;
+}
+
+/* Stats Preview */
+.stats-preview {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-item .counter {
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+/* Animated Pattern */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+
+/* Enhanced Service Card Styling */
+.service-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow:
+        0 10px 30px rgba(0, 123, 255, 0.1),
+        0 1px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.6s ease;
+    z-index: 1;
+}
+
+.service-card:hover::before {
+    left: 100%;
+}
+
+.service-card:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow:
+        0 25px 50px rgba(0, 123, 255, 0.2),
+        0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 123, 255, 0.3);
+}
+
+.service-card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    border-radius: 20px;
+    transition: transform 0.4s ease;
+}
+
+.service-card:hover .service-card-bg {
+    transform: scale(1.05);
+}
+
+.service-card .card-body {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 249, 250, 0.95) 100%);
+    border-radius: 20px;
+    margin: 15px;
+    padding: 35px 30px 30px 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Enhanced Service Features */
+.service-features {
+    margin-top: 25px;
+}
+
+.feature-item {
+    background: rgba(0, 123, 255, 0.05);
+    border-radius: 12px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.feature-item:hover {
+    background: rgba(0, 123, 255, 0.1);
+    border-left-color: #007bff;
+    transform: translateX(5px);
+}
+
+.feature-item i {
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover i {
+    transform: scale(1.2);
+    color: #007bff !important;
+}
+
+/* Enhanced Service Card Button */
+.service-card .btn {
+    background: linear-gradient(135deg, #007bff 0%, #6610f2 100%);
+    border: none;
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.service-card .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.service-card .btn:hover::before {
+    left: 100%;
+}
+
+.service-card .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.3);
+    background: linear-gradient(135deg, #0056b3 0%, #520dc2 100%);
+}
+
+.service-card .btn i {
+    transition: transform 0.3s ease;
+}
+
+/* Enhanced Service Card Typography */
+.service-card .card-body h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    line-height: 1.3;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.service-card .card-body p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+/* Process Section */
+.process-timeline {
+    position: relative;
+    padding-left: 100px;
+}
+
+.timeline-connector {
+    position: absolute;
+    left: 100px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, #0d6efd, #6610f2);
+    border-radius: 2px;
+}
+
+.process-marker {
+    position: absolute;
+    left: -100px;
+    top: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(13, 110, 253, 0.3);
+    z-index: 2;
+}
+
+.process-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.process-content {
+    transition: all 0.3s ease;
+    margin-left: 30px;
+}
+
+.process-content:hover {
+    transform: translateX(15px);
+}
+
+.process-bg-pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(13, 110, 253, 0.05) 0%, transparent 50%),
+
+.tech-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.tech-card:hover .tech-icon {
+    transform: scale(1.1);
+}
+
+.tech-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tech-card:hover .tech-glow {
+    opacity: 1;
+}
+
+/* Dashboard Mockup */
+.dashboard-mockup {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.mockup-browser {
+    border-radius: 1rem;
+}
+
+.browser-dots .dot {
+    width: 12px;
+    height: 12px;
+}
+
+.metric-card {
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+}
+
+.chart-bar {
+    transition: all 0.3s ease;
+}
+
+.floating-badge {
+    animation: float 3s ease-in-out infinite;
+}
+
+.floating-badge:nth-child(2) {
+    animation-delay: 1.5s;
+}
+
+/* Modal Enhancements */
+.service-modal-image {
+    position: relative;
+}
+
+.image-overlay-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.service-modal-image:hover .image-overlay-modal {
+    opacity: 1;
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+@keyframes ripple {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+
+/* Enhanced Progress Bar */
+.progress {
+    height: 6px;
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #007bff 0%, #6610f2 100%);
+    border-radius: 10px;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Particle Background */
+.particle-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+
+/* CTA Background Animation */
+.cta-bg-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    animation: bgFloat 15s linear infinite;
+}
+
+@keyframes bgFloat {
+    0% { transform: translateX(-30px) translateY(-30px); }
+    100% { transform: translateX(30px) translateY(30px); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .service-card {
+        min-height: 350px;
+        border: 2px solid #007bff;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+    }
+
+    .service-card .card-body {
+        margin: 8px;
+        padding: 20px 20px 30px 20px; /* Extra top padding for no icon */
+    }
+
+    .service-card-bg {
+        border-radius: 0.375rem;
+    }
+
+    .service-card:hover .card-body {
+        transform: translateY(-3px);
+    }
+}
+
+@media (max-width: 576px) {
+    .service-card {
+        min-height: 320px;
+        border: 2px solid #007bff;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.1);
+    }
+
+    .service-card .card-body {
+        margin: 6px;
+        padding: 16px 16px 24px 16px; /* Extra top padding for no icon */
+    }
+
+    .service-card-bg {
+        border-radius: 0.375rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Counter Animation
+    function animateCounter() {
+        const counters = document.querySelectorAll('.counter');
+
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / 100;
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+
+                if (current < target) {
+                    counter.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+
+            // Check if element is in viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCounter();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            observer.observe(counter);
+        });
+    }
+
+    // Progress Bar Animation
+    function animateProgressBars() {
+        const progressBars = document.querySelectorAll('.animate-progress');
+
+        progressBars.forEach(bar => {
+            const targetWidth = bar.getAttribute('aria-valuenow') + '%';
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        bar.style.width = targetWidth;
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            observer.observe(bar);
+        });
+    }
+
+    // Parallax effect for floating elements
+    function initParallax() {
+        const floatingElements = document.querySelectorAll('.floating-element-1, .floating-element-2, .floating-element-3');
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+
+            floatingElements.forEach((element, index) => {
+                const speed = (index + 1) * 0.3;
+                element.style.transform = `translateY(${rate * speed}px) rotate(${scrolled * 0.01}deg)`;
+            });
+        });
+    }
+
+    // Initialize animations
+    animateCounter();
+    animateProgressBars();
+    initParallax();
+
+    // Service card interactions
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach((card, index) => {
+        // Staggered entrance animation
+        card.style.animationDelay = `${index * 0.1}s`;
+
+        card.addEventListener('mouseenter', function() {
+            // Enhanced hover effect
+            this.style.transform = 'translateY(-15px) scale(1.02)';
+
+            // Add ripple effect
+            const ripple = document.createElement('div');
+            ripple.classList.add('ripple');
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(0, 123, 255, 0.1);
+                transform: scale(0);
+                animation: ripple 0.6s linear;
+                pointer-events: none;
+                z-index: 0;
+            `;
+
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+
+            // Animate progress bar
+            const progressBar = this.querySelector('.progress-bar');
+            if (progressBar) {
+                progressBar.style.animation = 'shimmer 1.5s infinite';
+            }
+
+            // Animate feature items
+            const featureItems = this.querySelectorAll('.feature-item');
+            featureItems.forEach((item, i) => {
+                setTimeout(() => {
+                    item.style.transform = 'translateX(8px)';
+                }, i * 50);
+            });
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+
+            // Reset feature items
+            const featureItems = this.querySelectorAll('.feature-item');
+            featureItems.forEach(item => {
+                item.style.transform = 'translateX(0)';
+            });
+
+            // Reset progress bar animation
+            const progressBar = this.querySelector('.progress-bar');
+            if (progressBar) {
+                progressBar.style.animation = '';
+            }
+        });
+    });
+
+    // Set dynamic service card backgrounds
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.service-card-bg-dynamic[data-bg-image]').forEach(card => {
+            const imageUrl = card.getAttribute('data-bg-image');
+            if (imageUrl) {
+                // Create a test image to check if the URL is valid
+                const img = new Image();
+                img.onload = function() {
+                    // Image loaded successfully
+                    card.style.background = `linear-gradient(135deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.4) 100%), url(${imageUrl}) center/cover no-repeat`;
+                };
+                img.onerror = function() {
+                    // If image fails to load, use a fallback gradient
+                    card.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.6) 0%, rgba(118, 75, 162, 0.6) 100%)';
+                    console.warn('Failed to load image:', imageUrl);
+                };
+                img.src = imageUrl;
+            } else {
+                // No image URL provided, use default gradient
+                card.style.background = 'linear-gradient(135deg, rgba(102, 126, 234, 0.6) 0%, rgba(118, 75, 162, 0.6) 100%)';
+            }
+        });
+    });
+    // Enhanced hover effects for service cards (using serviceCardElements to avoid variable redeclaration)
+    const serviceCardElements = document.querySelectorAll('.service-card');
+    serviceCardElements.forEach((card, index) => {
+        card.addEventListener('mouseenter', function() {
+            // Animate feature items
+            const featureItems = this.querySelectorAll('.feature-item');
+            featureItems.forEach((item, i) => {
+                setTimeout(() => {
+                    item.style.transform = 'translateX(8px)';
+                }, i * 50);
+            });
+        });
+
+        card.addEventListener('mouseleave', function() {
+            // Reset feature items
+            const featureItems = this.querySelectorAll('.feature-item');
+            featureItems.forEach(item => {
+                item.style.transform = 'translateX(0)';
+            });
+        });
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}

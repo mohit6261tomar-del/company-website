@@ -1,0 +1,387 @@
+/* Advanced Visual Effects Library */
+
+/* Glassmorphism Enhanced */
+.glass-morphism {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 8px 32px rgba(31, 38, 135, 0.37),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.glass-morphism-dark {
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.37),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Advanced Shadow Effects */
+.shadow-glow {
+    box-shadow:
+        0 0 20px rgba(102, 126, 234, 0.3),
+        0 0 40px rgba(102, 126, 234, 0.2),
+        0 0 80px rgba(102, 126, 234, 0.1);
+}
+
+.shadow-glow-strong {
+    box-shadow:
+        0 0 30px rgba(102, 126, 234, 0.5),
+        0 0 60px rgba(102, 126, 234, 0.3),
+        0 0 120px rgba(102, 126, 234, 0.2);
+}
+
+.shadow-inset {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-float {
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.1),
+        0 15px 35px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.shadow-float:hover {
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.15),
+        0 25px 65px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient Overlays */
+.gradient-overlay {
+    position: relative;
+}
+
+.gradient-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(102, 126, 234, 0.8) 0%,
+        rgba(118, 75, 162, 0.6) 50%,
+        rgba(240, 147, 251, 0.4) 100%
+    );
+    pointer-events: none;
+}
+
+.gradient-overlay-light {
+    position: relative;
+}
+
+.gradient-overlay-light::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    pointer-events: none;
+}
+
+/* Text Effects */
+.text-shadow-soft {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text-shadow-medium {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.text-shadow-strong {
+    text-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-outline {
+    -webkit-text-stroke: 1px rgba(102, 126, 234, 0.5);
+    color: transparent;
+}
+
+/* Border Effects */
+.border-gradient {
+    border: 2px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(45deg, #667eea, #764ba2) border-box;
+}
+
+.border-animated {
+    position: relative;
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, #667eea, #764ba2) border-box;
+    animation: border-rotate 3s linear infinite;
+}
+
+@keyframes border-rotate {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 400% 0%; }
+}
+
+.border-glow {
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+}
+
+/* Background Effects */
+.bg-mesh {
+    background-image:
+        radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(240, 147, 251, 0.1) 0%, transparent 50%);
+}
+
+.bg-grid {
+    background-image:
+        linear-gradient(rgba(102, 126, 234, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(102, 126, 234, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.bg-dots {
+    background-image: radial-gradient(circle, rgba(102, 126, 234, 0.2) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* Hover Effect Enhancements */
+.hover-lift-enhanced {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift-enhanced:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.hover-tilt {
+    transition: transform 0.3s ease;
+}
+
+.hover-tilt:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(-5deg);
+}
+
+/* Interactive Elements */
+.interactive-scale-enhanced {
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.interactive-scale-enhanced:hover {
+    transform: scale(1.05);
+}
+
+.interactive-rotate-enhanced {
+    transition: transform 0.3s ease;
+}
+
+.interactive-rotate-enhanced:hover {
+    transform: rotate(3deg);
+}
+
+/* Loading States */
+.loading-shimmer {
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Pulse Effects */
+.pulse-ring {
+    position: relative;
+}
+
+.pulse-ring::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse-ring-animation 2s ease-out infinite;
+}
+
+@keyframes pulse-ring-animation {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+    100% {
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+}
+
+/* 3D Effects */
+.transform-3d {
+    transform-style: preserve-3d;
+}
+
+.transform-3d-hover {
+    transition: transform 0.3s ease;
+    transform-style: preserve-3d;
+}
+
+.transform-3d-hover:hover {
+    transform: rotateX(10deg) rotateY(-10deg) translateZ(20px);
+}
+
+/* Advanced Button Effects */
+.btn-magnetic {
+    transition: transform 0.3s ease;
+}
+
+.btn-magnetic:hover {
+    animation: magnetic-hover 0.3s ease;
+}
+
+@keyframes magnetic-hover {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Card Effects */
+.card-hover-advanced {
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.card-hover-advanced:hover {
+    transform: translateY(-10px) rotateX(5deg) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Image Effects */
+.image-hover-zoom {
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.image-hover-zoom:hover {
+    transform: scale(1.1);
+}
+
+.image-overlay {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(102, 126, 234, 0.8) 0%,
+        rgba(240, 147, 251, 0.6) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.image-overlay:hover::before {
+    opacity: 1;
+}
+
+/* Typography Effects */
+.font-gradient {
+    background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.font-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.font-glow {
+    text-shadow: 0 0 10px currentColor;
+}
+
+/* Layout Effects */
+.divider-gradient {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #667eea, transparent);
+}
+
+.divider-pattern {
+    height: 1px;
+    background: repeating-linear-gradient(
+        90deg,
+        #667eea 0px,
+        #667eea 10px,
+        transparent 10px,
+        transparent 20px
+    );
+}
+
+/* Animation Performance */
+.will-animate {
+    will-change: transform, opacity;
+}
+
+.will-transform {
+    will-change: transform;
+}
+
+.will-opacity {
+    will-change: opacity;
+}
+
+/* Responsive Effects */
+@media (max-width: 768px) {
+    .hover-lift-enhanced:hover {
+        transform: translateY(-5px) scale(1.01);
+    }
+
+    .shadow-float:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* Print Styles */
+@media print {
+    .glass-morphism,
+    .shadow-glow,
+    .gradient-overlay {
+        background: white !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+    }
+}

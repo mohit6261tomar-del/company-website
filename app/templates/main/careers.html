@@ -1,0 +1,1251 @@
+{% extends "base.html" %}
+
+{% block title %}{% if company %}{{ company.name }} - Careers{% else %}KodesMind - Careers{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header position-relative bg-gradient-primary py-5 overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="floating-element-1"></div>
+        <div class="floating-element-2"></div>
+        <div class="floating-element-3"></div>
+        <div class="particle-bg"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="animate-fade-in-up">
+                    <span class="badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 animate-bounce-in">Join Our Team</span>
+                    <h1 class="fw-bold text-black mb-4 display-4 animate-slide-in-left" data-delay="1">Build the Future with Us</h1>
+                    <h4 class="lead text-black-100 mb-0 animate-slide-in-right" data-delay="2">Join our passionate team of innovators and help shape the future of technology</h4>
+                </div>
+
+                <!-- Career Stats -->
+                <div class="row justify-content-center mt-5 animate-fade-in-up" data-delay="3">
+                    <div class="col-lg-10">
+                        <div class="career-stats bg-white bg-opacity-10 backdrop-blur-sm rounded-3 p-4">
+                            <div class="row text-center">
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="50">0</div>
+                                        <h5 class="text-black-100 small mb-0">Team Members</h5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="15">0</div>
+                                        <h5 class="text-black-100 small mb-0">Countries</h5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="100">0</div>
+                                        <h5 class="text-black-100 small mb-0">Projects Completed</h5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="98">0</div>
+                                        <h5 class="text-black-100 small mb-0">Employee Satisfaction %</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Careers Intro -->
+<section class="py-5 position-relative">
+    <!-- Background Pattern -->
+    <div class="animated-pattern position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="animate-fade-in-up">
+                    <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Why Join Us</span>
+                    <h2 class="fw-bold mb-4 text-gradient animate-slide-in-left">Work With Passionate People</h2>
+                    <p class="lead text-muted mb-4 animate-fade-in-up" data-delay="1">
+                        At {{ company.name if company else 'our company' }}, we're building more than just software — we're building a better future.
+                        Join our team of talented individuals who are passionate about making a difference.
+                    </p>
+                    <p class="mb-4 animate-fade-in-up" data-delay="2">
+                        We believe in fostering a culture of innovation, collaboration, and continuous learning.
+                        When you join our team, you'll have the opportunity to work on exciting projects,
+                        develop new skills, and grow your career in a supportive environment.
+                    </p>
+
+                    <!-- Key Benefits Preview -->
+                    <div class="key-benefits mb-4 animate-fade-in-up" data-delay="3">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="benefit-item d-flex align-items-center p-3 bg-light rounded-3 hover-lift">
+                                    <div class="benefit-icon bg-primary bg-opacity-10 text-primary me-3">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Remote Work</h6>
+                                        <p class="text-muted small mb-0">Work from anywhere</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="benefit-item d-flex align-items-center p-3 bg-light rounded-3 hover-lift">
+                                    <div class="benefit-icon bg-success bg-opacity-10 text-success me-3">
+                                        <i class="fas fa-heart"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Health Insurance</h6>
+                                        <p class="text-muted small mb-0">Comprehensive coverage</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="benefit-item d-flex align-items-center p-3 bg-light rounded-3 hover-lift">
+                                    <div class="benefit-icon bg-info bg-opacity-10 text-info me-3">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Learning Budget</h6>
+                                        <p class="text-muted small mb-0">Annual development</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="benefit-item d-flex align-items-center p-3 bg-light rounded-3 hover-lift">
+                                    <div class="benefit-icon bg-warning bg-opacity-10 text-warning me-3">
+                                        <i class="fas fa-umbrella-beach"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-1">Paid Time Off</h6>
+                                        <p class="text-muted small mb-0">Generous vacation</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-3 animate-fade-in-up" data-delay="4">
+                        <a href="#open-positions" class="btn btn-primary btn-lg px-5 animate-bounce-in">
+                            <i class="fas fa-search me-2"></i>View Open Positions
+                        </a>
+                        <a href="#life-at-company" class="btn btn-outline-primary btn-lg px-5 animate-bounce-in" data-delay="1">
+                            <i class="fas fa-users me-2"></i>Life at Company
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="position-relative animate-fade-in-right">
+                    <!-- Main Image -->
+                    <div class="main-image-container position-relative">
+                        <img src="{{ url_for('static', filename='img/career.png') }}" alt="Team Collaboration" class="img-fluid rounded-3 shadow-lg hover-lift">
+                        <div class="image-overlay"></div>
+
+                        <!-- Floating Stats Cards -->
+                        <div class="position-absolute top-0 start-0 translate-middle bg-white p-4 rounded-3 shadow-lg animate-bounce-in" data-delay="5" style="width: 220px;">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-badge bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-1 fw-bold text-gradient">50+</h3>
+                                    <p class="mb-0 text-muted small">Team Members</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="position-absolute bottom-0 end-0 translate-middle bg-white p-4 rounded-3 shadow-lg animate-bounce-in" data-delay="6" style="width: 220px;">
+                            <div class="d-flex align-items-center">
+                                <div class="stat-badge bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-1 fw-bold text-gradient">15+</h3>
+                                    <p class="mb-0 text-muted small">Countries</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Quote -->
+                        <div class="position-absolute top-50 start-100 translate-middle bg-white p-3 rounded-3 shadow-lg animate-fade-in" data-delay="7" style="width: 250px;">
+                            <div class="text-center">
+                                <i class="fas fa-quote-left text-primary mb-2"></i>
+                                <p class="mb-2 small fw-medium">"Innovation, teamwork, and fun — that’s what defines our culture."</p>
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <img src="{{ url_for('static', filename='img/career.png') }}" alt="KodeMinds" class="rounded-circle me-2" style="width: 30px; height: 30px;">
+                                    <div>
+                                        <p class="mb-0 small fw-bold">KodeMinds</p>
+                                        <p class="mb-0 text-muted" style="font-size: 0.7rem;">Our Company</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Perks & Benefits -->
+<section class="py-5 bg-light position-relative">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="benefits-pattern"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Why Choose Us</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Perks & Benefits</h2>
+            <p class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We take care of our team with a comprehensive benefits package and a great work environment.</p>
+        </div>
+
+        <div class="row g-4 stagger-children">
+            <div class="col-md-6 col-lg-4">
+                <div class="benefit-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="1">
+                    <div class="card-body p-4 text-center">
+                        <div class="benefit-icon-container mb-4 position-relative">
+                            <div class="benefit-icon bg-primary bg-opacity-10 text-primary animate-pulse">
+                                <i class="fas fa-laptop-house fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Remote Work</h4>
+                        <p class="text-muted mb-0">Work from anywhere with our flexible remote work policy and full support for your home office setup.</p>
+                        <div class="benefit-progress mt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-primary animate-progress" role="progressbar" style="width: 0%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="benefit-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="2">
+                    <div class="card-body p-4 text-center">
+                        <div class="benefit-icon-container mb-4 position-relative">
+                            <div class="benefit-icon bg-success bg-opacity-10 text-success animate-pulse">
+                                <i class="fas fa-heartbeat fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Health & Wellness</h4>
+                        <p class="text-muted mb-0">Comprehensive health, dental, and vision insurance with wellness programs and mental health support.</p>
+                        <div class="benefit-progress mt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-success animate-progress" role="progressbar" style="width: 0%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="benefit-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="3">
+                    <div class="card-body p-4 text-center">
+                        <div class="benefit-icon-container mb-4 position-relative">
+                            <div class="benefit-icon bg-info bg-opacity-10 text-info animate-pulse">
+                                <i class="fas fa-graduation-cap fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Learning & Growth</h4>
+                        <p class="text-muted mb-0">Annual learning budget, conference attendance, and professional development opportunities.</p>
+                        <div class="benefit-progress mt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-info animate-progress" role="progressbar" style="width: 0%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="benefit-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="4">
+                    <div class="card-body p-4 text-center">
+                        <div class="benefit-icon-container mb-4 position-relative">
+                            <div class="benefit-icon bg-warning bg-opacity-10 text-warning animate-pulse">
+                                <i class="fas fa-umbrella-beach fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Paid Time Off</h4>
+                        <p class="text-muted mb-0">Generous vacation policy, paid holidays, and flexible time off for personal needs.</p>
+                        <div class="benefit-progress mt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-warning animate-progress" role="progressbar" style="width: 0%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="benefit-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="5">
+                    <div class="card-body p-4 text-center">
+                        <div class="benefit-icon-container mb-4 position-relative">
+                            <div class="benefit-icon bg-danger bg-opacity-10 text-danger animate-pulse">
+                                <i class="fas fa-baby-carriage fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Parental Leave</h4>
+                        <p class="text-muted mb-0">Paid parental leave for all new parents with flexible return-to-work options.</p>
+                        <div class="benefit-progress mt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-danger animate-progress" role="progressbar" style="width: 0%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="benefit-card card border-0 shadow-sm h-100 hover-lift animate-bounce-in" data-delay="6">
+                    <div class="card-body p-4 text-center">
+                        <div class="benefit-icon-container mb-4 position-relative">
+                            <div class="benefit-icon bg-secondary bg-opacity-10 text-secondary animate-pulse">
+                                <i class="fas fa-dumbbell fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Wellness Stipend</h4>
+                        <p class="text-muted mb-0">Monthly wellness stipend for gym memberships, fitness apps, or wellness activities.</p>
+                        <div class="benefit-progress mt-3">
+                            <div class="progress" style="height: 4px;">
+                                <div class="progress-bar bg-secondary animate-progress" role="progressbar" style="width: 0%" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Open Positions -->
+<section class="py-5 position-relative" id="open-positions">
+    <!-- Particle Background -->
+    <div class="particle-bg position-absolute top-0 start-0 w-100 h-100"></div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Join Our Team</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Open Positions</h2>
+            <p class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Check out our current job openings and find the perfect fit for your skills and experience.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                {% if careers %}
+                    {% for job in careers %}
+                    <div class="job-card card border-0 shadow-sm mb-4 hover-lift animate-bounce-in" data-delay="{{ loop.index }}">
+                        <div class="card-body p-4">
+                            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
+                                <div class="mb-3 mb-lg-0 flex-grow-1">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <h4 class="fw-bold mb-0 me-3">
+                                            <a href="{{ url_for('main.career_detail', career_id=job.id) }}" class="text-decoration-none text-dark hover-title">
+                                                {{ job.job_title }}
+                                            </a>
+                                        </h4>
+                                        {% if job.is_featured %}
+                                        <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-1">
+                                            <i class="fas fa-star me-1"></i>Featured
+                                        </span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="job-meta d-flex flex-wrap gap-4 text-muted small mb-3">
+                                        <span class="d-flex align-items-center">
+                                            <i class="fas fa-briefcase me-1 text-primary"></i>
+                                            {{ job.job_type|default('Full-time') }}
+                                        </span>
+                                        {% if job.location %}
+                                        <span class="d-flex align-items-center">
+                                            <i class="fas fa-map-marker-alt me-1 text-success"></i>
+                                            {{ job.location }}
+                                        </span>
+                                        {% endif %}
+                                        {% if job.salary_range %}
+                                        <span class="d-flex align-items-center">
+                                            <i class="fas fa-dollar-sign me-1 text-info"></i>
+                                            {{ job.salary_range }}
+                                        </span>
+                                        {% endif %}
+                                        {% if job.remote_work %}
+                                        <span class="badge bg-success bg-opacity-10 text-success px-2 py-1">
+                                            <i class="fas fa-home me-1"></i>Remote
+                                        </span>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if job.description %}
+                                    <p class="text-muted mb-3">{{ job.description|truncate(200) }}</p>
+                                    {% endif %}
+
+                                    <!-- Skills Tags -->
+                                    <div class="skills-tags d-flex flex-wrap gap-2">
+                                        {% for skill in ['JavaScript', 'React', 'Python', 'Leadership'][:4] %}
+                                        <span class="skill-tag bg-light text-dark px-3 py-1 rounded-pill small">{{ skill }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="text-lg-end mt-3 mt-lg-0">
+                                    <div class="d-flex flex-column align-items-lg-end">
+                                        <a href="{{ url_for('main.career_detail', career_id=job.id) }}" class="btn btn-primary btn-lg px-4 mb-2 animate-bounce-in">
+                                            <i class="fas fa-eye me-2"></i>View Details
+                                        </a>
+                                        <small class="text-muted">Posted {{ job.created_at.strftime('%B %d, %Y') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="text-center py-5 animate-fade-in-up">
+                    <div class="empty-state bg-white rounded-3 shadow-sm p-5">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 100px; height: 100px;">
+                            <i class="fas fa-briefcase fa-3x"></i>
+                        </div>
+                        <h3 class="h4 fw-bold mb-3 animate-slide-in-left">No Open Positions</h3>
+                        <p class="text-muted mb-4 animate-fade-in-up" data-delay="1">There are no open positions at the moment. Please check back later or send us your resume for future opportunities.</p>
+                        <div class="d-flex justify-content-center gap-3 animate-fade-in-up" data-delay="2">
+                            <a href="#contact" class="btn btn-primary px-4">
+                                <i class="fas fa-envelope me-2"></i>Contact Us
+                            </a>
+                            <a href="{{ url_for('main.about') }}" class="btn btn-outline-primary px-4">
+                                <i class="fas fa-info-circle me-2"></i>Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="text-center mt-5 animate-fade-in-up" data-delay="7">
+                    <p class="text-muted mb-4">Don't see a position that matches your skills? We're always looking for talented people to join our team.</p>
+                    <a href="#contact" class="btn btn-outline-primary btn-lg px-5 animate-bounce-in">
+                        <i class="fas fa-paper-plane me-2"></i>Send Us Your Resume
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Life at Company -->
+<section class="py-5 bg-light position-relative" id="life-at-company">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="culture-pattern"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Culture</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Life at {{ company.name if company else 'Our Company' }}</h2>
+            <p class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We believe in creating an inclusive and supportive work environment where everyone can thrive.</p>
+        </div>
+
+        <div class="row g-4 stagger-children">
+            <div class="col-md-6 col-lg-3">
+                <div class="culture-card text-center p-4 h-100 hover-lift animate-bounce-in" data-delay="1">
+                    <div class="culture-icon-container mb-4 position-relative">
+                        <div class="culture-icon bg-primary bg-opacity-10 text-primary animate-pulse" style="width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <h4 class="h5 fw-bold mb-3">Collaborative Environment</h4>
+                    <p class="text-muted mb-0">We work together as a team, sharing knowledge and supporting each other's growth and development.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="culture-card text-center p-4 h-100 hover-lift animate-bounce-in" data-delay="2">
+                    <div class="culture-icon-container mb-4 position-relative">
+                        <div class="culture-icon bg-success bg-opacity-10 text-success animate-pulse" style="width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-lightbulb fa-2x"></i>
+                        </div>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <h4 class="h5 fw-bold mb-3">Innovation</h4>
+                    <p class="text-muted mb-0">We encourage creative thinking and new ideas to solve complex problems and drive innovation.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="culture-card text-center p-4 h-100 hover-lift animate-bounce-in" data-delay="3">
+                    <div class="culture-icon-container mb-4 position-relative">
+                        <div class="culture-icon bg-info bg-opacity-10 text-info animate-pulse" style="width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-heart fa-2x"></i>
+                        </div>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <h4 class="h5 fw-bold mb-3">Work-Life Balance</h4>
+                    <p class="text-muted mb-0">We value your time and well-being, both inside and outside of work with flexible policies.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="culture-card text-center p-4 h-100 hover-lift animate-bounce-in" data-delay="4">
+                    <div class="culture-icon-container mb-4 position-relative">
+                        <div class="culture-icon bg-warning bg-opacity-10 text-warning animate-pulse" style="width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-globe-americas fa-2x"></i>
+                        </div>
+                        <div class="icon-glow"></div>
+                    </div>
+                    <h4 class="h5 fw-bold mb-3">Global Team</h4>
+                    <p class="text-muted mb-0">Work with talented people from around the world and learn about different cultures and perspectives.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Team Gallery -->
+        <div class="row g-2 mt-5 animate-fade-in-up" data-delay="5">
+            {% for i in range(8) %}
+            <div class="col-6 col-md-4 col-lg-3">
+                
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- How We Hire -->
+<section class="py-5 position-relative">
+    <!-- Particle Background -->
+    <div class="particle-bg position-absolute top-0 start-0 w-100 h-100"></div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0 animate-fade-in-left">
+                <div class="hiring-process-image position-relative">
+                    <img src="{{ url_for('static', filename='img/career hiring.png') }}" alt="Our Hiring Process" class="img-fluid rounded-3 shadow-lg">
+                    <div class="process-decoration position-absolute top-0 end-0 bg-primary bg-opacity-10 rounded-3 p-3 animate-bounce-in" data-delay="1">
+                        <i class="fas fa-search fa-2x text-primary"></i>
+                    </div>
+                    <div class="process-decoration position-absolute bottom-0 start-0 bg-success bg-opacity-10 rounded-3 p-3 animate-bounce-in" data-delay="2">
+                        <i class="fas fa-handshake fa-2x text-success"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 animate-fade-in-right">
+                <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Process</span>
+                <h2 class="fw-bold mb-4 animate-slide-in-left" data-delay="1">How We Hire</h2>
+                <p class="text-muted mb-4 animate-fade-in-up" data-delay="2">We've designed our hiring process to be transparent, efficient, and respectful of your time while ensuring we find the perfect fit.</p>
+
+                <div class="hiring-timeline">
+                    <div class="hiring-step d-flex mb-4 animate-fade-in-up" data-delay="3">
+                        <div class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-4 animate-pulse" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <span class="fw-bold">1</span>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-2">Application Review</h5>
+                            <p class="text-muted mb-0">We'll review your application and get back to you within 1-2 weeks with feedback.</p>
+                        </div>
+                    </div>
+
+                    <div class="hiring-step d-flex mb-4 animate-fade-in-up" data-delay="4">
+                        <div class="step-number bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-4 animate-pulse" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <span class="fw-bold">2</span>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-2">Initial Interview</h5>
+                            <p class="text-muted mb-0">A 30-minute video call with our hiring manager to discuss your experience and the role.</p>
+                        </div>
+                    </div>
+
+                    <div class="hiring-step d-flex mb-4 animate-fade-in-up" data-delay="5">
+                        <div class="step-number bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-4 animate-pulse" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <span class="fw-bold">3</span>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-2">Skills Assessment</h5>
+                            <p class="text-muted mb-0">A practical assignment to assess your skills and problem-solving abilities.</p>
+                        </div>
+                    </div>
+
+                    <div class="hiring-step d-flex animate-fade-in-up" data-delay="6">
+                        <div class="step-number bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-4 animate-pulse" style="width: 50px; height: 50px; flex-shrink: 0;">
+                            <span class="fw-bold">4</span>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-2">Team Interview</h5>
+                            <p class="text-muted mb-0">Meet the team and learn more about our culture and work environment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="cta-bg-animation"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8 animate-fade-in-up">
+                <div class="icon-box bg-blue bg-opacity-20 text-white d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                    <i class="fas fa-rocket fa-2x"></i>
+                </div>
+                <h2 class="fw-bold mb-4 animate-slide-in-left" data-delay="1">Ready to Join Our Team?</h2>
+                <p class="lead mb-5 animate-fade-in-up" data-delay="2">Take the next step in your career and help us build something amazing together.</p>
+                <div class="d-flex gap-3 justify-content-center animate-fade-in-up" data-delay="3">
+                    <a href="#open-positions" class="btn btn-light btn-lg px-5 animate-bounce-in">View Open Positions</a>
+                    <a href="#contact" class="btn btn-outline-light btn-lg px-5 animate-bounce-in" data-delay="1">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced Contact Form Section -->
+<section class="py-5" id="contact">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-5 animate-fade-in-up">
+                            <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                                <i class="fas fa-paper-plane fa-2x"></i>
+                            </div>
+                            <h2 class="fw-bold mb-3 animate-slide-in-left">Get in Touch</h2>
+                            <p class="text-muted animate-fade-in-up" data-delay="1">Have questions about working with us? Send us a message and we'll get back to you soon.</p>
+                        </div>
+
+                        <form class="animate-fade-in-up" data-delay="2">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="name" placeholder="Your Full Name" required>
+                                        <label for="name">Full Name *</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control" id="email" placeholder="your.email@example.com" required>
+                                        <label for="email">Email Address *</label>
+                                    </div>
+                                </div>
+
+                                <!-- Phone Number Field -->
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="tel" class="form-control" id="phone" placeholder="+1 (555) 123-4567">
+                                        <label for="phone">Phone Number</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="position">
+                                            <option value="" selected disabled>Select a position</option>
+                                            <option value="frontend">Frontend Developer</option>
+                                            <option value="backend">Backend Developer</option>
+                                            <option value="designer">UI/UX Designer</option>
+                                            <option value="marketing">Marketing Specialist</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                        <label for="position">Position of Interest</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" id="message" placeholder="Tell us about yourself and why you're interested in joining our team..." style="height: 150px" required></textarea>
+                                        <label for="message">Message *</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <input class="form-control" type="file" id="resume" accept=".pdf,.doc,.docx">
+                                        <label for="resume">Upload Resume (PDF, DOC, DOCX)</label>
+                                    </div>
+                                    <div class="form-text">Maximum file size: 5MB</div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="privacy" required>
+                                        <label class="form-check-label" for="privacy">
+                                            I agree to the <a href="#" class="text-decoration-none">Privacy Policy</a> and
+                                            <a href="#" class="text-decoration-none">Terms of Service</a>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg px-5 w-100 animate-bounce-in">
+                                        <i class="fas fa-paper-plane me-2"></i> Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Page Header Enhancements */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.floating-element-1,
+.floating-element-2,
+.floating-element-3 {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-element-1 {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.floating-element-2 {
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+}
+
+.floating-element-3 {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    top: 30%;
+    right: 20%;
+    animation-delay: 4s;
+}
+
+/* Career Stats */
+.career-stats {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Main Image Container */
+.main-image-container {
+    position: relative;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.main-image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+/* Benefit Cards */
+.benefit-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.benefit-card:hover::before {
+    left: 100%;
+}
+
+.benefit-icon-container {
+    position: relative;
+}
+
+.benefit-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+}
+
+.benefit-card:hover .benefit-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.benefit-card:hover .icon-glow {
+    opacity: 1;
+}
+
+.benefit-progress .progress {
+    border-radius: 2px;
+}
+
+/* Job Cards */
+.job-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.job-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.job-card:hover::before {
+    opacity: 1;
+}
+
+.job-meta {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem !important;
+}
+
+.skill-tag {
+    transition: all 0.3s ease;
+}
+
+.skill-tag:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+.hover-title {
+    transition: color 0.3s ease;
+}
+
+.hover-title:hover {
+    color: #0d6efd !important;
+}
+
+/* Culture Cards */
+.culture-card {
+    transition: all 0.3s ease;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.culture-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.culture-icon-container {
+    position: relative;
+}
+
+.culture-icon {
+    transition: all 0.3s ease;
+}
+
+.culture-card:hover .culture-icon {
+    transform: scale(1.1);
+}
+
+/* Team Gallery */
+.team-member-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.team-member-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.member-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.team-member-card:hover .member-overlay {
+    opacity: 1;
+}
+
+/* Hiring Process */
+.hiring-process-image {
+    position: relative;
+}
+
+.process-decoration {
+    animation: float 3s ease-in-out infinite;
+}
+
+.process-decoration:nth-child(2) {
+    animation-delay: 1.5s;
+}
+
+.step-number {
+    position: relative;
+    z-index: 2;
+}
+
+/* Background Patterns */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+
+.benefits-pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(13, 110, 253, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(25, 135, 84, 0.05) 0%, transparent 50%);
+    background-size: 300px 300px, 400px 400px;
+    animation: patternMove 25s linear infinite;
+}
+
+.culture-pattern {
+    background-image:
+        radial-gradient(circle at 30% 30%, rgba(255, 193, 7, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(220, 53, 69, 0.05) 0%, transparent 50%);
+    background-size: 250px 250px, 350px 350px;
+    animation: patternMove 30s linear infinite;
+}
+
+/* Particle Background */
+.particle-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+
+/* CTA Background Animation */
+.cta-bg-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    animation: bgFloat 15s linear infinite;
+}
+
+@keyframes bgFloat {
+    0% { transform: translateX(-30px) translateY(-30px); }
+    100% { transform: translateX(30px) translateY(30px); }
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+.animate-progress {
+    animation: progressFill 1s ease-out forwards;
+}
+
+@keyframes progressFill {
+    0% { width: 0%; }
+    100% { width: var(--progress-width, 95%); }
+}
+
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Form Enhancements */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+    color: #0d6efd;
+    opacity: 0.8;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Empty State */
+.empty-state {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .key-benefits .row .col-6 {
+        margin-bottom: 1rem;
+    }
+
+    .job-card .d-flex {
+        flex-direction: column;
+    }
+
+    .job-card .text-lg-end {
+        text-align: start !important;
+        margin-top: 1rem;
+    }
+
+    .hiring-step {
+        padding-left: 70px;
+    }
+
+    .step-number {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Counter Animation
+    function animateCounter() {
+        const counters = document.querySelectorAll('.counter');
+
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / 100;
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+
+                if (current < target) {
+                    counter.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+
+            // Check if element is in viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCounter();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            observer.observe(counter);
+        });
+    }
+
+    // Progress Bar Animation
+    function animateProgressBars() {
+        const progressBars = document.querySelectorAll('.animate-progress');
+
+        progressBars.forEach(bar => {
+            const targetWidth = bar.getAttribute('aria-valuenow') + '%';
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        bar.style.width = targetWidth;
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            observer.observe(bar);
+        });
+    }
+
+    // Parallax effect for floating elements
+    function initParallax() {
+        const floatingElements = document.querySelectorAll('.floating-element-1, .floating-element-2, .floating-element-3');
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+
+            floatingElements.forEach((element, index) => {
+                const speed = (index + 1) * 0.3;
+                element.style.transform = `translateY(${rate * speed}px) rotate(${scrolled * 0.01}deg)`;
+            });
+        });
+    }
+
+    // Initialize animations
+    animateCounter();
+    animateProgressBars();
+    initParallax();
+
+    // Benefit card interactions
+    const benefitCards = document.querySelectorAll('.benefit-card');
+    benefitCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Job card interactions
+    const jobCards = document.querySelectorAll('.job-card');
+    jobCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Culture card interactions
+    const cultureCards = document.querySelectorAll('.culture-card');
+    cultureCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Team member card interactions
+    const teamCards = document.querySelectorAll('.team-member-card');
+    teamCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+
+    // Contact form submission
+    const contactForm = document.querySelector('#contact form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const button = this.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+
+            // Simulate form submission
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check me-2"></i>Message Sent!';
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-success');
+
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-primary');
+                    button.disabled = false;
+
+                    // Clear form
+                    this.reset();
+                }, 2000);
+            }, 1500);
+        });
+    }
+});
+</script>
+{% endblock %}

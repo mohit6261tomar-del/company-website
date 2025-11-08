@@ -1,0 +1,263 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_header %}{{ title }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.team') }}">Team</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ 'Edit' if member else 'Add' }} Member</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    {{ form.photo_path() }}
+                    
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group mb-4 text-center">
+                                <div class="mb-3">
+                                    {% if form.photo_path.data %}
+                                        <img id="photoPreview" src="{{ url_for('static', filename=form.photo_path.data) }}" 
+                                             class="img-thumbnail rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                                    {% else %}
+                                        <div id="photoPreview" class="d-flex align-items-center justify-content-center bg-light rounded-circle mx-auto" 
+                                             style="width: 150px; height: 150px;">
+                                            <i class="fas fa-user fa-3x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="mb-3">
+                                    <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                                    {% if member and member.photo_path %}
+                                        <div class="form-text">Current: {{ member.photo_path.split('/')[-1] }}</div>
+                                    {% endif %}
+                                </div>
+                                <small class="form-text text-muted">Recommended size: 400x400px, JPG or PNG</small>
+                            </div>
+                            
+                            <div class="form-group form-check mb-3">
+                                {{ form.is_active(class="form-check-input" + (' is-invalid' if form.is_active.errors else '')) }}
+                                {{ form.is_active.label(class="form-check-label") }}
+                                {% for error in form.is_active.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="form-group form-check mb-3">
+                                {{ form.featured(class="form-check-input" + (' is-invalid' if form.featured.errors else '')) }}
+                                {{ form.featured.label(class="form-check-label") }}
+                                {% for error in form.featured.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                                <small class="form-text text-muted">Featured members appear on the homepage</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                {{ form.order_position.label(class="form-label") }}
+                                {{ form.order_position(class="form-control" + (' is-invalid' if form.order_position.errors else '')) }}
+                                {% for error in form.order_position.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                                <small class="form-text text-muted">Lower numbers appear first</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        {{ form.name.label(class="form-label") }}
+                                        {{ form.name(class="form-control" + (' is-invalid' if form.name.errors else ''), placeholder="Full name") }}
+                                        {% for error in form.name.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        {{ form.position.label(class="form-label") }}
+                                        {{ form.position(class="form-control" + (' is-invalid' if form.position.errors else ''), placeholder="e.g., CEO, Developer") }}
+                                        {% for error in form.position.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        {{ form.email.label(class="form-label") }}
+                                        {{ form.email(class="form-control" + (' is-invalid' if form.email.errors else ''), placeholder="email@example.com") }}
+                                        {% for error in form.email.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        {{ form.phone.label(class="form-label") }}
+                                        {{ form.phone(class="form-control" + (' is-invalid' if form.phone.errors else ''), placeholder="+1234567890") }}
+                                        {% for error in form.phone.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                {{ form.bio.label(class="form-label") }}
+                                {{ form.bio(class="form-control" + (' is-invalid' if form.bio.errors else ''), rows=4, placeholder="A short bio about the team member") }}
+                                {% for error in form.bio.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="form-group mb-4">
+                                {{ form.skills.label(class="form-label") }}
+                                {{ form.skills(class="form-control" + (' is-invalid' if form.skills.errors else ''), placeholder="e.g., Web Development, UI/UX, Marketing") }}
+                                {% for error in form.skills.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                                <small class="form-text text-muted">Separate skills with commas</small>
+                            </div>
+                            
+                            <h5 class="mb-3">Social Media</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fab fa-linkedin-in"></i></span>
+                                            {{ form.linkedin_url(class="form-control" + (' is-invalid' if form.linkedin_url.errors else ''), placeholder="LinkedIn profile URL") }}
+                                        </div>
+                                        {% for error in form.linkedin_url.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                                            {{ form.twitter_url(class="form-control" + (' is-invalid' if form.twitter_url.errors else ''), placeholder="Twitter profile URL") }}
+                                        </div>
+                                        {% for error in form.twitter_url.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fab fa-facebook-f"></i></span>
+                                            {{ form.facebook_url(class="form-control" + (' is-invalid' if form.facebook_url.errors else ''), placeholder="Facebook profile URL") }}
+                                        </div>
+                                        {% for error in form.facebook_url.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fab fa-instagram"></i></span>
+                                            {{ form.instagram_url(class="form-control" + (' is-invalid' if form.instagram_url.errors else ''), placeholder="Instagram profile URL") }}
+                                        </div>
+                                        {% for error in form.instagram_url.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{{ url_for('admin.team') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i> Back to Team
+                                </a>
+                                <div>
+                                    <button type="submit" name="save_and_add" value="true" class="btn btn-outline-primary me-2">
+                                        <i class="fas fa-save me-1"></i> Save & Add Another
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Image preview for team member photo
+document.getElementById('photo').addEventListener('change', function(e) {
+    const file = this.files[0];
+    const preview = document.getElementById('photoPreview');
+    const label = this.nextElementSibling;
+    
+    if (file) {
+        // Update file name in label
+        label.textContent = file.name;
+        
+        // Show image preview if it's an image
+        if (file.type.match('image.*')) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                // If preview is an image, update its src
+                if (preview.tagName === 'IMG') {
+                    preview.src = e.target.result;
+                } 
+                // If preview is a div (placeholder), replace it with an image
+                else if (preview.tagName === 'DIV') {
+                    const img = document.createElement('img');
+                    img.id = 'photoPreview';
+                    img.src = e.target.result;
+                    img.className = 'img-thumbnail rounded-circle';
+                    img.style.width = '150px';
+                    img.style.height = '150px';
+                    img.style.objectFit = 'cover';
+                    preview.parentNode.replaceChild(img, preview);
+                }
+            }
+            
+            reader.readAsDataURL(file);
+        }
+    } else {
+        label.textContent = 'Choose photo...';
+    }
+});
+
+// Form validation
+(function() {
+    'use strict';
+    var forms = document.querySelectorAll('.needs-validation');
+    
+    Array.prototype.slice.call(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            form.classList.add('was-validated');
+        }, false);
+    });
+})();
+</script>
+{% endblock %}

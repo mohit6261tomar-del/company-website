@@ -1,0 +1,925 @@
+{% extends "base.html" %}
+
+{% block title %}{% if company %}{{ company.name }} - Contact{% else %}KodesMind - Contact{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header position-relative bg-gradient-primary py-5 overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="floating-element-1"></div>
+        <div class="floating-element-2"></div>
+        <div class="floating-element-3"></div>
+        <div class="particle-bg"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="animate-fade-in-up">
+                    <span class="badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 animate-bounce-in">Get In Touch</span>
+                    <h1 class="fw-bold text-black mb-4 display-4 animate-slide-in-left" data-delay="1">Contact Us</h1>
+                    <h5 class="lead text-black-100 mb-0 animate-slide-in-right" data-delay="2">Ready to start your project? Let's discuss how we can help you achieve your goals</h5>
+                </div>
+
+                <!-- Contact Stats -->
+                <div class="row justify-content-center mt-5 animate-fade-in-up" data-delay="3">
+                    <div class="col-lg-8">
+                        <div class="contact-stats bg-white bg-opacity-10 backdrop-blur-sm rounded-3 p-4">
+                            <div class="row text-center">
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="24">0</div>
+                                        <h5 class="text-black-100 small mb-0">Hour Response</h5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="98">0</div>
+                                        <h5 class="text-black-100 small mb-0">Client Satisfaction %</h5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="500">0</div>
+                                        <h5 class="text-black-100 small mb-0">Projects Completed</h5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="5">0</div>
+                                        <h5 class="text-black-100 small mb-0">Years Experience</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Info -->
+<section class="py-5 position-relative">
+    <!-- Background Pattern -->
+    <div class="animated-pattern position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
+
+    <div class="container position-relative">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="contact-card card border-0 shadow-sm h-100 hover-lift animate-fade-in-left" data-delay="1">
+                    <div class="card-body p-4 text-center">
+                        <div class="contact-icon-container mb-4 position-relative">
+                            <div class="contact-icon bg-primary bg-opacity-10 text-primary animate-pulse" style="width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-map-marker-alt fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Our Location</h4>
+                        <address class="text-muted mb-0">
+                            {{ company.address if company and company.address else '123 Startup Street\nSan Francisco, CA 94107\nUnited States' }}
+                        </address>
+                        <div class="mt-3">
+                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-directions me-2"></i>Get Directions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="contact-card card border-0 shadow-sm h-100 hover-lift animate-fade-in-up" data-delay="2">
+                    <div class="card-body p-4 text-center">
+                        <div class="contact-icon-container mb-4 position-relative">
+                            <div class="contact-icon bg-success bg-opacity-10 text-success animate-pulse" style="width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-envelope fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Email Us</h4>
+                        <div class="email-info">
+                            <p class="text-muted mb-2">General Inquiries:</p>
+                            <p class="mb-3">
+                                <a href="mailto:{{ company.email if company and company.email else 'info@startup.com' }}" class="text-decoration-none fw-medium">
+                                    {{ company.email if company and company.email else 'info@startup.com' }}
+                                </a>
+                            </p>
+                            <p class="text-muted mb-2">Support:</p>
+                            <p class="mb-0">
+                                <a href="mailto:ms305329@gmail.com" class="text-decoration-none fw-medium">ms305329@gmail.com</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="contact-card card border-0 shadow-sm h-100 hover-lift animate-fade-in-right" data-delay="3">
+                    <div class="card-body p-4 text-center">
+                        <div class="contact-icon-container mb-4 position-relative">
+                            <div class="contact-icon bg-info bg-opacity-10 text-info animate-pulse" style="width: 80px; height: 80px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-phone-alt fa-2x"></i>
+                            </div>
+                            <div class="icon-glow"></div>
+                        </div>
+                        <h4 class="h5 fw-bold mb-3">Call Us</h4>
+                        <div class="phone-info">
+                            <p class="text-muted mb-2">Phone:</p>
+                            <p class="mb-3">
+                                <a href="tel:{{ company.phone if company and company.phone else '+11234567890' }}" class="text-decoration-none fw-medium">
+                                    {{ company.phone if company and company.phone else '+1 (123) 456-7890' }}
+                                </a>
+                            </p>
+                            <p class="text-muted mb-2">Business Hours:</p>
+                            <p class="mb-0 small">Monday - Friday: 9:00 AM - 6:00 PM PST</p>
+                            <p class="mb-0 small">Weekend: Emergency Support Only</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact CTA -->
+        <div class="row mt-5 animate-fade-in-up" data-delay="4">
+            <div class="col-12 text-center">
+                <div class="contact-cta bg-primary bg-opacity-5 rounded-3 p-5">
+                    <h3 class="fw-bold mb-3">Need Immediate Assistance?</h3>
+                    <p class="text-muted mb-4">Don't hesitate to reach out. We're here to help you succeed.</p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="tel:{{ company.phone if company and company.phone else '+11234567890' }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-phone me-2"></i>Call Now
+                        </a>
+                        <a href="mailto:{{ company.email if company and company.email else 'info@startup.com' }}" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-envelope me-2"></i>Email Us
+                        </a>
+                        <a href="#contact-form" class="btn btn-success btn-lg">
+                            <i class="fas fa-comments me-2"></i>Live Chat
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form -->
+<section class="py-5 bg-light position-relative" id="contact-form">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="form-pattern"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-5 animate-fade-in-up">
+                            <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                                <i class="fas fa-paper-plane fa-2x"></i>
+                            </div>
+                            <h2 class="fw-bold mb-3 animate-slide-in-left">Send Us a Message</h2>
+                            <p class="text-muted animate-fade-in-up" data-delay="1">Fill out the form below and we'll get back to you within 24 hours.</p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('main.contact') }}" novalidate class="animate-fade-in-up" data-delay="2">
+                            {{ form.hidden_tag() }}
+                            <div class="row g-4">
+                                <!-- Name Field -->
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        {{ form.name(class="form-control" + (' is-invalid' if form.name.errors else ''), id="name", placeholder="Your Name") }}
+                                        {{ form.name.label(for="name") }}
+                                        {% for error in form.name.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <!-- Email Field -->
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        {{ form.email(class="form-control" + (' is-invalid' if form.email.errors else ''), id="email", placeholder="Your Email") }}
+                                        {{ form.email.label(for="email") }}
+                                        {% for error in form.email.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Subject Field -->
+                            <div class="form-floating mb-3">
+                                {{ form.subject(class="form-control" + (' is-invalid' if form.subject.errors else ''), id="subject", placeholder="Subject") }}
+                                {{ form.subject.label(for="subject") }}
+                                {% for error in form.subject.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Message Field -->
+                            <div class="form-floating mb-4">
+                                {{ form.message(class="form-control" + (' is-invalid' if form.message.errors else ''), id="message", placeholder="Your Message", style="height: 150px") }}
+                                {{ form.message.label(for="message") }}
+                                {% for error in form.message.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg animate-bounce-in">
+                                    <i class="fas fa-paper-plane me-2"></i> Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="py-5 bg-white position-relative">
+    <!-- Particle Background -->
+    <div class="particle-bg position-absolute top-0 start-0 w-100 h-100"></div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <h2 class="fw-bold mb-3 text-gradient">Find Us</h2>
+            <p class="text-muted w-lg-50 mx-auto">Visit our office or schedule a meeting to discuss your project in person.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="map-container animate-fade-in-left">
+                    <div class="ratio ratio-21x9 rounded-3 overflow-hidden shadow-lg">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0351303544!2d-122.39955468468244!3d37.78583717975798!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085807f1d177007%3A0x1b961e0a45f8acf8!2s123%20Startup%20St%2C%20San%20Francisco%2C%20CA%2094107%2C%20USA!5e0!3m2!1sen!2s!4v1623456789012!5m2!1sen!2s"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="office-info animate-fade-in-right">
+                    <!-- Office Hours -->
+                    <div class="info-card card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="info-icon bg-primary bg-opacity-10 text-primary me-3">
+                                    <i class="fas fa-clock fa-lg"></i>
+                                </div>
+                                <h5 class="fw-bold mb-0">Office Hours</h5>
+                            </div>
+                            <div class="office-hours">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Monday - Friday</span>
+                                    <span class="fw-bold">9:00 AM - 6:00 PM</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Saturday</span>
+                                    <span class="fw-bold">10:00 AM - 4:00 PM</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span>Sunday</span>
+                                    <span class="text-muted">Closed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Contact -->
+                    <div class="info-card card border-0 shadow-sm mb-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="info-icon bg-success bg-opacity-10 text-success me-3">
+                                    <i class="fas fa-phone fa-lg"></i>
+                                </div>
+                                <h5 class="fw-bold mb-0">Quick Contact</h5>
+                            </div>
+                            <div class="quick-contact">
+                                <a href="tel:{{ company.phone if company and company.phone else '+11234567890' }}" class="btn btn-success w-100 mb-3">
+                                    <i class="fas fa-phone me-2"></i>Call Us Now
+                                </a>
+                                <a href="mailto:{{ company.email if company and company.email else 'info@startup.com' }}" class="btn btn-outline-primary w-100 mb-3">
+                                    <i class="fas fa-envelope me-2"></i>Email Us
+                                </a>
+                                <a href="#contact-form" class="btn btn-outline-info w-100">
+                                    <i class="fas fa-comments me-2"></i>Live Chat
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="info-card card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="info-icon bg-warning bg-opacity-10 text-warning me-3">
+                                    <i class="fas fa-share-alt fa-lg"></i>
+                                </div>
+                                <h5 class="fw-bold mb-0">Follow Us</h5>
+                            </div>
+                            <div class="social-links d-flex justify-content-center gap-3">
+                                {% if company and company.facebook_url %}
+                                <a href="{{ company.facebook_url }}" class="social-link bg-primary text-white rounded-circle d-flex align-items-center justify-content-center animate-pulse" style="width: 45px; height: 45px;" target="_blank" rel="noopener">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                {% endif %}
+                                {% if company and company.twitter_url %}
+                                <a href="{{ company.twitter_url }}" class="social-link bg-info text-white rounded-circle d-flex align-items-center justify-content-center animate-pulse" style="width: 45px; height: 45px;" target="_blank" rel="noopener">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                {% endif %}
+                                {% if company and company.instagram_url %}
+                                <a href="{{ company.instagram_url }}" class="social-link bg-danger text-white rounded-circle d-flex align-items-center justify-content-center animate-pulse" style="width: 45px; height: 45px;" target="_blank" rel="noopener">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                {% endif %}
+                                {% if company and company.linkedin_url %}
+                                <a href="{{ company.linkedin_url }}" class="social-link bg-primary text-white rounded-circle d-flex align-items-center justify-content-center animate-pulse" style="width: 45px; height: 45px;" target="_blank" rel="noopener">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5 bg-light position-relative">
+    <!-- Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="faq-pattern"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="text-center mb-5 animate-fade-in-up">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">FAQ</span>
+            <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Frequently Asked Questions</h2>
+            <p class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Find answers to common questions about our services and process.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item border-0 shadow-sm mb-3 animate-fade-in-up" data-delay="1">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <i class="fas fa-question-circle me-3 text-primary"></i>
+                                How long does a typical project take?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Project timelines vary depending on scope and complexity. A simple website might take 2-4 weeks, while a complex web application could take 3-6 months. We'll provide a detailed timeline during our initial consultation.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item border-0 shadow-sm mb-3 animate-fade-in-up" data-delay="2">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                <i class="fas fa-question-circle me-3 text-primary"></i>
+                                Do you provide ongoing support?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! We provide comprehensive support packages including maintenance, updates, security monitoring, and technical assistance. Our support plans are tailored to your specific needs.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item border-0 shadow-sm mb-3 animate-fade-in-up" data-delay="3">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <i class="fas fa-question-circle me-3 text-primary"></i>
+                                What's your development process?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We follow an agile development process with regular check-ins, transparent communication, and iterative improvements. You'll have access to project management tools and regular progress updates.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item border-0 shadow-sm mb-3 animate-fade-in-up" data-delay="4">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <i class="fas fa-question-circle me-3 text-primary"></i>
+                                Can you work with our existing systems?
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! We specialize in integrations and can work with your existing systems, databases, and third-party services. We'll ensure seamless integration with your current infrastructure.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="cta-bg-animation"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8 animate-fade-in-up">
+                <div class="icon-box bg-blue bg-opacity-20 text-white d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                    <i class="fas fa-rocket fa-2x"></i>
+                </div>
+                <h2 class="fw-bold mb-4 animate-slide-in-left" data-delay="1">Ready to Start Your Project?</h2>
+                <p class="lead mb-5 animate-fade-in-up" data-delay="2">Let's discuss your vision and create something amazing together. Get in touch today!</p>
+                <div class="d-flex gap-3 justify-content-center flex-column flex-sm-row animate-fade-in-up" data-delay="3">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg px-5 animate-bounce-in">Start Your Project</a>
+                    <a href="{{ url_for('main.services') }}" class="btn btn-outline-light btn-lg px-5 animate-bounce-in" style="animation-delay: 0.2s;">View Services</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Page Header Enhancements */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.floating-element-1,
+.floating-element-2,
+.floating-element-3 {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-element-1 {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.floating-element-2 {
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+}
+
+.floating-element-3 {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    top: 30%;
+    right: 20%;
+    animation-delay: 4s;
+}
+
+/* Contact Stats */
+.contact-stats {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Contact Cards */
+.contact-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.contact-card:hover::before {
+    left: 100%;
+}
+
+.contact-icon-container {
+    position: relative;
+}
+
+.contact-icon {
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover .contact-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.icon-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(13, 110, 253, 0.2) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.contact-card:hover .icon-glow {
+    opacity: 1;
+}
+
+/* Contact CTA */
+.contact-cta {
+    transition: all 0.3s ease;
+}
+
+.contact-cta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(13, 110, 253, 0.1);
+}
+
+/* Form Enhancements */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label {
+    color: #0d6efd;
+    opacity: 0.8;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Project Types */
+.project-types .form-check {
+    transition: all 0.3s ease;
+}
+
+.project-types .form-check:hover {
+    transform: translateY(-2px);
+}
+
+.project-types .form-check-input:checked + .form-check-label {
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+/* Map Container */
+.map-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.map-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Info Cards */
+.info-card {
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.info-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-link {
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    transform: scale(1.1) translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Background Patterns */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+
+.form-pattern {
+    background-image:
+        radial-gradient(circle at 30% 30%, rgba(13, 110, 253, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(25, 135, 84, 0.05) 0%, transparent 50%);
+    background-size: 250px 250px, 350px 350px;
+    animation: patternMove 25s linear infinite;
+}
+
+.faq-pattern {
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(255, 193, 7, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(220, 53, 69, 0.05) 0%, transparent 50%);
+    background-size: 300px 300px, 400px 400px;
+    animation: patternMove 30s linear infinite;
+}
+
+/* Particle Background */
+.particle-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+
+/* CTA Background Animation */
+.cta-bg-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    animation: bgFloat 15s linear infinite;
+}
+
+@keyframes bgFloat {
+    0% { transform: translateX(-30px) translateY(-30px); }
+    100% { transform: translateX(30px) translateY(30px); }
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Accordion Enhancements */
+.accordion-button {
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: rgba(13, 110, 253, 0.05);
+    color: #0d6efd;
+}
+
+.accordion-button:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.accordion-body {
+    padding: 1.5rem;
+    background: rgba(13, 110, 253, 0.02);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .contact-card {
+        margin-bottom: 2rem;
+    }
+
+    .office-info {
+        margin-top: 2rem;
+    }
+
+    .quick-contact .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .social-links {
+        flex-wrap: wrap;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Counter Animation
+    function animateCounter() {
+        const counters = document.querySelectorAll('.counter');
+
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / 100;
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+
+                if (current < target) {
+                    counter.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+
+            // Check if element is in viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCounter();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            observer.observe(counter);
+        });
+    }
+
+    // Parallax effect for floating elements
+    function initParallax() {
+        const floatingElements = document.querySelectorAll('.floating-element-1, .floating-element-2, .floating-element-3');
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+
+            floatingElements.forEach((element, index) => {
+                const speed = (index + 1) * 0.3;
+                element.style.transform = `translateY(${rate * speed}px) rotate(${scrolled * 0.01}deg)`;
+            });
+        });
+    }
+
+    // Contact card interactions
+    const contactCards = document.querySelectorAll('.contact-card');
+    contactCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+        });
+
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Form submission
+    const contactForm = document.querySelector('form[method="POST"]');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const button = this.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+
+            // Simulate form submission
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check me-2"></i>Message Sent!';
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-success');
+
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-primary');
+                    button.disabled = false;
+
+                    // Show success message
+                    showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+                }, 2000);
+            }, 1500);
+        });
+    }
+
+    // Project type checkboxes interaction
+    const projectCheckboxes = document.querySelectorAll('input[name="project_types"]');
+    projectCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const label = this.nextElementSibling;
+            if (this.checked) {
+                label.style.backgroundColor = 'rgba(13, 110, 253, 0.1)';
+                label.style.color = '#0d6efd';
+            } else {
+                label.style.backgroundColor = 'transparent';
+                label.style.color = 'inherit';
+            }
+        });
+    });
+
+    // Initialize animations
+    animateCounter();
+    initParallax();
+
+    // Phone number formatting (basic)
+    const phoneInput = document.getElementById('phone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = value;
+                } else if (value.length <= 6) {
+                    value = `(${value.slice(0, 3)}) ${value.slice(3)}`;
+                } else {
+                    value = `(${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                }
+            }
+            e.target.value = value;
+        });
+    }
+});
+
+// Notification function
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type} position-fixed`;
+    notification.style.cssText = `
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        border: none;
+    `;
+    notification.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+</script>
+{% endblock %}

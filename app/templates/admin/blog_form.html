@@ -1,0 +1,167 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_header %}{{ title }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.blog_posts') }}">Blog Posts</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Post Details</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                {{ form.title.label(class="form-label") }}
+                                {{ form.title(class="form-control" + (' is-invalid' if form.title.errors else '')) }}
+                                {% for error in form.title.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                {{ form.slug.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">/blog/</span>
+                                    {{ form.slug(class="form-control" + (' is-invalid' if form.slug.errors else '')) }}
+                                </div>
+                                {% for error in form.slug.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                                <small class="form-text text-muted">URL-friendly version of the title</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label class="form-label">Featured Image</label>
+                        <div class="custom-file">
+                            {{ form.featured_image(class="custom-file-input" + (' is-invalid' if form.featured_image.errors else ''), id="featuredImage") }}
+                            <label class="custom-file-label" for="featuredImage">Choose file...</label>
+                            {% for error in form.featured_image.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <small class="form-text text-muted">Recommended size: 1200x630px</small>
+                        {% if post and post.featured_image %}
+                            <div class="mt-2">
+                                <img src="{{ url_for('static', filename=post.featured_image) }}" alt="Featured Image" class="img-thumbnail" style="max-height: 200px;">
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        {{ form.excerpt.label(class="form-label") }}
+                        {{ form.excerpt(class="form-control" + (' is-invalid' if form.excerpt.errors else ''), rows=3) }}
+                        {% for error in form.excerpt.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <small class="form-text text-muted">A short summary of the post (max 500 characters).</small>
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        {{ form.content.label(class="form-label") }}
+                        {{ form.content(class="form-control" + (' is-invalid' if form.content.errors else ''), rows=10) }}
+                        {% for error in form.content.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-check mb-4">
+                        {{ form.is_published(class="form-check-input" + (' is-invalid' if form.is_published.errors else '')) }}
+                        {{ form.is_published.label(class="form-check-label") }}
+                        {% for error in form.is_published.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('admin.blog_posts') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Posts
+                        </a>
+                        <div>
+                            <button type="submit" name="save_draft" value="true" class="btn btn-outline-primary me-2">
+                                <i class="far fa-save me-1"></i> Save Draft
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-1"></i> {{ 'Update' if post else 'Publish' }} Post
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Update file input label with selected file name
+document.addEventListener('DOMContentLoaded', function() {
+    // For featured image
+    const featuredImageInput = document.getElementById('featuredImage');
+    if (featuredImageInput) {
+        featuredImageInput.addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : 'Choose file...';
+            const label = this.nextElementSibling;
+            label.textContent = fileName;
+            
+            // Show image preview
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                const preview = document.createElement('div');
+                preview.className = 'mt-2';
+                preview.innerHTML = '<p class="mb-1">Preview:</p><img class="img-thumbnail" style="max-height: 200px;">';
+                
+                // Remove existing preview if any
+                const existingPreview = this.closest('.form-group').querySelector('.image-preview');
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
+                
+                preview.classList.add('image-preview');
+                this.closest('.form-group').appendChild(preview);
+                
+                const img = preview.querySelector('img');
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+    
+    // Auto-generate slug from title
+    const titleInput = document.getElementById('{{ form.title.id }}');
+    const slugInput = document.getElementById('{{ form.slug.id }}');
+    
+    if (titleInput && slugInput && !slugInput.value) {
+        titleInput.addEventListener('blur', function() {
+            if (!slugInput.value) {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/[^\w\s-]/g, '')  // Remove special characters
+                    .replace(/\s+/g, '-')       // Replace spaces with -
+                    .replace(/--+/g, '-')       // Replace multiple - with single -
+                    .trim();
+                slugInput.value = slug;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

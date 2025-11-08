@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config['SITE_NAME'] }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4">Sign In</h2>
+                    
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <form method="POST" action="" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Username Field -->
+                        <div class="form-floating mb-3">
+                            {{ form.username(class="form-control" + (' is-invalid' if form.username.errors else ''), id="username", placeholder="Enter username") }}
+                            {{ form.username.label(for="username") }}
+                            {% for error in form.username.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Password Field -->
+                        <div class="form-floating mb-3">
+                            {{ form.password(class="form-control" + (' is-invalid' if form.password.errors else ''), id="password", placeholder="Password") }}
+                            {{ form.password.label(for="password") }}
+                            {% for error in form.password.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Remember Me -->
+                        <div class="form-check mb-3">
+                            {{ form.remember_me(class="form-check-input", id="remember_me") }}
+                            {{ form.remember_me.label(class="form-check-label", for="remember_me") }}
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                        
+                        <!-- Forgot Password Link (Coming Soon) -->
+                        <div class="text-center mt-3">
+                            <a href="#" class="text-decoration-none text-muted" style="cursor: not-allowed;" title="Password reset coming soon">
+                                Forgot Your Password?
+                            </a>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <!-- Register Link -->
+                    <div class="text-center">
+                        <p class="mb-0">
+                            New User? 
+                            <a href="{{ url_for('auth.register') }}" class="text-decoration-none">
+                                Click to Register
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

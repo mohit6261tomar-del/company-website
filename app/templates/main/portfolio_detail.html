@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}{{ portfolio.project_name }} - Portfolio Detail{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="fw-bold">{{ portfolio.project_name }}</h1>
+                <nav aria-label="breadcrumb" class="d-inline-block">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.portfolio') }}">Portfolio</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ portfolio.project_name }}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Details -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-5">
+                <!-- Project Images -->
+                {% if portfolio.images %}
+                    {% set primary_image = portfolio.images|selectattr('is_primary', 'equalto', True)|first or portfolio.images[0] %}
+                    <div class="project-hero mb-5">
+                        <img src="{{ url_for('static', filename=primary_image.image_path) }}" alt="{{ portfolio.project_name }}" class="img-fluid w-100 rounded-3 shadow">
+                    </div>
+
+                    <!-- Image Gallery -->
+                    {% if portfolio.images|length > 1 %}
+                    <div class="project-gallery mb-5">
+                        <h3 class="h4 fw-bold mb-4">Project Gallery</h3>
+                        <div class="row g-3">
+                            {% for image in portfolio.images %}
+                            <div class="col-md-4">
+                                <a href="{{ url_for('static', filename=image.image_path) }}" data-lightbox="project-gallery" data-title="{{ image.caption or portfolio.project_name }}">
+                                    <img src="{{ url_for('static', filename=image.image_path) }}" alt="{{ image.caption or portfolio.project_name }}" class="img-fluid w-100 rounded-3 shadow-sm hover-shadow">
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="project-hero mb-5">
+                        <div class="bg-light rounded-3 d-flex align-items-center justify-content-center" style="height: 400px;">
+                            <i class="fas fa-image fa-4x text-muted"></i>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Project Description -->
+                <div class="project-description">
+                    <h2 class="h3 fw-bold mb-4">Project Overview</h2>
+                    <div class="content">
+                        {{ portfolio.description|safe }}
+                    </div>
+                </div>
+
+                <!-- Project Features -->
+                {% if portfolio.features %}
+                <div class="project-features mt-5">
+                    <h3 class="h4 fw-bold mb-4">Key Features</h3>
+                    <div class="row g-3">
+                        {% for feature in portfolio.features.split('\n') if feature.strip() %}
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="icon-box bg-primary bg-opacity-10 text-primary me-3">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <span>{{ feature.strip() }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Technologies Used -->
+                {% if portfolio.technologies %}
+                <div class="project-technologies mt-5">
+                    <h3 class="h4 fw-bold mb-4">Technologies Used</h3>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tech in portfolio.technologies.split(',') %}
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">{{ tech.strip() }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Project Info Card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-4">Project Details</h4>
+                        <div class="project-info">
+                            {% if portfolio.client %}
+                            <div class="info-item d-flex justify-content-between mb-3">
+                                <span class="text-muted">Client:</span>
+                                <span class="fw-medium">{{ portfolio.client }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if portfolio.project_date %}
+                            <div class="info-item d-flex justify-content-between mb-3">
+                                <span class="text-muted">Date:</span>
+                                <span class="fw-medium">{{ portfolio.project_date.strftime('%B %Y') }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if portfolio.project_url %}
+                            <div class="info-item d-flex justify-content-between mb-3">
+                                <span class="text-muted">Website:</span>
+                                <a href="{{ portfolio.project_url }}" target="_blank" class="text-decoration-none">
+                                    {{ portfolio.project_url|replace('https://', '')|replace('http://', '') }}
+                                </a>
+                            </div>
+                            {% endif %}
+
+                            {% if portfolio.category %}
+                            <div class="info-item d-flex justify-content-between mb-3">
+                                <span class="text-muted">Category:</span>
+                                <span class="fw-medium">{{ portfolio.category }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if portfolio.budget %}
+                            <div class="info-item d-flex justify-content-between mb-3">
+                                <span class="text-muted">Budget:</span>
+                                <span class="fw-medium">{{ portfolio.budget }}</span>
+                            </div>
+                            {% endif %}
+
+                            {% if portfolio.duration %}
+                            <div class="info-item d-flex justify-content-between">
+                                <span class="text-muted">Duration:</span>
+                                <span class="fw-medium">{{ portfolio.duration }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA Card -->
+                <div class="card border-0 shadow-sm bg-primary text-white">
+                    <div class="card-body p-4 text-center">
+                        <h5 class="fw-bold mb-3">Like What You See?</h5>
+                        <p class="mb-4">Let's discuss your next project and bring your ideas to life.</p>
+                        <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg px-4">Start Your Project</a>
+                    </div>
+                </div>
+
+                <!-- Share Card -->
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Share This Project</h5>
+                        <div class="d-flex gap-2">
+                            <a href="#" class="btn btn-outline-primary btn-sm flex-fill">
+                                <i class="fab fa-facebook-f me-2"></i>Facebook
+                            </a>
+                            <a href="#" class="btn btn-outline-info btn-sm flex-fill">
+                                <i class="fab fa-twitter me-2"></i>Twitter
+                            </a>
+                            <a href="#" class="btn btn-outline-primary btn-sm flex-fill">
+                                <i class="fab fa-linkedin-in me-2"></i>LinkedIn
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Projects -->
+{% if portfolios %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3">Related Projects</h2>
+            <p class="text-muted w-lg-50 mx-auto">Check out more of our work that might interest you.</p>
+        </div>
+
+        <div class="row g-4">
+            {% for related_project in portfolios[:3] %}
+                {% if related_project.id != portfolio.id %}
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100 hover-shadow transition-all">
+                        <div class="position-relative overflow-hidden">
+                            {% if related_project.images %}
+                                {% set related_image = related_project.images|selectattr('is_primary', 'equalto', True)|first or related_project.images[0] %}
+                                <img src="{{ url_for('static', filename=related_image.image_path) }}" class="card-img-top" alt="{{ related_project.project_name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div class="portfolio-overlay">
+                                <div class="overlay-content">
+                                    <h6 class="text-white mb-2">{{ related_project.project_name }}</h6>
+                                    <p class="text-white-50 mb-3">{{ related_project.client if related_project.client else 'Client Name' }}</p>
+                                    <a href="{{ url_for('main.portfolio_detail', portfolio_id=related_project.id) }}" class="btn btn-sm btn-light">View Project</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title mb-1">{{ related_project.project_name }}</h6>
+                            <p class="text-muted small mb-0">{{ related_project.description|truncate(80) }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <h2 class="fw-bold mb-3">Ready to Start Your Project?</h2>
+                <p class="lead mb-0">Let's discuss how we can help you achieve your goals with our expert development and design services.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg px-4 me-2">Get a Free Quote</a>
+                <a href="{{ url_for('main.portfolio') }}" class="btn btn-outline-light btn-lg px-4">View All Projects</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.project-hero img {
+    transition: transform 0.3s ease;
+}
+
+.project-hero:hover img {
+    transform: scale(1.02);
+}
+
+.project-gallery img {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.project-gallery img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.info-item {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.portfolio-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 110, 253, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.card:hover .portfolio-overlay {
+    opacity: 1;
+}
+
+.overlay-content {
+    text-align: center;
+    padding: 20px;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.card:hover .overlay-content {
+    transform: translateY(0);
+}
+
+.hover-shadow {
+    transition: all 0.3s ease;
+}
+
+.hover-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .btn-light, .btn-outline-light {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .col-lg-4.text-lg-end {
+        text-align: center !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+{% endblock %}

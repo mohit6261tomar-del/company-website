@@ -1,0 +1,139 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ 'Edit' if career else 'Add' }} Career Opportunity{% endblock %}
+
+{% block page_header %}{{ 'Edit' if career else 'Add New' }} Career Opportunity{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.careers') }}">Careers</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ 'Edit' if career else 'Add' }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="job_title" class="form-label">Job Title *</label>
+                                <input type="text" class="form-control" id="job_title" name="job_title" 
+                                       value="{{ form.job_title.data or '' }}" required>
+                                <div class="invalid-feedback">Please provide a job title.</div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="location" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="location" name="location" 
+                                               value="{{ form.location.data or '' }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="job_type" class="form-label">Job Type</label>
+                                        <select class="form-select" id="job_type" name="job_type">
+                                            <option value="full-time" {% if form.job_type.data == 'full-time' %}selected{% endif %}>Full Time</option>
+                                            <option value="part-time" {% if form.job_type.data == 'part-time' %}selected{% endif %}>Part Time</option>
+                                            <option value="contract" {% if form.job_type.data == 'contract' %}selected{% endif %}>Contract</option>
+                                            <option value="internship" {% if form.job_type.data == 'internship' %}selected{% endif %}>Internship</option>
+                                            <option value="freelance" {% if form.job_type.data == 'freelance' %}selected{% endif %}>Freelance</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Job Description *</label>
+                                <textarea class="form-control" id="description" name="description" rows="5" required>{{ form.description.data or '' }}</textarea>
+                                <div class="invalid-feedback">Please provide a job description.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="requirements" class="form-label">Requirements</label>
+                                <textarea class="form-control" id="requirements" name="requirements" rows="5">{{ form.requirements.data or '' }}</textarea>
+                                <div class="form-text">Enter each requirement on a new line.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="responsibilities" class="form-label">Responsibilities</label>
+                                <textarea class="form-control" id="responsibilities" name="responsibilities" rows="5">{{ form.responsibilities.data or '' }}</textarea>
+                                <div class="form-text">Enter each responsibility on a new line.</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="salary_range" class="form-label">Salary Range</label>
+                                <input type="text" class="form-control" id="salary_range" name="salary_range" 
+                                       value="{{ form.salary_range.data or '' }}" placeholder="e.g., $50,000 - $70,000 per year">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Publish</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
+                                                   {% if form.is_active.data or not form.is_active.data is defined %}checked{% endif %}>
+                                            <label class="form-check-label" for="is_active">Active</label>
+                                        </div>
+                                        <div class="form-text">Only active positions will be visible on the website.</div>
+                                    </div>
+                                    
+                                    <div class="d-grid gap-2 mt-4">
+                                        <button type="submit" name="save_and_add" value="true" class="btn btn-outline-primary">
+                                            <i class="fas fa-save me-1"></i> Save & Add Another
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-1"></i> {{ 'Update' if career else 'Publish' }} Position
+                                        </button>
+                                        <a href="{{ url_for('admin.careers') }}" class="btn btn-outline-secondary">
+                                            <i class="fas fa-times me-1"></i> Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Enable Bootstrap form validation
+    (function () {
+        'use strict'
+        
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+        
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+{% endblock %}

@@ -1,0 +1,20 @@
+/* Static Card Styles */
+.static-card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background: white;
+}
+
+.static-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.static-card .icon-container {
+    transition: all 0.3s ease;
+}
+
+.static-card:hover .icon-container {
+    transform: scale(1.1);
+}

@@ -1,0 +1,137 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Manage Services{% endblock %}
+
+{% block page_header %}Manage Services{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Services</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Services List</h4>
+                <a href="{{ url_for('admin.add_service') }}" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i> Add New Service
+                </a>
+            </div>
+            <div class="card-body">
+                {% if services %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Featured</th>
+                                <th>Order</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for service in services %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if service.icon %}
+                                        <i class="{{ service.icon }} me-2"></i>
+                                        {% endif %}
+                                        {{ service.title }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if service.is_active else 'secondary' }}">
+                                        {{ 'Active' if service.is_active else 'Inactive' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if service.is_featured %}
+                                    <i class="fas fa-star text-warning"></i>
+                                    {% endif %}
+                                </td>
+                                <td>{{ service.order_position }}</td>
+                                <td>{{ service.updated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ url_for('admin.edit_service', service_id=service.id) }}" 
+                                           class="btn btn-sm btn-outline-primary" 
+                                           data-bs-toggle="tooltip" 
+                                           title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" 
+                                                class="btn btn-sm btn-outline-danger delete-service" 
+                                                data-id="{{ service.id }}"
+                                                data-bs-toggle="tooltip" 
+                                                title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <i class="fas fa-box-open fa-4x text-muted"></i>
+                    </div>
+                    <h5>No Services Found</h5>
+                    <p class="text-muted">Get started by adding your first service.</p>
+                    <a href="{{ url_for('admin.add_service') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i> Add Service
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+
+// Handle service deletion
+document.querySelectorAll('.delete-service').forEach(button => {
+    button.addEventListener('click', function() {
+        const serviceId = this.getAttribute('data-id');
+        if (confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
+            fetch(`/admin/services/${serviceId}/delete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert('Error deleting service: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the service.');
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,231 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Career Details - Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Career Details</h1>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('admin.careers') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to Careers
+            </a>
+            <a href="{{ url_for('admin.edit_career', career_id=career.id) }}" class="btn btn-primary">
+                <i class="fas fa-edit me-1"></i> Edit Career
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Career Information</h5>
+                        <div>
+                            {% if career.is_active %}
+                                <span class="badge bg-success me-2">Active</span>
+                            {% else %}
+                                <span class="badge bg-warning me-2">Inactive</span>
+                            {% endif %}
+                            <span class="badge bg-info">{{ career.created_at.strftime('%Y-%m-%d') }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h3>{{ career.job_title }}</h3>
+                            <p class="text-muted mb-3">
+                                <i class="fas fa-map-marker-alt me-1"></i> {{ career.location or 'Location not specified' }}
+                                <span class="ms-3"><i class="fas fa-clock me-1"></i> {{ career.job_type or 'Full-time' }}</span>
+                                {% if career.salary_range %}
+                                <span class="ms-3"><i class="fas fa-money-bill me-1"></i> {{ career.salary_range }}</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('admin.edit_career', career_id=career.id) }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form method="POST" 
+                                      action="{{ url_for('admin.delete_career', career_id=career.id) }}" 
+                                      class="d-inline"
+                                      onsubmit="return confirm('Are you sure you want to delete this career position?')">
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5>Description</h5>
+                            <div class="bg-light p-3 rounded">
+                                {{ career.description|nl2br }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Requirements</h5>
+                            <div class="bg-light p-3 rounded">
+                                {{ career.requirements|nl2br if career.requirements else 'No specific requirements listed.' }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {% if career.responsibilities %}
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5>Responsibilities</h5>
+                            <div class="bg-light p-3 rounded">
+                                {{ career.responsibilities|nl2br }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Posted:</strong> {{ career.created_at.strftime('%B %d, %Y at %I:%M %p') }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Status:</strong> 
+                            {% if career.is_active %}
+                                <span class="badge bg-success">Active - Accepting Applications</span>
+                            {% else %}
+                                <span class="badge bg-warning">Inactive - Not Accepting Applications</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a href="{{ url_for('main.career_detail', career_id=career.id) }}" 
+                               target="_blank" 
+                               class="btn btn-outline-info">
+                                <i class="fas fa-eye me-1"></i> View on Website
+                            </a>
+                        </div>
+                        <div>
+                            <form method="POST" 
+                                  action="{{ url_for('admin.toggle_career', career_id=career.id) }}" 
+                                  class="d-inline"
+                                  id="toggleForm">
+                                <button type="submit" 
+                                        class="btn {% if career.is_active %}btn-warning{% else %}btn-success{% endif %}"
+                                        id="toggleBtn">
+                                    <i class="fas fa-{% if career.is_active %}pause{% else %}play{% endif %} me-1"></i>
+                                    {% if career.is_active %}Deactivate{% else %}Activate{% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Applications for this Career -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Applications for this Position</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Applied</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for application in career.applications %}
+                                <tr>
+                                    <td>{{ application.name }}</td>
+                                    <td>{{ application.email }}</td>
+                                    <td>{{ application.phone or '-' }}</td>
+                                    <td>
+                                        {% if application.status == 'pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif application.status == 'reviewed' %}
+                                            <span class="badge bg-info">Reviewed</span>
+                                        {% elif application.status == 'shortlisted' %}
+                                            <span class="badge bg-success">Shortlisted</span>
+                                        {% elif application.status == 'rejected' %}
+                                            <span class="badge bg-danger">Rejected</span>
+                                        {% elif application.status == 'hired' %}
+                                            <span class="badge bg-dark">Hired</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ application.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin.view_application', application_id=application.id) }}" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        No applications received for this position yet.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('toggleForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const form = e.target;
+    const btn = document.getElementById('toggleBtn');
+    const originalText = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Updating...';
+    btn.disabled = true;
+    
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating career status');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+});
+</script>
+{% endblock %}

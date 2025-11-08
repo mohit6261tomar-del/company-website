@@ -1,0 +1,247 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ 'Edit' if service else 'Add' }} Service{% endblock %}
+
+{% block page_header %}{{ 'Edit' if service else 'Add New' }} Service{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.services') }}">Services</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ 'Edit' if service else 'Add' }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Service Details</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        {{ form.title.label(class="form-label") }}
+                                        {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else ""), 
+                                                   placeholder="Enter service title") }}
+                                        {% for error in form.title.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        {{ form.slug.label(class="form-label") }}
+                                        <div class="input-group">
+                                            {{ form.slug(class="form-control" + (" is-invalid" if form.slug.errors else ""), 
+                                                      placeholder="service-slug") }}
+                                            <button class="btn btn-outline-secondary" type="button" id="generate-slug">
+                                                <i class="fas fa-sync-alt"></i>
+                                            </button>
+                                            {% for error in form.slug.errors %}
+                                                <div class="invalid-feedback">{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                        <small class="form-text text-muted">URL-friendly version of the title</small>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        {{ form.description.label(class="form-label") }}
+                                        {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), 
+                                                         placeholder="Brief description for listings") }}
+                                        {% for error in form.description.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        {{ form.content.label(class="form-label") }}
+                                        {{ form.content(class="form-control" + (" is-invalid" if form.content.errors else ""), 
+                                                     rows=8) }}
+                                        {% for error in form.content.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Media</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        {{ form.icon.label(class="form-label") }}
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i id="icon-preview" class="fas fa-cog"></i></span>
+                                            {{ form.icon(class="form-control" + (" is-invalid" if form.icon.errors else ""), 
+                                                      placeholder="fas fa-icon") }}
+                                            {% for error in form.icon.errors %}
+                                                <div class="invalid-feedback">{{ error }}</div>
+                                            {% endfor %}
+                                        </div>
+                                        <small class="form-text text-muted">
+                                            Use <a href="https://fontawesome.com/icons" target="_blank">Font Awesome</a> or other icon library classes
+                                        </small>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        {{ form.image.label(class="form-label") }}
+                                        {% if service and service.image_path %}
+                                            <div class="mb-2">
+                                                <img src="{{ url_for('static', filename=service.image_path) }}" 
+                                                     class="img-fluid rounded" 
+                                                     id="image-preview"
+                                                     style="max-height: 150px;">
+                                            </div>
+                                        {% else %}
+                                            <div class="mb-2">
+                                                <img src="#" 
+                                                     class="img-fluid rounded d-none" 
+                                                     id="image-preview"
+                                                     style="max-height: 150px;">
+                                            </div>
+                                        {% endif %}
+                                        {{ form.image(class="form-control" + (" is-invalid" if form.image.errors else "")) }}
+                                        {% for error in form.image.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Settings</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-check form-switch mb-3">
+                                        {{ form.is_featured(class="form-check-input" + (" is-invalid" if form.is_featured.errors else "")) }}
+                                        {{ form.is_featured.label(class="form-check-label") }}
+                                        {% for error in form.is_featured.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <div class="form-check form-switch mb-3">
+                                        {{ form.is_active(class="form-check-input" + (" is-invalid" if form.is_active.errors else "")) }}
+                                        {{ form.is_active.label(class="form-check-label") }}
+                                        {% for error in form.is_active.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        {{ form.order_position.label(class="form-label") }}
+                                        {{ form.order_position(class="form-control" + (" is-invalid" if form.order_position.errors else ""), 
+                                                            type="number") }}
+                                        {% for error in form.order_position.errors %}
+                                            <div class="invalid-feedback">{{ error }}</div>
+                                        {% endfor %}
+                                        <small class="form-text text-muted">Lower numbers appear first</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i> Save Service
+                                </button>
+                                <a href="{{ url_for('admin.services') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-1"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+});
+
+// Generate slug from title
+document.getElementById('generate-slug').addEventListener('click', function() {
+    const title = document.getElementById('title').value;
+    if (title) {
+        const slug = title.toLowerCase()
+                        .replace(/[^\w\s-]/g, '') // Remove special chars
+                        .replace(/\s+/g, '-')      // Replace spaces with -
+                        .replace(/--+/g, '-')       // Replace multiple - with single -
+                        .trim();
+        document.getElementById('slug').value = slug;
+    }
+});
+
+// Update icon preview
+document.getElementById('icon').addEventListener('input', function() {
+    const iconPreview = document.getElementById('icon-preview');
+    const iconClasses = this.value.split(' ');
+    
+    // Remove all existing icon classes
+    Array.from(iconPreview.classList).forEach(className => {
+        if (className.startsWith('fa-')) {
+            iconPreview.classList.remove(className);
+        }
+    });
+    
+    // Add new icon classes
+    iconClasses.forEach(className => {
+        if (className) {
+            iconPreview.classList.add(className);
+        }
+    });
+});
+
+// Image preview
+const imageInput = document.getElementById('image');
+const imagePreview = document.getElementById('image-preview');
+
+if (imageInput) {
+    imageInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.remove('d-none');
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+// Initialize Summernote for rich text editor
+if (typeof $ !== 'undefined' && $.fn.summernote) {
+    $('.summernote').summernote({
+        height: 300,
+        minHeight: null,
+        maxHeight: null,
+        focus: true,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ]
+    });
+}
+</script>
+{% endblock %}

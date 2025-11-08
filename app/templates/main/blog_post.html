@@ -1,0 +1,408 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - {{ company.name if company else 'Blog' }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="fw-bold">Blog</h1>
+                <nav aria-label="breadcrumb" class="d-inline-block">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.blog') }}">Blog</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Post</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Post -->
+<article class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Post Header -->
+                <header class="mb-5">
+                    <h1 class="fw-bold mb-3">{{ post.title }}</h1>
+                    <div class="d-flex flex-wrap align-items-center text-muted mb-4">
+                        <div class="d-flex align-items-center me-4 mb-2">
+                            <img src="https://ui-avatars.com/api/?name={{ post.author.username|urlencode }}&background=0d6efd&color=fff&size=40" alt="{{ post.author.username }}" class="rounded-circle me-2" width="40">
+                            <span>By {{ post.author.username }}</span>
+                        </div>
+                        <div class="d-flex align-items-center me-4 mb-2">
+                            <i class="far fa-calendar-alt me-2"></i>
+                            <time datetime="{{ post.created_at.strftime('%Y-%m-%d') }}">
+                                {{ post.created_at.strftime('%B %d, %Y') }}
+                            </time>
+                        </div>
+                        <div class="d-flex align-items-center me-4 mb-2">
+                            <i class="far fa-clock me-2"></i>
+                            <span>5 min read</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="far fa-comment me-2"></i>
+                            <span>12 Comments</span>
+                        </div>
+                    </div>
+                    {% if post.featured_image %}
+                    <div class="post-featured-image mb-4">
+                        <img src="{{ url_for('static', filename=post.featured_image) }}" alt="{{ post.title }}" class="img-fluid rounded-3 shadow-sm">
+                    </div>
+                    {% endif %}
+                </header>
+                
+                <!-- Post Content -->
+                <div class="post-content mb-5">
+                    {{ post.content|safe }}
+                </div>
+                
+                <!-- Post Tags -->
+                <div class="post-tags mb-5">
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="fw-bold me-2">Tags:</span>
+                        {% for tag in ['Web Design', 'Development', 'UI/UX'] %}
+                        <a href="#" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                            {{ tag }}
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Post Share -->
+                <div class="post-share d-flex align-items-center mb-5 p-4 bg-light rounded-3">
+                    <span class="fw-bold me-3">Share:</span>
+                    {% set share_url = url_for('main.blog_post', slug=post.slug, _external=True) %}
+                    <div class="d-flex gap-3">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url|urlencode }}" class="text-dark" target="_blank" rel="noopener" aria-label="Share on Facebook"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="https://twitter.com/intent/tweet?url={{ share_url|urlencode }}&text={{ post.title|urlencode }}" class="text-dark" target="_blank" rel="noopener" aria-label="Share on Twitter"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url|urlencode }}" class="text-dark" target="_blank" rel="noopener" aria-label="Share on LinkedIn"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                        <a href="https://pinterest.com/pin/create/button/?url={{ share_url|urlencode }}&description={{ post.title|urlencode }}" class="text-dark" target="_blank" rel="noopener" aria-label="Share on Pinterest"><i class="fab fa-pinterest-p fa-lg"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Author Box -->
+                <div class="author-box d-flex flex-column flex-md-row align-items-center p-4 bg-light rounded-3 mb-5">
+                    <div class="flex-shrink-0 mb-3 mb-md-0 me-md-4">
+                        <img src="https://ui-avatars.com/api/?name={{ post.author.username|urlencode }}&background=0d6efd&color=fff&size=150" alt="{{ post.author.username }}" class="rounded-circle" width="100">
+                    </div>
+                    <div class="flex-grow-1 text-center text-md-start">
+                        <h5 class="fw-bold mb-2">About {{ post.author.username }}</h5>
+                        <p class="text-muted mb-2">
+                            {{ post.author.bio if post.author.bio else 'An experienced professional with a passion for technology and innovation.' }}
+                        </p>
+                        <div class="social-links">
+                            <a href="#" class="text-muted me-2"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-muted me-2"><i class="fab fa-github"></i></a>
+                            <a href="#" class="text-muted me-2"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="text-muted"><i class="fas fa-globe"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Comments Section -->
+                <div class="comments-section mb-5">
+                    <h4 class="fw-bold mb-4">Comments (3)</h4>
+                    
+                    <!-- Comment List -->
+                    <div class="comment-list mb-5">
+                        <!-- Comment 1 -->
+                        <div class="comment d-flex mb-4">
+                            <div class="flex-shrink-0 me-3">
+                                <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="User" class="rounded-circle" width="60">
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="comment-header d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold mb-0">Sarah Johnson</h6>
+                                    <span class="text-muted small">2 days ago</span>
+                                </div>
+                                <div class="comment-body">
+                                    <p class="mb-2">Great article! The points you've made are really insightful and well-researched. I particularly liked the section about responsive design.</p>
+                                    <a href="#" class="btn btn-link p-0 text-decoration-none">
+                                        <i class="fas fa-reply me-1"></i> Reply
+                                    </a>
+                                </div>
+                                
+                                <!-- Nested Comment -->
+                                <div class="comment d-flex mt-4">
+                                    <div class="flex-shrink-0 me-3">
+                                        <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="User" class="rounded-circle" width="50">
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="comment-header d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="fw-bold mb-0">Michael Chen</h6>
+                                            <span class="text-muted small">1 day ago</span>
+                                        </div>
+                                        <div class="comment-body">
+                                            <p class="mb-2">I completely agree, Sarah! The responsive design section was very thorough. I'd love to see more about performance optimization in a future post.</p>
+                                            <a href="#" class="btn btn-link p-0 text-decoration-none">
+                                                <i class="fas fa-reply me-1"></i> Reply
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Comment 2 -->
+                        <div class="comment d-flex">
+                            <div class="flex-shrink-0 me-3">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="User" class="rounded-circle" width="60">
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="comment-header d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold mb-0">David Wilson</h6>
+                                    <span class="text-muted small">3 days ago</span>
+                                </div>
+                                <div class="comment-body">
+                                    <p class="mb-2">Thanks for sharing this valuable information. The examples you provided really helped me understand the concepts better.</p>
+                                    <a href="#" class="btn btn-link p-0 text-decoration-none">
+                                        <i class="fas fa-reply me-1"></i> Reply
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Leave a Comment -->
+                    <div class="leave-comment">
+                        <h4 class="fw-bold mb-4">Leave a Comment</h4>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="name" class="form-label">Name *</label>
+                                    <input type="text" class="form-control" id="name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email *</label>
+                                    <input type="email" class="form-control" id="email" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="website" class="form-label">Website</label>
+                                    <input type="url" class="form-control" id="website">
+                                </div>
+                                <div class="col-12">
+                                    <label for="comment" class="form-label">Comment *</label>
+                                    <textarea class="form-control" id="comment" rows="5" required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="save-info" checked>
+                                        <label class="form-check-label" for="save-info">
+                                            Save my name, email, and website in this browser for the next time I comment.
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary px-4">Post Comment</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Related Posts -->
+                <div class="related-posts">
+                    <h4 class="fw-bold mb-4">You May Also Like</h4>
+                    <div class="row g-4">
+                        {% for i in range(3) %}
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <img src="{{ url_for('static', filename='img/career hiring.png') }}" class="card-img-top" alt="Related Post">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold">
+                                        <a href="#" class="text-decoration-none text-dark">
+                                            {{ [
+                                                '10 Tips for Better Web Design in 2023',
+                                                'The Future of Responsive Web Design',
+                                                'How to Improve Your Website Performance'
+                                            ][i] }}
+                                        </a>
+                                    </h5>
+                                    <p class="card-text text-muted small">
+                                        {{ [
+                                            'Learn the latest web design trends and best practices for creating stunning websites.',
+                                            'Discover what the future holds for responsive design and how to stay ahead.',
+                                            'Essential tips and tricks to make your website load faster and perform better.'
+                                        ][i] }}
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent border-0 pt-0">
+                                    <a href="#" class="btn btn-link p-0 text-primary text-decoration-none">
+                                        Read More <i class="fas fa-arrow-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-4">Ready to Start Your Project?</h2>
+                <p class="lead mb-5">Let's work together to bring your ideas to life. Contact us today for a free consultation.</p>
+                <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg px-4 me-3">Get In Touch</a>
+                <a href="{{ url_for('main.portfolio') }}" class="btn btn-outline-light btn-lg px-4">View Our Work</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.post-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #4a4a4a;
+}
+
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.post-content h2 {
+    font-size: 1.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.post-content h3 {
+    font-size: 1.5rem;
+}
+
+.post-content h4 {
+    font-size: 1.3rem;
+}
+
+.post-content p {
+    margin-bottom: 1.5rem;
+}
+
+.post-content a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.post-content a:hover {
+    text-decoration: underline;
+}
+
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.post-content blockquote {
+    border-left: 4px solid #0d6efd;
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    background-color: #f8f9fa;
+    font-style: italic;
+}
+
+.post-content ul,
+.post-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+}
+
+.post-content ul li,
+.post-content ol li {
+    margin-bottom: 0.5rem;
+}
+
+.post-content code {
+    background-color: #f1f1f1;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.post-content pre {
+    background-color: #282c34;
+    color: #abb2bf;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 2rem 0;
+}
+
+.post-content pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+    font-family: 'Courier New', monospace;
+}
+
+.post-tags {
+    padding: 1.5rem 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.comment {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #fff;
+    color: #0d6efd;
+    margin-right: 0.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid #dee2e6;
+}
+
+.social-links a:hover {
+    background-color: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    border-color: #86b7fe;
+}
+
+.btn-link {
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}

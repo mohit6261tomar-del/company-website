@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% if company %}{{ company.name }}{% else %}KodesMind{% endif %}{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/effects.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navigation.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+    
+    <style>
+        /* Enhanced Navbar Brand Styling */
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: translateY(-2px);
+        }
+        
+        .navbar-brand img {
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover img {
+            transform: scale(1.05);
+        }
+        
+        .navbar-brand span {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.4rem;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Navbar scrolled state */
+        .navbar.scrolled .navbar-brand span {
+            font-size: 1.3rem;
+        }
+        
+        .navbar.scrolled .navbar-brand img {
+            height: 35px !important;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.index') }}">
+                {% if company and company.logo_path %}
+                    <img src="{{ url_for('static', filename=company.logo_path) }}" alt="{{ company.name }}" class="me-2" style="height: 40px; width: auto;">
+                {% endif %}
+                <span class="fw-bold gradient-text">{{ company.name if company else 'KodesMind' }}</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}" href="{{ url_for('main.index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'main.about' %}active{% endif %}" href="{{ url_for('main.about') }}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'main.services' %}active{% endif %}" href="{{ url_for('main.services') }}">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'main.portfolio' %}active{% endif %}" href="{{ url_for('main.portfolio') }}">Portfolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'main.blog' %}active{% endif %}" href="{{ url_for('main.blog') }}">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint in ['main.careers', 'main.career_detail'] %}active{% endif %}" href="{{ url_for('main.careers') }}">Career</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link {% if request.endpoint == 'main.contact' %}active{% endif %}" href="{{ url_for('main.contact') }}">Contact</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-primary" href="{{ url_for('admin.dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-outline-primary" href="{{ url_for('auth.logout') }}">
+                                <i class="fas fa-sign-out-alt me-1"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-primary" href="{{ url_for('auth.login') }}">
+                                <i class="fas fa-sign-in-alt me-1"></i> Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show mb-0 rounded-0" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 animate-slide-in-left animate-delay-1">
+                    <h5 class="text-uppercase mb-4 text-gradient">
+                        {% if company %}{{ company.name }}{% else %}KodesMind{% endif %}
+                    </h5>
+                    <p class="text-white-50">{% if company %}{{ company.tagline }}{% else %}Building the future with innovative solutions.{% endif %}</p>
+                    <div class="social-links mt-3 d-flex gap-3">
+                        <a href="{{ company.facebook_url if company and company.facebook_url else '#' }}" class="text-white hover-scale hover-glow rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(255,255,255,0.1);" {% if company and company.facebook_url %}target="_blank" rel="noopener"{% endif %}>
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="{{ company.twitter_url if company and company.twitter_url else '#' }}" class="text-white hover-scale hover-glow rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(255,255,255,0.1);" {% if company and company.twitter_url %}target="_blank" rel="noopener"{% endif %}>
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="{{ company.linkedin_url if company and company.linkedin_url else '#' }}" class="text-white hover-scale hover-glow rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(255,255,255,0.1);" {% if company and company.linkedin_url %}target="_blank" rel="noopener"{% endif %}>
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="{{ company.instagram_url if company and company.instagram_url else '#' }}" class="text-white hover-scale hover-glow rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: rgba(255,255,255,0.1);" {% if company and company.instagram_url %}target="_blank" rel="noopener"{% endif %}>
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 animate-fade-in-up animate-delay-2">
+                    <h5 class="text-uppercase mb-4">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{{ url_for('main.about') }}" class="text-white-50 text-decoration-none hover-lift-enhanced">About Us</a></li>
+                        <li class="mb-2"><a href="{{ url_for('main.services') }}" class="text-white-50 text-decoration-none hover-lift-enhanced">Services</a></li>
+                        <li class="mb-2"><a href="{{ url_for('main.portfolio') }}" class="text-white-50 text-decoration-none hover-lift-enhanced">Portfolio</a></li>
+                        <li class="mb-2"><a href="{{ url_for('main.blog') }}" class="text-white-50 text-decoration-none hover-lift-enhanced">Blog</a></li>
+                        <li><a href="{{ url_for('main.contact') }}" class="text-white-50 text-decoration-none hover-lift-enhanced">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 animate-fade-in-up animate-delay-3">
+                    <h5 class="text-uppercase mb-4">Contact Info</h5>
+                    <ul class="list-unstyled text-white-50">
+                        {% if company %}
+                            {% if company.address %}
+                                <li class="mb-3 hover-lift-enhanced">
+                                    <i class="fas fa-map-marker-alt me-2 text-primary"></i> {{ company.address }}
+                                </li>
+                            {% endif %}
+                            {% if company.email %}
+                                <li class="mb-3 hover-lift-enhanced">
+                                    <i class="fas fa-envelope me-2 text-primary"></i> {{ company.email }}
+                                </li>
+                            {% endif %}
+                            {% if company.phone %}
+                                <li class="mb-3 hover-lift-enhanced">
+                                    <i class="fas fa-phone-alt me-2 text-primary"></i> {{ company.phone }}
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            <li class="mb-3 hover-lift-enhanced">
+                                <i class="fas fa-map-marker-alt me-2 text-primary"></i> 123 Innovation Drive, Tech City, TC 12345
+                            </li>
+                            <li class="mb-3 hover-lift-enhanced">
+                                <i class="fas fa-envelope me-2 text-primary"></i> info@kodesmind.com
+                            </li>
+                            <li class="mb-3 hover-lift-enhanced">
+                                <i class="fas fa-phone-alt me-2 text-primary"></i> +1 (555) KODES-01
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-lg-3 animate-slide-in-right animate-delay-4">
+                    <h5 class="text-uppercase mb-4">Newsletter</h5>
+                    <p class="text-white-50">Subscribe to our newsletter for the latest updates.</p>
+                    <form class="mb-3">
+                        <div class="input-group">
+                            <input type="email" class="form-control bg-dark border-secondary text-white" placeholder="Your Email" required>
+                            <button class="btn btn-gradient" type="submit">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary opacity-25">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start animate-fade-in-up animate-delay-5">
+                    <p class="mb-0">&copy; {{ now.year }} {% if company %}{{ company.name }}{% else %}KodesMind{% endif %}. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end animate-fade-in-up animate-delay-6">
+                    <a href="#" class="text-white-50 text-decoration-none me-3 hover-lift-enhanced">Privacy Policy</a>
+                    <a href="#" class="text-white-50 text-decoration-none hover-lift-enhanced">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="btn btn-gradient btn-lg back-to-top animate-bounce-in" id="backToTop" style="display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Loading Animation -->
+    <div id="loadingSpinner" class="position-fixed top-0 start-0 w-100 h-100 d-none" style="background: rgba(255,255,255,0.9); z-index: 9999;">
+        <div class="position-absolute top-50 start-50 translate-middle">
+            <div class="spinner-container">
+                <div class="advanced-spinner"></div>
+            </div>
+            <p class="mt-3 text-center text-muted">Loading...</p>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- Navigation JS -->
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('mainNavbar');
+        
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Add active class to current nav item
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            // Add click event to all nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Remove active class from all links
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Close mobile menu if open
+                    const navbarCollapse = document.querySelector('.navbar-collapse');
+                    if (navbarCollapse.classList.contains('show')) {
+                        const bsCollapse = new bootstrap.Collapse(navbarCollapse, {
+                            toggle: false
+                        });
+                        bsCollapse.hide();
+                    }
+                });
+            });
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Initialize navbar with scroll class if scrolled on page load
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            }
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+    
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/918458804893?text=Hello!%20I%20want%20to%20know%20more%20about%20your%20services." 
+       target="_blank" 
+       class="whatsapp-float"
+       rel="noopener noreferrer">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <style>
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .whatsapp-float:hover {
+            background-color: #128C7E;
+            color: #FFF;
+            transform: scale(1.1);
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+            text-decoration: none;
+        }
+        
+        .whatsapp-float i {
+            margin-top: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 24px;
+            }
+        }
+    </style>
+</body>
+</html>

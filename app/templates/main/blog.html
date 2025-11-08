@@ -1,0 +1,969 @@
+{% extends "base.html" %}
+
+{% block title %}{% if company %}{{ company.name }} - Blog{% else %}KodesMind - Blog{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header position-relative bg-gradient-primary py-5 overflow-hidden">
+    <!-- Animated Background Elements -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="floating-element-1"></div>
+        <div class="floating-element-2"></div>
+        <div class="floating-element-3"></div>
+        <div class="particle-bg"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="animate-fade-in-up">
+                    <span class="badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 animate-bounce-in">Insights & Updates</span>
+                    <h1 class="fw-bold text-black mb-4 display-4 animate-slide-in-left" data-delay="1">Our Blog</h1>
+                    <h5 class="lead text-black-100 mb-0 animate-slide-in-right" data-delay="2">Discover the latest insights, trends, and expert perspectives on technology, business, and innovation</h5>
+                </div>
+
+                <!-- Blog Stats -->
+                <div class="row justify-content-center mt-5 animate-fade-in-up" data-delay="3">
+                    <div class="col-lg-8">
+                        <div class="blog-stats bg-white bg-opacity-10 backdrop-blur-sm rounded-3 p-4">
+                            <div class="row text-center">
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="150">0</div>
+                                        <h5 class="text-black-100 small mb-0">Articles Published</h5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="25">0</div>
+                                        <h5 class="text-black-100 small mb-0">Expert Authors</h5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3 mb-md-0">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="50">0</div>
+                                        <h5 class="text-black-100 small mb-0">Categories</h5>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="stat-item">
+                                        <div class="counter text-black" data-target="10">0</div>
+                                        <h5 class="text-black-100 small mb-0">K+ Monthly Readers</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Posts -->
+<section class="py-5 position-relative">
+    <!-- Background Pattern -->
+    <div class="animated-pattern position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
+
+    <div class="container position-relative">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                {% if posts.items %}
+                    {% for post in posts.items %}
+                    <article class="blog-card card border-0 shadow-sm mb-5 hover-lift animate-fade-in-up" data-delay="{{ loop.index }}">
+                        <div class="position-relative overflow-hidden">
+                            {% if post.featured_image %}
+                            <div class="blog-image-container">
+                                <img src="{{ url_for('static', filename=post.featured_image) }}" class="card-img-top blog-image" alt="{{ post.title }}">
+                                <div class="image-overlay"></div>
+
+                                <!-- Reading Time Badge -->
+                                <div class="reading-time-badge">
+                                    <span class="badge bg-primary bg-opacity-90 text-white px-3 py-2">
+                                        <i class="fas fa-clock me-1"></i>{{ (post.content|length / 200)|round|int }} min read
+                                    </span>
+                                </div>
+
+                                <!-- Category Badge -->
+                                <div class="category-badge-overlay">
+                                    <span class="badge bg-success bg-opacity-90 text-white px-3 py-2">
+                                        <i class="fas fa-tag me-1"></i>{{ post.category if post.category else 'Technology' }}
+                                    </span>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="blog-image-container">
+                                <div class="blog-placeholder bg-gradient-primary d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-newspaper fa-4x text-white"></i>
+                                </div>
+                                <div class="image-overlay"></div>
+
+                                <!-- Reading Time Badge -->
+                                <div class="reading-time-badge">
+                                    <span class="badge bg-primary bg-opacity-90 text-white px-3 py-2">
+                                        <i class="fas fa-clock me-1"></i>{{ (post.content|length / 200)|round|int }} min read
+                                    </span>
+                                </div>
+
+                                <!-- Category Badge -->
+                                <div class="category-badge-overlay">
+                                    <span class="badge bg-success bg-opacity-90 text-white px-3 py-2">
+                                        <i class="fas fa-tag me-1"></i>{{ post.category if post.category else 'Technology' }}
+                                    </span>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <div class="card-body p-4">
+                                <!-- Post Meta -->
+                                <div class="post-meta d-flex align-items-center justify-content-between mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="author-avatar me-3">
+                                            <img src="{{ url_for('static', filename='img/mama photo.jpg') }}" alt="{{ post.author.username }}" class="rounded-circle">
+                                        </div>
+                                        <div>
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="fw-bold text-dark me-2">{{ post.author.username }}</span>
+                                                <span class="badge bg-primary bg-opacity-10 text-primary px-2 py-1 small">Author</span>
+                                            </div>
+                                            <div class="d-flex align-items-center text-muted small">
+                                                <i class="far fa-calendar-alt me-1"></i>
+                                                <span>{{ post.created_at.strftime('%B %d, %Y') }}</span>
+                                                <span class="mx-2">•</span>
+                                                <i class="far fa-clock me-1"></i>
+                                                <span>{{ (post.content|length / 200)|round|int }} min read</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Social Share -->
+                                    <div class="social-share">
+                                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Share on Twitter">
+                                            <i class="fab fa-twitter"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Share on LinkedIn">
+                                            <i class="fab fa-linkedin-in"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Share on Facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Post Title -->
+                                <h2 class="h3 fw-bold mb-3">
+                                    <a href="{{ url_for('main.blog_post', slug=post.slug) }}" class="text-decoration-none text-dark hover-title">
+                                        {{ post.title }}
+                                    </a>
+                                </h2>
+
+                                <!-- Post Excerpt -->
+                                <p class="card-text text-muted mb-4">
+                                    {{ post.excerpt if post.excerpt else post.content|striptags|truncate(250) }}
+                                </p>
+
+                                <!-- Tags -->
+                                {% if post.tags %}
+                                <div class="post-tags mb-4">
+                                    {% for tag in post.tags.split(',')[:3] %}
+                                    <span class="tag-item bg-light text-dark px-3 py-1 rounded-pill small me-2 mb-1">
+                                        <i class="fas fa-tag me-1"></i>{{ tag.strip() }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <!-- Post Actions -->
+                                <div class="post-actions d-flex justify-content-between align-items-center">
+                                    <a href="{{ url_for('main.blog_post', slug=post.slug) }}" class="btn btn-primary animate-bounce-in">
+                                        <i class="fas fa-book-open me-2"></i>Read Article
+                                    </a>
+
+                                    <div class="post-stats d-flex align-items-center text-muted small">
+                                        <div class="d-flex align-items-center me-3">
+                                            <i class="far fa-eye me-1"></i>
+                                            <span>{{ (post.views or 0) + 150 }} views</span>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <i class="far fa-comment me-1"></i>
+                                            <span>{{ (post.comments or 0) + 5 }} comments</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+
+                    <!-- Enhanced Pagination -->
+                    <nav aria-label="Blog pagination" class="mt-5 animate-fade-in-up" data-delay="6">
+                        <ul class="pagination justify-content-center">
+                            {% if posts.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link animate-bounce-in" href="{{ url_for('main.blog', page=posts.prev_num) }}" aria-label="Previous">
+                                    <i class="fas fa-chevron-left me-2"></i>Previous
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    <i class="fas fa-chevron-left me-2"></i>Previous
+                                </span>
+                            </li>
+                            {% endif %}
+
+                            {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                                {% if page_num %}
+                                    {% if page_num != posts.page %}
+                                    <li class="page-item">
+                                        <a class="page-link animate-bounce-in" href="{{ url_for('main.blog', page=page_num) }}">{{ page_num }}</a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link bg-gradient-primary">{{ page_num }}</span>
+                                    </li>
+                                    {% endif %}
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link">...</span>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if posts.has_next %}
+                            <li class="page-item">
+                                <a class="page-link animate-bounce-in" href="{{ url_for('main.blog', page=posts.next_num) }}" aria-label="Next">
+                                    Next<i class="fas fa-chevron-right ms-2"></i>
+                                </a>
+                            </li>
+                            {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    Next<i class="fas fa-chevron-right ms-2"></i>
+                                </span>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+
+                {% else %}
+                <div class="text-center py-5 animate-fade-in-up">
+                    <div class="empty-state bg-white rounded-3 shadow-sm p-5">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 100px; height: 100px;">
+                            <i class="fas fa-newspaper fa-3x"></i>
+                        </div>
+                        <h3 class="h4 fw-bold mb-3 animate-slide-in-left">No Blog Posts Yet</h3>
+                        <p class="text-muted mb-4 animate-fade-in-up" data-delay="1">We're working on creating amazing content for you. Check back soon for our latest articles and insights!</p>
+                        <div class="d-flex justify-content-center gap-3 animate-fade-in-up" data-delay="2">
+                            <a href="{{ url_for('main.index') }}" class="btn btn-primary px-4">
+                                <i class="fas fa-home me-2"></i>Back to Home
+                            </a>
+                            <a href="{{ url_for('main.contact') }}" class="btn btn-outline-primary px-4">
+                                <i class="fas fa-envelope me-2"></i>Contact Us
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Enhanced Sidebar -->
+            <div class="col-lg-4">
+                <!-- Search Widget -->
+                <div class="sidebar-widget card border-0 shadow-sm mb-4 animate-fade-in-right" data-delay="1">
+                    <div class="card-body p-4">
+                        <div class="widget-header d-flex align-items-center mb-4">
+                            <div class="widget-icon bg-primary bg-opacity-10 text-primary me-3">
+                                <i class="fas fa-search fa-lg"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">Search Articles</h5>
+                        </div>
+                        <form action="{{ url_for('main.blog') }}" method="get">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" name="q" class="form-control border-start-0" placeholder="Search posts..." value="{{ request.args.get('q', '') }}">
+                                <button class="btn btn-primary" type="submit">
+                                    Go
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Categories Widget -->
+                <div class="sidebar-widget card border-0 shadow-sm mb-4 animate-fade-in-right" data-delay="2">
+                    <div class="card-body p-4">
+                        <div class="widget-header d-flex align-items-center mb-4">
+                            <div class="widget-icon bg-success bg-opacity-10 text-success me-3">
+                                <i class="fas fa-folder fa-lg"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">Categories</h5>
+                        </div>
+                        <ul class="list-unstyled mb-0">
+                            {% for category in [
+                                {'name': 'Technology', 'icon': 'fas fa-laptop-code', 'count': 25, 'color': 'primary'},
+                                {'name': 'Business', 'icon': 'fas fa-chart-line', 'count': 18, 'color': 'success'},
+                                {'name': 'Design', 'icon': 'fas fa-palette', 'count': 15, 'color': 'info'},
+                                {'name': 'Development', 'icon': 'fas fa-code', 'count': 22, 'color': 'warning'},
+                                {'name': 'Marketing', 'icon': 'fas fa-bullhorn', 'count': 12, 'color': 'danger'},
+                                {'name': 'Digital Transformation', 'icon': 'fas fa-rocket', 'count': 8, 'color': 'secondary'},
+                                {'name': 'Productivity', 'icon': 'fas fa-clock', 'count': 14, 'color': 'dark'},
+                                {'name': 'Remote Work', 'icon': 'fas fa-globe', 'count': 10, 'color': 'primary'}
+                            ] %}
+                            <li class="mb-3">
+                                <a href="#" class="text-decoration-none d-flex align-items-center justify-content-between p-2 rounded-3 hover-lift">
+                                    <div class="d-flex align-items-center">
+                                        <div class="category-icon bg-{{ category.color }} bg-opacity-10 text-{{ category.color }} me-3">
+                                            <i class="{{ category.icon }}"></i>
+                                        </div>
+                                        <span class="fw-medium">{{ category.name }}</span>
+                                    </div>
+                                    <span class="badge bg-{{ category.color }} bg-opacity-10 text-{{ category.color }} rounded-pill">{{ category.count }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Featured Posts Widget -->
+                <div class="sidebar-widget card border-0 shadow-sm mb-4 animate-fade-in-right" data-delay="3">
+                    <div class="card-body p-4">
+                        <div class="widget-header d-flex align-items-center mb-4">
+                            <div class="widget-icon bg-warning bg-opacity-10 text-warning me-3">
+                                <i class="fas fa-star fa-lg"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">Featured Posts</h5>
+                        </div>
+                        <div class="featured-posts">
+                            {% for i in range(3) %}
+                            <div class="featured-post-item d-flex mb-4">
+                                <div class="featured-post-image me-3">
+                                    <img src="{{ url_for('static', filename='img/remote.png') }}" alt="Featured Post {{ i+1 }}" class="rounded-3" style="width: 80px; height: 80px; object-fit: cover;">
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 fw-bold">
+                                        <a href="#" class="text-decoration-none text-dark hover-title">
+                                            {{ [
+                                                'How to Build a Successful SaaS Product',
+                                                'The Future of Remote Work in 2024',
+                                                '10 Essential UI/UX Design Principles'
+                                            ][i] }}
+                                        </a>
+                                    </h6>
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <i class="far fa-calendar-alt me-1"></i>
+                                        <span>{{ ['May 15, 2025', 'June 10, 2024', 'January 5, 2023'][i] }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Newsletter Widget -->
+                <div class="sidebar-widget card border-0 shadow-sm mb-4 animate-fade-in-right" data-delay="4">
+                    <div class="card-body p-4 bg-gradient-primary text-white">
+                        <div class="text-center">
+                            <div class="icon-box bg-blue bg-opacity-20 text-white d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                                <i class="fas fa-envelope-open-text fa-lg"></i>
+                            </div>
+                            <h5 class="fw-bold mb-3">Stay Updated</h5>
+                            <p class="small mb-4 opacity-90">Get the latest articles and insights delivered to your inbox</p>
+                            <form class="newsletter-form">
+                                <div class="input-group mb-3">
+                                    <input type="email" class="form-control" placeholder="Your email address" required>
+                                    <button class="btn btn-light" type="submit">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                                <p class="small opacity-75 mb-0">No spam, unsubscribe anytime</p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tags Cloud Widget -->
+                <div class="sidebar-widget card border-0 shadow-sm animate-fade-in-right" data-delay="5">
+                    <div class="card-body p-4">
+                        <div class="widget-header d-flex align-items-center mb-4">
+                            <div class="widget-icon bg-info bg-opacity-10 text-info me-3">
+                                <i class="fas fa-tags fa-lg"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0">Popular Tags</h5>
+                        </div>
+                        <div class="tags-cloud d-flex flex-wrap gap-2">
+                            {% for tag in [
+                                'Web Design', 'Development', 'Marketing', 'SEO', 'UI/UX',
+                                'Tutorials', 'Business', 'Digital Transformation', 'Productivity', 'Remote',
+                                'Freelance', 'Agency', 'Mobile', 'E-commerce', 'Technology',
+                                'Innovation', 'Growth', 'Strategy', 'Tips', 'Guide'
+                            ] %}
+                            <a href="#" class="tag-cloud-item btn btn-sm btn-outline-secondary rounded-pill px-3 animate-bounce-in" data-delay="{{ loop.index }}">
+                                {{ tag }}
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-5 bg-gradient-primary text-white position-relative overflow-hidden">
+    <!-- Animated Background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100">
+        <div class="newsletter-bg-animation"></div>
+    </div>
+
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center animate-fade-in-up">
+                <div class="icon-box bg-blue bg-opacity-20 text-white d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                    <i class="fas fa-bell fa-2x"></i>
+                </div>
+                <h2 class="fw-bold mb-3 animate-slide-in-left" data-delay="1">Never Miss an Update</h2>
+                <p class="lead mb-4 animate-fade-in-up" data-delay="2">Subscribe to our newsletter and get the latest articles, insights, and industry trends delivered directly to your inbox.</p>
+
+                <form class="newsletter-form-main row g-3 justify-content-center animate-fade-in-up" data-delay="3">
+                    <div class="col-md-8">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="fas fa-envelope text-muted"></i>
+                            </span>
+                            <input type="email" class="form-control border-start-0" placeholder="Enter your email address" required>
+                            <button class="btn btn-light" type="submit">
+                                <i class="fas fa-paper-plane me-2"></i>Subscribe Now
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="newsletter-benefits d-flex justify-content-center gap-4 mt-4 animate-fade-in-up" data-delay="4">
+                    <div class="benefit-item text-center">
+                        <i class="fas fa-check-circle text-white mb-2"></i>
+                        <p class="small mb-0 opacity-90">Weekly Digest</p>
+                    </div>
+                    <div class="benefit-item text-center">
+                        <i class="fas fa-check-circle text-white mb-2"></i>
+                        <p class="small mb-0 opacity-90">Exclusive Content</p>
+                    </div>
+                    <div class="benefit-item text-center">
+                        <i class="fas fa-check-circle text-white mb-2"></i>
+                        <p class="small mb-0 opacity-90">Unsubscribe Anytime</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Page Header Enhancements */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.floating-element-1,
+.floating-element-2,
+.floating-element-3 {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+}
+
+.floating-element-1 {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.2);
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.floating-element-2 {
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    top: 60%;
+    right: 10%;
+    animation-delay: 2s;
+}
+
+.floating-element-3 {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    top: 30%;
+    right: 20%;
+    animation-delay: 4s;
+}
+
+/* Blog Stats */
+.blog-stats {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Blog Cards */
+.blog-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.blog-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.blog-card:hover::before {
+    opacity: 1;
+}
+
+.blog-image-container {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+}
+
+.blog-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.blog-card:hover .blog-image {
+    transform: scale(1.05);
+}
+
+.blog-placeholder {
+    height: 300px;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.blog-card:hover .image-overlay {
+    opacity: 1;
+}
+
+.reading-time-badge,
+.category-badge-overlay {
+    position: absolute;
+    z-index: 3;
+}
+
+.reading-time-badge {
+    top: 1rem;
+    left: 1rem;
+}
+
+.category-badge-overlay {
+    top: 1rem;
+    right: 1rem;
+}
+
+/* Post Meta */
+.author-avatar img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.social-share .btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 2px;
+    transition: all 0.3s ease;
+}
+
+.social-share .btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Tags */
+.tag-item {
+    transition: all 0.3s ease;
+}
+
+.tag-item:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+.hover-title {
+    transition: color 0.3s ease;
+}
+
+.hover-title:hover {
+    color: #0d6efd !important;
+}
+
+/* Sidebar Widgets */
+.sidebar-widget {
+    transition: all 0.3s ease;
+}
+
+.sidebar-widget:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.widget-header {
+    border-bottom: 2px solid rgba(13, 110, 253, 0.1);
+    padding-bottom: 1rem;
+}
+
+.widget-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    background-color: rgba(13, 110, 253, 0.05);
+    transform: translateX(5px);
+}
+
+/* Featured Posts */
+.featured-post-item {
+    transition: all 0.3s ease;
+}
+
+.featured-post-item:hover {
+    transform: translateX(5px);
+}
+
+.featured-post-image img {
+    transition: transform 0.3s ease;
+}
+
+.featured-post-item:hover .featured-post-image img {
+    transform: scale(1.1);
+}
+
+/* Tags Cloud */
+.tag-cloud-item {
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.tag-cloud-item:hover {
+    background-color: #0d6efd !important;
+    color: white !important;
+    border-color: #0d6efd !important;
+}
+
+/* Newsletter */
+.newsletter-form .input-group,
+.newsletter-form-main .input-group {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 2rem;
+    overflow: hidden;
+}
+
+.newsletter-form .form-control,
+.newsletter-form-main .form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+}
+
+.newsletter-form .btn,
+.newsletter-form-main .btn {
+    border-radius: 0 2rem 2rem 0;
+    padding: 1rem 1.5rem;
+}
+
+/* Pagination */
+.pagination .page-link {
+    border-radius: 2rem;
+    padding: 0.75rem 1.25rem;
+    margin: 0 0.25rem;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background-color: rgba(13, 110, 253, 0.1);
+    transform: translateY(-2px);
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Background Patterns */
+.animated-pattern {
+    background-image:
+        radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.1) 0%, transparent 50%);
+    background-size: 200px 200px, 300px 300px;
+    animation: patternMove 20s linear infinite;
+}
+
+/* Particle Background */
+.particle-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 200px 200px;
+    animation: particleFloat 20s linear infinite;
+}
+
+@keyframes particleFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-50px); }
+}
+
+/* Newsletter Background Animation */
+.newsletter-bg-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.03)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.03)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    animation: bgFloat 15s linear infinite;
+}
+
+@keyframes bgFloat {
+    0% { transform: translateX(-30px) translateY(-30px); }
+    100% { transform: translateX(30px) translateY(30px); }
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+@keyframes patternMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+.hover-lift {
+    transition: all 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Empty State */
+.empty-state {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .blog-image-container {
+        height: 250px;
+    }
+
+    .post-meta {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .social-share {
+        margin-top: 1rem;
+    }
+
+    .widget-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .widget-icon {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Counter Animation
+    function animateCounter() {
+        const counters = document.querySelectorAll('.counter');
+
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / 100;
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+
+                if (current < target) {
+                    counter.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+
+            // Check if element is in viewport
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCounter();
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            observer.observe(counter);
+        });
+    }
+
+    // Parallax effect for floating elements
+    function initParallax() {
+        const floatingElements = document.querySelectorAll('.floating-element-1, .floating-element-2, .floating-element-3');
+
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+
+            floatingElements.forEach((element, index) => {
+                const speed = (index + 1) * 0.3;
+                element.style.transform = `translateY(${rate * speed}px) rotate(${scrolled * 0.01}deg)`;
+            });
+        });
+    }
+
+    // Blog card interactions
+    const blogCards = document.querySelectorAll('.blog-card');
+    blogCards.forEach(card => {
+        const image = card.querySelector('.blog-image');
+        const overlay = card.querySelector('.image-overlay');
+
+        card.addEventListener('mouseenter', function() {
+            if (image) {
+                image.style.transform = 'scale(1.05)';
+            }
+            if (overlay) {
+                overlay.style.opacity = '1';
+            }
+        });
+
+        card.addEventListener('mouseleave', function() {
+            if (image) {
+                image.style.transform = 'scale(1)';
+            }
+            if (overlay) {
+                overlay.style.opacity = '0';
+            }
+        });
+    });
+
+    // Tag interactions
+    const tagItems = document.querySelectorAll('.tag-item, .tag-cloud-item');
+    tagItems.forEach(tag => {
+        tag.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05) rotate(2deg)';
+        });
+
+        tag.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1) rotate(0deg)';
+        });
+    });
+
+    // Newsletter form submission
+    const newsletterForms = document.querySelectorAll('.newsletter-form, .newsletter-form-main');
+    newsletterForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = this.querySelector('input[type="email"]').value;
+            const button = this.querySelector('button[type="submit"]');
+
+            // Simulate form submission
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Subscribing...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check me-2"></i>Subscribed!';
+                button.classList.remove('btn-light', 'btn-primary');
+                button.classList.add('btn-success');
+
+                setTimeout(() => {
+                    this.querySelector('input[type="email"]').value = '';
+                    button.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Subscribe Now';
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-light');
+                    button.disabled = false;
+                }, 2000);
+            }, 1500);
+        });
+    });
+
+    // Initialize animations
+    animateCounter();
+    initParallax();
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
+{% endblock %}

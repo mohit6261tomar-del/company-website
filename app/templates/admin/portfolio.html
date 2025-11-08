@@ -1,0 +1,206 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Portfolio</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Portfolio</li>
+    </ol>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-photo-video me-1"></i>
+            Portfolio Projects
+            <a href="{{ url_for('admin.add_portfolio') }}" class="btn btn-primary btn-sm float-end">
+                <i class="fas fa-plus me-1"></i> Add Project
+            </a>
+        </div>
+        <div class="card-body">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Client</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in projects %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if project.images %}
+                                    <img src="{{ url_for('static', filename=project.images[0].image_path) }}" 
+                                         class="img-thumbnail me-3" 
+                                         style="width: 50px; height: 50px; object-fit: cover;"
+                                         alt="{{ project.project_name }}">
+                                    {% endif %}
+                                    <div>
+                                        <strong>{{ project.project_name }}</strong>
+                                        <div class="text-muted small">{{ project.category }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ project.client or 'N/A' }}</td>
+                            <td>{{ project.date_completed.strftime('%b %Y') if project.date_completed else 'N/A' }}</td>
+                            <td>
+                                {% if project.is_featured %}
+                                    <span class="badge bg-primary">Featured</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Regular</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ url_for('main.portfolio_detail', portfolio_id=project.id) }}" 
+                                       class="btn btn-sm btn-info" 
+                                       target="_blank"
+                                       title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('admin.edit_portfolio', portfolio_id=project.id) }}" 
+                                       class="btn btn-sm btn-primary"
+                                       title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" 
+                                            class="btn btn-sm btn-danger"
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal{{ project.id }}"
+                                            title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteModal{{ project.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ project.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="deleteModalLabel{{ project.id }}">Confirm Delete</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete the project "{{ project.project_name }}"?
+                                                <br><small class="text-muted">This will also delete all associated images and cannot be undone.</small>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <form class="delete-project-form" action="{{ url_for('admin.delete_portfolio', portfolio_id=project.id) }}" method="POST" style="display: inline;">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">No portfolio projects found. <a href="{{ url_for('admin.add_portfolio') }}">Add your first project</a>.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<!-- Page level plugins -->
+<script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+<!-- Page level custom scripts -->
+<script>
+    // Enable DataTables
+    $(document).ready(function() {
+        var table = $('#dataTable').DataTable({
+            "order": [[2, "desc"]] // Sort by date descending by default
+        });
+
+        // Handle delete form submission with AJAX
+        $('.delete-project-form').on('submit', function(e) {
+            e.preventDefault();
+            
+            var form = $(this);
+            var modal = form.closest('.modal');
+            
+            // Show loading state
+            var submitBtn = form.find('button[type="submit"]');
+            var originalBtnText = submitBtn.html();
+            submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...');
+            
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                dataType: 'json',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Show success message
+                        if (response.message) {
+                            // Create and show a flash message
+                            var alertHtml = `
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    ${response.message}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            `;
+                            $('.card-body').prepend(alertHtml);
+                        }
+                        
+                        // Close the modal
+                        var modalInstance = bootstrap.Modal.getInstance(modal[0]);
+                        modalInstance.hide();
+                        
+                        // Reload the page to reflect changes
+                        setTimeout(function() {
+                            window.location.href = response.redirect || window.location.href;
+                        }, 1000);
+                    } else {
+                        // Show error message
+                        alert(response.message || 'An error occurred while deleting the project.');
+                        submitBtn.prop('disabled', false).html(originalBtnText);
+                    }
+                },
+                error: function(xhr) {
+                    var errorMessage = 'An error occurred while deleting the project.';
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response && response.message) {
+                            errorMessage = response.message;
+                        }
+                    } catch (e) {}
+                    
+                    alert(errorMessage);
+                    submitBtn.prop('disabled', false).html(originalBtnText);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

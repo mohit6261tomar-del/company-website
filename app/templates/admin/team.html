@@ -1,0 +1,225 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Team Management{% endblock %}
+
+{% block page_header %}Team Members{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Team</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Team Members</h5>
+                <a href="{{ url_for('admin.add_team_member') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus me-1"></i> Add New Member
+                </a>
+            </div>
+            <div class="card-body">
+                {% if team_members %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Photo</th>
+                                    <th>Name</th>
+                                    <th>Position</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for member in team_members %}
+                                    <tr data-member-id="{{ member.id }}">
+                                        <td>
+                                            {% if member.photo_path %}
+                                                <img src="{{ url_for('static', filename=member.photo_path) }}" alt="{{ member.name }}" class="rounded-circle" width="40" height="40">
+                                            {% else %}
+                                                <div class="avatar-placeholder rounded-circle d-flex align-items-center justify-content-center bg-light" style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-user text-muted"></i>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ member.name }}</td>
+                                        <td>{{ member.position }}</td>
+                                        <td>
+                                            {% if member.email %}
+                                                <a href="mailto:{{ member.email }}">{{ member.email }}</a>
+                                            {% else %}
+                                                <span class="text-muted">Not provided</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if member.is_active %}
+                                                <span class="badge bg-success">Active</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Inactive</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{{ url_for('admin.edit_team_member', member_id=member.id) }}" class="btn btn-outline-primary" data-bs-toggle="tooltip" title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-outline-danger delete-team-member"
+                                                        data-member-id="{{ member.id }}"
+                                                        data-member-name="{{ member.name }}"
+                                                        data-bs-toggle="tooltip" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-4x text-muted"></i>
+                        </div>
+                        <h5>No team members found</h5>
+                        <p class="text-muted">Get started by adding your first team member.</p>
+                        <a href="{{ url_for('admin.add_team_member') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i> Add Team Member
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            {% if team_members %}
+                <div class="card-footer text-muted">
+                    Showing {{ team_members|length }} team member{{ '' if team_members|length == 1 else 's' }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialize tooltips
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+});
+
+// Handle team member deletion
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle delete button clicks in modals
+    document.querySelectorAll('.delete-team-member').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const memberId = this.getAttribute('data-member-id');
+            const memberName = this.getAttribute('data-member-name');
+            const button = this;
+
+            if (confirm(`Are you sure you want to delete "${memberName}"? This action cannot be undone.`)) {
+                // Disable button and show loading state
+                button.disabled = true;
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                // Get CSRF token from meta tag
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                // Send AJAX request to delete team member
+                fetch(`/admin/team/${memberId}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the table row
+                        const row = document.querySelector(`tr[data-member-id="${memberId}"]`);
+                        if (row) {
+                            row.style.opacity = '0';
+                            row.style.transform = 'translateX(-100%)';
+                            setTimeout(() => {
+                                row.remove();
+                            }, 300);
+                        }
+
+                        // Update the counter
+                        const counter = document.querySelector('.card-footer .text-muted');
+                        if (counter) {
+                            const currentCount = parseInt(counter.textContent.match(/Showing (\d+)/)[1]);
+                            const newCount = currentCount - 1;
+                            counter.textContent = `Showing ${newCount} team member${newCount === 1 ? '' : 's'}`;
+
+                            // If no more members, show empty state
+                            if (newCount === 0) {
+                                document.querySelector('.table-responsive').innerHTML = `
+                                    <div class="text-center py-5">
+                                        <div class="mb-3">
+                                            <i class="fas fa-users fa-4x text-muted"></i>
+                                        </div>
+                                        <h5>No team members found</h5>
+                                        <p class="text-muted">Get started by adding your first team member.</p>
+                                        <a href="/admin/team/add" class="btn btn-primary">
+                                            <i class="fas fa-plus me-1"></i> Add Team Member
+                                        </a>
+                                    </div>
+                                `;
+                            }
+                        }
+
+                        // Show success message
+                        showAlert('Team member deleted successfully!', 'success');
+                    } else {
+                        showAlert(data.message || 'An error occurred while deleting the team member.', 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('An error occurred while deleting the team member. Please try again.', 'danger');
+                })
+                .finally(() => {
+                    // Re-enable button and restore content
+                    button.disabled = false;
+                    button.innerHTML = originalContent;
+                });
+            }
+        });
+    });
+});
+
+// Function to show alerts
+function showAlert(message, type) {
+    // Remove existing alerts
+    document.querySelectorAll('.alert.position-fixed').forEach(alert => alert.remove());
+
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);';
+    alertDiv.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'} me-2"></i>
+            <div>${message}</div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    `;
+
+    document.body.appendChild(alertDiv);
+
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.classList.remove('show');
+            setTimeout(() => alertDiv.remove(), 150);
+        }
+    }, 5000);
+}
+</script>
+{% endblock %}

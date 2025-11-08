@@ -1,0 +1,318 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Company Information{% endblock %}
+
+{% block page_header %}Company Information{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Company Info</li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Basic Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.name.label(class="form-label") }}
+                                {{ form.name(class="form-control" + (' is-invalid' if form.name.errors else '')) }}
+                                {% for error in form.name.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.tagline.label(class="form-label") }}
+                                {{ form.tagline(class="form-control" + (' is-invalid' if form.tagline.errors else '')) }}
+                                {% for error in form.tagline.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        {{ form.about_us.label(class="form-label") }}
+                        {{ form.about_us(class="form-control" + (' is-invalid' if form.about_us.errors else ''), rows=5) }}
+                        {% for error in form.about_us.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <small class="form-text text-muted">A brief description of your company.</small>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.email.label(class="form-label") }}
+                                {{ form.email(class="form-control" + (' is-invalid' if form.email.errors else '')) }}
+                                {% for error in form.email.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.phone.label(class="form-label") }}
+                                {{ form.phone(class="form-control" + (' is-invalid' if form.phone.errors else '')) }}
+                                {% for error in form.phone.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        {{ form.address.label(class="form-label") }}
+                        {{ form.address(class="form-control" + (' is-invalid' if form.address.errors else ''), rows=2) }}
+                        {% for error in form.address.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Logo</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="logo" name="logo" accept="image/*">
+                                    <label class="custom-file-label" for="logo">
+                                        {% if company and company.logo_path %}
+                                            {{ company.logo_path.split('/')[-1] }}
+                                        {% else %}
+                                            Choose logo...
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                {% if company and company.logo_path %}
+                                    <div class="mt-2">
+                                        <img src="{{ url_for('static', filename=company.logo_path) }}" alt="Current Logo" class="img-thumbnail" style="max-height: 100px;">
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Recommended size: 200x50px (transparent PNG)</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Favicon</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="favicon" name="favicon" accept="image/x-icon,image/vnd.microsoft.icon">
+                                    <label class="custom-file-label" for="favicon">
+                                        {% if company and company.favicon_path %}
+                                            {{ company.favicon_path.split('/')[-1] }}
+                                        {% else %}
+                                            Choose favicon...
+                                        {% endif %}
+                                    </label>
+                                </div>
+                                {% if company and company.favicon_path %}
+                                    <div class="mt-2">
+                                        <img src="{{ url_for('static', filename=company.favicon_path) }}" alt="Current Favicon" class="img-thumbnail" style="width: 32px; height: 32px;">
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">Recommended format: .ico, 32x32px</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group form-check mb-3">
+                        {{ form.is_active(class="form-check-input" + (' is-invalid' if form.is_active.errors else '')) }}
+                        {{ form.is_active.label(class="form-check-label") }}
+                        {% for error in form.is_active.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <small class="form-text text-muted">If unchecked, the website will show a maintenance page.</small>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Save Changes
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary">
+                            <i class="fas fa-undo me-1"></i> Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Social Media</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fab fa-facebook-f"></i></span>
+                                    {{ form.facebook_url(class="form-control" + (' is-invalid' if form.facebook_url.errors else ''), placeholder="https://facebook.com/yourpage") }}
+                                </div>
+                                {% for error in form.facebook_url.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                                    {{ form.twitter_url(class="form-control" + (' is-invalid' if form.twitter_url.errors else ''), placeholder="https://twitter.com/yourhandle") }}
+                                </div>
+                                {% for error in form.twitter_url.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fab fa-linkedin-in"></i></span>
+                                    {{ form.linkedin_url(class="form-control" + (' is-invalid' if form.linkedin_url.errors else ''), placeholder="https://linkedin.com/company/yourcompany") }}
+                                </div>
+                                {% for error in form.linkedin_url.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fab fa-instagram"></i></span>
+                                    {{ form.instagram_url(class="form-control" + (' is-invalid' if form.instagram_url.errors else ''), placeholder="https://instagram.com/yourprofile") }}
+                                </div>
+                                {% for error in form.instagram_url.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                            
+                            <div class="form-group mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fab fa-youtube"></i></span>
+                                    {{ form.youtube_url(class="form-control" + (' is-invalid' if form.youtube_url.errors else ''), placeholder="https://youtube.com/yourchannel") }}
+                                </div>
+                                {% for error in form.youtube_url.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Save Social Links
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">SEO & Analytics</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="form-group mb-3">
+                        {{ form.seo_title.label(class="form-label") }}
+                        {{ form.seo_title(class="form-control" + (' is-invalid' if form.seo_title.errors else '')) }}
+                        {% for error in form.seo_title.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <small class="form-text text-muted">Page title shown in search engines (50-60 characters recommended).</small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        {{ form.seo_description.label(class="form-label") }}
+                        {{ form.seo_description(class="form-control" + (' is-invalid' if form.seo_description.errors else ''), rows=3) }}
+                        {% for error in form.seo_description.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <small class="form-text text-muted">Meta description shown in search results (150-160 characters recommended).</small>
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        {{ form.seo_keywords.label(class="form-label") }}
+                        {{ form.seo_keywords(class="form-control" + (' is-invalid' if form.seo_keywords.errors else '')) }}
+                        {% for error in form.seo_keywords.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <small class="form-text text-muted">Comma-separated list of keywords relevant to your business.</small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        {{ form.google_analytics_code.label(class="form-label") }}
+                        {{ form.google_analytics_code(class="form-control" + (' is-invalid' if form.google_analytics_code.errors else ''), rows=3, placeholder="<!-- Google Analytics code here -->") }}
+                        {% for error in form.google_analytics_code.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <small class="form-text text-muted">Paste your Google Analytics tracking code here.</small>
+                    </div>
+                    
+                    <div class="form-group mb-4">
+                        {{ form.facebook_pixel_code.label(class="form-label") }}
+                        {{ form.facebook_pixel_code(class="form-control" + (' is-invalid' if form.facebook_pixel_code.errors else ''), rows=3, placeholder="<!-- Facebook Pixel code here -->") }}
+                        {% for error in form.facebook_pixel_code.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                        <small class="form-text text-muted">Paste your Facebook Pixel code here.</small>
+                    </div>
+                    
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> Save SEO Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Update file input label with selected file name
+const fileInputs = document.querySelectorAll('.custom-file-input');
+fileInputs.forEach(input => {
+    input.addEventListener('change', function() {
+        const fileName = this.files[0] ? this.files[0].name : 'Choose file...';
+        const label = this.nextElementSibling;
+        label.textContent = fileName;
+        
+        // Preview image if it's an image file
+        if (this.files && this.files[0] && this.files[0].type.match('image.*')) {
+            const reader = new FileReader();
+            const previewId = this.id + 'Preview';
+            let preview = document.getElementById(previewId);
+            
+            if (!preview) {
+                preview = document.createElement('div');
+                preview.id = previewId;
+                preview.className = 'mt-2';
+                this.parentNode.appendChild(preview);
+            }
+            
+            reader.onload = function(e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" class="img-thumbnail" style="max-height: 100px;">';
+            }
+            
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+</script>
+{% endblock %}
