@@ -17,7 +17,7 @@
             <div class="col-12 text-center">
                 <div class="animate-fade-in-up">
                     <span class="badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 animate-bounce-in">Discover Our Story</span>
-                    <h1 class="fw-bold text-black mb-4 display-4 animate-slide-in-left" data-delay="1">About Us</h1>
+                    <h1 class="fw-bold text-white mb-4 display-4 animate-slide-in-left" data-delay="1">About Us</h1>
                     <h2 class="lead text-black-100 mb- animate-slide-in-right" data-delay="2">Learn about our journey, our values, and the passionate team behind our success</h2>
                 </div>
 
@@ -45,14 +45,14 @@
                     <h2 class="fw-bold mb-4 text-gradient animate-slide-in-left">Who We Are</h2>
 
                     {% if company and company.about_us %}
-                        <div class="content animate-fade-in-up" data-delay="1">
+                        <div class="content animate-fade-in-up text-white" data-delay="1">
                             {{ company.about_us|safe }}
                         </div>
                     {% else %}
                         <div class="content animate-fade-in-up" data-delay="1">
-                            <p class="lead text-muted mb-4">Welcome to {{ company.name if company else 'KodesMind' }}, a leading software development company dedicated to delivering innovative solutions that help businesses thrive in the digital age.</p>
-                            <p class="mb-4">Founded in 2020, we've grown from a small team of passionate developers to a full-service digital agency serving clients worldwide. Our mission is to empower businesses through cutting-edge technology, creative design, and strategic thinking.</p>
-                            <p class="mb-4">We believe in building long-term partnerships with our clients, understanding their unique challenges, and delivering tailored solutions that drive real results. With a team of experienced professionals and a commitment to excellence, we've helped hundreds of businesses transform their ideas into successful digital products.</p>
+                            <p class="lead text-white mb-4">Welcome to {{ company.name if company else 'KodesMind' }}, a leading software development company dedicated to delivering innovative solutions that help businesses thrive in the digital age.</p>
+                            <p class="mb-4 text-white">Founded in 2020, we've grown from a small team of passionate developers to a full-service digital agency serving clients worldwide. Our mission is to empower businesses through cutting-edge technology, creative design, and strategic thinking.</p>
+                            <p class="mb-4 text-white">We believe in building long-term partnerships with our clients, understanding their unique challenges, and delivering tailored solutions that drive real results. With a team of experienced professionals and a commitment to excellence, we've helped hundreds of businesses transform their ideas into successful digital products.</p>
                         </div>
                     {% endif %}
 
@@ -66,8 +66,8 @@
 <section class="py-5">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="fw-bold mb-3">Our Achievements</h2>
-      <h4 class="text-muted">Proud milestones in our journey</h4>
+      <h2 class="fw-bold mb-3 text-blue">Our Achievements</h2>
+      <h4 class="text-white">Proud milestones in our journey</h4>
     </div>
     <div class="row g-4">
       {% with title='200+ Projects', description='Successfully delivered projects for satisfied clients.', icon='fas fa-project-diagram', color='warning' %}
@@ -230,7 +230,7 @@
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Team</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Experts</h2>
-            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Our team of talented professionals is dedicated to helping your business succeed with passion and expertise.</h4>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1" style="color: white !important;">Our team of talented professionals is dedicated to helping your business succeed with passion and expertise.</h4>
         </div>
 
         {% if team %}
@@ -305,26 +305,15 @@
                         <!-- Social Links Overlay -->
                         <div class="team-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                             <div class="social-links">
-                                {% if member.linkedin_url %}
-                                <a href="{{ member.linkedin_url }}" class="social-link bg-primary text-white me-2 animate-pulse" target="_blank" rel="noopener">
+                                <a href="#" class="social-link bg-primary text-white me-2 animate-pulse">
                                     <i class="fab fa-linkedin-in"></i>
                                 </a>
-                                {% endif %}
-                                {% if member.twitter_url %}
-                                <a href="{{ member.twitter_url }}" class="social-link bg-info text-white me-2 animate-pulse" target="_blank" rel="noopener">
+                                <a href="#" class="social-link bg-info text-white me-2 animate-pulse">
                                     <i class="fab fa-twitter"></i>
                                 </a>
-                                {% endif %}
-                                {% if member.facebook_url %}
-                                <a href="{{ member.facebook_url }}" class="social-link bg-primary text-white animate-pulse" target="_blank" rel="noopener">
+                                <a href="#" class="social-link bg-primary text-white animate-pulse">
                                     <i class="fab fa-facebook-f"></i>
                                 </a>
-                                {% endif %}
-                                {% if member.instagram_url %}
-                                <a href="{{ member.instagram_url }}" class="social-link bg-danger text-white animate-pulse" target="_blank" rel="noopener">
-                                    <i class="fab fa-instagram"></i>
-                                </a>
-                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -372,7 +361,7 @@
                         </div>
                         <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
                             <div class="timeline-year text-primary fw-bold">2020</div>
-                            <h5 class="fw-bold mb-2">Company Founded</h5>
+                            <h5 class="fw-bold mb-2 text-black">Company Founded</h5>
                             <p class="text-muted mb-0">Started with a vision to revolutionize digital solutions for businesses worldwide.</p>
                         </div>
                     </div>
@@ -385,7 +374,7 @@
                         </div>
                         <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
                             <div class="timeline-year text-success fw-bold">2021</div>
-                            <h5 class="fw-bold mb-2">Team Expansion</h5>
+                            <h5 class="fw-bold mb-2 text-black">Team Expansion</h5>
                             <p class="text-muted mb-0">Grew our team to 25 talented professionals across multiple disciplines.</p>
                         </div>
                     </div>
@@ -398,7 +387,7 @@
                         </div>
                         <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
                             <div class="timeline-year text-info fw-bold">2022</div>
-                            <h5 class="fw-bold mb-2">100 Projects Milestone</h5>
+                            <h5 class="fw-bold mb-2 text-black">100 Projects Milestone</h5>
                             <p class="text-muted mb-0">Celebrated completing 100 successful projects for clients globally.</p>
                         </div>
                     </div>
@@ -411,7 +400,7 @@
                         </div>
                         <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
                             <div class="timeline-year text-warning fw-bold">2023</div>
-                            <h5 class="fw-bold mb-2">Global Expansion</h5>
+                            <h5 class="fw-bold mb-2 text-black">Global Expansion</h5>
                             <p class="text-muted mb-0">Expanded operations to serve clients in 25+ countries worldwide.</p>
                         </div>
                     </div>

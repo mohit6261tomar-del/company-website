@@ -1,0 +1,236 @@
+{% extends "crm/base.html" %}
+
+{% block title %}{{ title }} - Kodeminds CRM{% endblock %}
+
+{% block sidebar %}
+<nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+    <div class="position-sticky pt-3">
+        <div class="text-center mb-4">
+            <h4 class="text-white"><i class="fas fa-chart-line"></i> Kodeminds CRM</h4>
+            <p class="text-white-50 small">Staff Panel</p>
+        </div>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('crm.staff_dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <a class="nav-link text-danger" href="{{ url_for('crm.staff_logout') }}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+        
+        <div class="mt-4 p-3 bg-white bg-opacity-10 rounded">
+            <p class="text-white small mb-1"><strong>{{ staff.name }}</strong></p>
+            <p class="text-white-50 small mb-0">{{ staff.phone_number }}</p>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block topbar %}
+<div class="topbar d-flex justify-content-between align-items-center">
+    <h3 class="mb-0">Lead Management Dashboard</h3>
+    <div>
+        <span class="badge bg-primary">My Leads: {{ my_leads }}</span>
+        <span class="badge bg-info ms-2">Total: {{ total_leads }}</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Search and Filter -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('crm.staff_dashboard') }}" class="row g-3">
+            <div class="col-md-4">
+                <input type="text" name="search" class="form-control" placeholder="Search by name, business, or phone" value="{{ search_query }}">
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="new" {% if status_filter == 'new' %}selected{% endif %}>New</option>
+                    <option value="contacted" {% if status_filter == 'contacted' %}selected{% endif %}>Contacted</option>
+                    <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+                    <option value="won" {% if status_filter == 'won' %}selected{% endif %}>Won</option>
+                    <option value="lost" {% if status_filter == 'lost' %}selected{% endif %}>Lost</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="sort_by" class="form-select">
+                    <option value="created_at_desc" {% if sort_by == 'created_at_desc' %}selected{% endif %}>Newest First</option>
+                    <option value="created_at_asc" {% if sort_by == 'created_at_asc' %}selected{% endif %}>Oldest First</option>
+                    <option value="business_name_asc" {% if sort_by == 'business_name_asc' %}selected{% endif %}>Name A-Z</option>
+                    <option value="business_name_desc" {% if sort_by == 'business_name_desc' %}selected{% endif %}>Name Z-A</option>
+                    <option value="status" {% if sort_by == 'status' %}selected{% endif %}>Status</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Leads Table -->
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-list"></i> All Leads</span>
+        <span class="text-muted">{{ leads.total }} leads found</span>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Business Name</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Assigned To</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in leads.items %}
+                    <tr>
+                        <td>{{ lead.id }}</td>
+                        <td>
+                            <strong>{{ lead.business_name }}</strong>
+                            {% if lead.lead_name %}
+                            <br><small class="text-muted">{{ lead.lead_name }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <i class="fas fa-phone"></i> {{ lead.phone_number }}<br>
+                            {% if lead.email %}
+                            <small><i class="fas fa-envelope"></i> {{ lead.email }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if lead.status == 'new' %}
+                            <span class="badge bg-warning badge-status">New</span>
+                            {% elif lead.status == 'contacted' %}
+                            <span class="badge bg-info badge-status">Contacted</span>
+                            {% elif lead.status == 'in_progress' %}
+                            <span class="badge bg-primary badge-status">In Progress</span>
+                            {% elif lead.status == 'won' %}
+                            <span class="badge bg-success badge-status">Won</span>
+                            {% elif lead.status == 'lost' %}
+                            <span class="badge bg-danger badge-status">Lost</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if lead.priority == 'high' %}
+                            <span class="badge bg-danger">High</span>
+                            {% elif lead.priority == 'medium' %}
+                            <span class="badge bg-warning">Medium</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Low</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if lead.assigned_staff %}
+                            <i class="fas fa-user"></i> {{ lead.assigned_staff.name }}
+                            {% else %}
+                            <span class="text-muted">Unassigned</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('crm.staff_view_lead', lead_id=lead.id) }}" class="btn btn-sm btn-primary action-btn" title="View">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="tel:{{ lead.phone_number }}" class="btn btn-sm btn-success action-btn" title="Call" onclick="logActivity({{ lead.id }}, 'call')">
+                                <i class="fas fa-phone"></i>
+                            </a>
+                            <a href="https://wa.me/{{ lead.phone_number.replace('+', '').replace(' ', '') }}" 
+                               target="_blank" class="btn btn-sm btn-success action-btn" title="WhatsApp" onclick="logActivity({{ lead.id }}, 'whatsapp')">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <a href="{{ url_for('crm.staff_edit_lead', lead_id=lead.id) }}" class="btn btn-sm btn-warning action-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="btn btn-sm btn-danger action-btn" title="Delete" onclick="deleteLead({{ lead.id }})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        {% if leads.pages > 1 %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+                {% if leads.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('crm.staff_dashboard', page=leads.prev_num, search=search_query, status=status_filter, sort_by=sort_by) }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                {% for page_num in leads.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if page_num == leads.page %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ page_num }}</a></li>
+                        {% else %}
+                        <li class="page-item"><a class="page-link" href="{{ url_for('crm.staff_dashboard', page=page_num, search=search_query, status=status_filter, sort_by=sort_by) }}">{{ page_num }}</a></li>
+                        {% endif %}
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if leads.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('crm.staff_dashboard', page=leads.next_num, search=search_query, status=status_filter, sort_by=sort_by) }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function logActivity(leadId, activityType) {
+    fetch(`/crm/staff/lead/${leadId}/log-activity`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        },
+        body: `activity_type=${activityType}`
+    });
+}
+
+function deleteLead(leadId) {
+    if (confirm('Are you sure you want to delete this lead?')) {
+        fetch(`/crm/staff/lead/${leadId}/delete`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Error deleting lead: ' + data.message);
+            }
+        });
+    }
+}
+</script>
+{% endblock %}

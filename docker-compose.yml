@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=mysql+pymysql://root:password@db:3306/company_db
+      - SECRET_KEY=your-production-secret-key
+    depends_on:
+      - db
+    volumes:
+      - ./instance:/app/instance
+      - ./app/static/uploads:/app/app/static/uploads
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=company_db
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=company_user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql_data:

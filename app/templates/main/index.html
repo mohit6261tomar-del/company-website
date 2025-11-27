@@ -2823,7 +2823,7 @@
 </style>
 {% block content %}
 <!-- Enhanced Hero Slider Section -->
-<section class="hero-slider-wrapper position-relative">
+<section class="hero-slider-wrapper position-relative" data-bg-section="hero">
     <div class="hero-slider position-relative overflow-hidden">
         <!-- Slide 1 -->
         <div class="slide-item active" data-bg="COMP 1.jpg">
@@ -2837,7 +2837,7 @@
                              style="color: rgb(204, 86, 86) !important; text-shadow: 0 2px 10px rgba(199, 79, 79, 0.5);">
                              {{ company.tagline if company else 'Innovative Solutions for Your Business' }}
                             </h1>
-                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2" style="color: white;">
                                 We help businesses transform their ideas into reality with cutting-edge technology and creative solutions.
                                 Our team of experts is dedicated to delivering exceptional results that drive growth and success.
                             </p>
@@ -2866,7 +2866,7 @@
                             <h1 class="hero-title display-3 fw-bold mb-4 animate-fade-in-up animate-delay-1" style="color: white !important;">
                                 Transform Your Digital Presence
                             </h1>
-                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2" style="color: white;">
                                 Leverage cutting-edge technologies to create stunning digital experiences that captivate your audience
                                 and drive meaningful business results across all platforms.
                             </p>
@@ -2896,7 +2896,7 @@
                             <h1 class="hero-title display-3 fw-bold mb-4 animate-fade-in-up animate-delay-1" style="color: white !important;">
                                 Build Something Extraordinary
                             </h1>
-                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2" style="color: white;">
                                 From concept to deployment, we craft digital solutions that not only meet your needs
                                 but exceed expectations and set new standards in your industry.
                             </p>
@@ -2926,7 +2926,7 @@
                                 <h1 class="hero-title display-3 fw-bold animate-fade-in-up animate-delay-1" style="color: white !important;">
                                     Fast, Reliable, Scalable
                                 </h1>
-                                <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                                <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2" style="color: white;">
                                     Experience lightning-fast performance with enterprise-grade reliability.
                                     Our solutions scale effortlessly to handle any workload or traffic demands.
                                 </p>
@@ -2957,7 +2957,7 @@
                                 <h1 class="hero-title display-3 fw-bold animate-fade-in-up animate-delay-1" style="color: white !important;">
                                     Driven by Excellence
                                 </h1>
-                                <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                                <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2" style="color: white;">
                                     We're passionate about creating digital experiences that make a difference.
                                     Every project is an opportunity to push boundaries and deliver exceptional results.
                                 </p>
@@ -2987,7 +2987,7 @@
                             <h1 class="hero-title display-3 fw-bold mb-4 animate-fade-in-up animate-delay-1" style="color: white !important;">
                                 Tomorrow's Technology Today
                             </h1>
-                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2 text-white-100">
+                            <p class="hero-subtitle lead mb-5 animate-fade-in-up animate-delay-2" style="color: white;">
                                 Stay ahead of the curve with future-proof solutions built on emerging technologies.
                                 We prepare your business for the digital landscape of tomorrow.
                             </p>
@@ -3031,7 +3031,7 @@
     </div>
 </section>
 <!-- About Us Section -->
-<section class="py-5 position-relative" id="about">
+<section class="py-5 position-relative" id="about" data-bg-section="about">
     <!-- Background Pattern -->
     <div class="animated-pattern position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
     <div class="container position-relative">
@@ -3041,14 +3041,14 @@
                     <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Story</span>
                     <h2 class="fw-bold mb-4 text-gradient animate-slide-in-left">Who We Are</h2>
                     {% if company and company.about_us %}
-                        <div class="content animate-fade-in-up" data-delay="1">
+                        <div class="content animate-fade-in-up text-white" data-delay="1">
                             {{ company.about_us|safe }}
                         </div>
                     {% else %}
-                        <div class="content animate-fade-in-up" data-delay="1">
-                            <p class="lead text-muted mb-4">Welcome to {{ company.name if company else 'our company' }}, a leading software development company dedicated to delivering innovative solutions that help businesses thrive in the digital age.</p>
-                            <p class="mb-4">Founded in 2020, we've grown from a small team of passionate developers to a full-service digital agency serving clients worldwide. Our mission is to empower businesses through cutting-edge technology, creative design, and strategic thinking.</p>
-                            <p class="mb-4">We believe in building long-term partnerships with our clients, understanding their unique challenges, and delivering tailored solutions that drive real results. With a team of experienced professionals and a commitment to excellence, we've helped hundreds of businesses transform their ideas into successful digital products.</p>
+                        <div class="content animate-fade-in-up text-white" data-delay="1">
+                            <h5 class="lead mb-4" >Welcome to {{ company.name if company else 'our company' }}, a leading software development company dedicated to delivering innovative solutions that help businesses thrive in the digital age.</h5>
+                            <h5 class="mb-4">Founded in 2020, we've grown from a small team of passionate developers to a full-service digital agency serving clients worldwide. Our mission is to empower businesses through cutting-edge technology, creative design, and strategic thinking.</h5>
+                            <h5 class="mb-4">We believe in building long-term partnerships with our clients, understanding their unique challenges, and delivering tailored solutions that drive real results. With a team of experienced professionals and a commitment to excellence, we've helped hundreds of businesses transform their ideas into successful digital products.</h5>
                         </div>
                     {% endif %}
                     </div>
@@ -3058,16 +3058,21 @@
     </div>
 </section>
 <!-- Our Core Values Section -->
-<section class="py-5 bg-light position-relative">
-    <!-- Background Elements -->
-    <div class="position-absolute top-0 start-0 w-100 h-100">
-        <div class="shape-divider"></div>
+<section class="py-5 position-relative core-values-section">
+    <!-- 3D Animated Background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100 core-values-bg">
+        <div class="core-values-gradient"></div>
+        <div class="core-values-shapes">
+            <div class="shape-3d shape-1"></div>
+            <div class="shape-3d shape-2"></div>
+            <div class="shape-3d shape-3"></div>
+        </div>
     </div>
     <div class="container position-relative">
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Why Choose Us</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Core Values</h2>
-            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We are committed to delivering exceptional value to our clients through our core principles and values that guide everything we do.</h4>
+            <h4 class="w-lg-50 mx-auto animate-fade-in-up" data-delay="1" style="color: white;">We are committed to delivering exceptional value to our clients through our core principles and values that guide everything we do.</h4>
         </div>
         <div class="row g-4 stagger-children">
             <div class="col-md-6 col-lg-4">
@@ -3188,11 +3193,21 @@
     </div>
 </section>
 <!-- Static Cards Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold mb-3">Our Key Features</h2>
-            <h4 class="text-muted">Discover what makes us stand out</h4>
+<section class="py-5 position-relative key-features-section">
+    <!-- 3D Animated Background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100 key-features-bg">
+        <div class="key-features-gradient"></div>
+        <div class="key-features-particles">
+            <div class="particle-3d particle-1"></div>
+            <div class="particle-3d particle-2"></div>
+            <div class="particle-3d particle-3"></div>
+            <div class="particle-3d particle-4"></div>
+        </div>
+    </div>
+    <div class="container position-relative">
+    <div class="text-center mb-5">
+            <h2 class="fw-bold mb-3 text-blue">Our Key Features</h2>
+            <h4 class="text-white">Discover what makes us stand out</h4>
         </div>
         <div class="row g-4">
             {% with title='Innovative Solutions', description='We create cutting-edge software tailored to your business needs.', icon='fas fa-lightbulb', color='primary' %}
@@ -3208,14 +3223,14 @@
     </div>
 </section>
 <!-- Services Section -->
-<section class="py-5 my-5 position-relative" id="services">
+<section class="py-5 my-5 position-relative" id="services" data-bg-section="services">
     <!-- Animated Background Pattern -->
     <div class="animated-pattern position-absolute top-0 start-0 w-100 h-100 opacity-25"></div>
     <div class="container position-relative">
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Services</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">What We Offer</h2>
-            <h4 class="text-muted w-lg-100 mx-auto animate-fade-in-up" data-delay="1">We provide a wide range of services to help your business grow and succeed in the digital world.</h4>
+            <h4 class="w-lg-100 mx-auto animate-fade-in-up" data-delay="1" style="color: white;">We provide a wide range of services to help your business grow and succeed in the digital world.</h4>
         </div>
         <div class="row g-4 stagger-children">
             {% if services %}
@@ -3260,16 +3275,22 @@
     </div>
 </section>
 <!-- Comprehensive Services Section -->
-<section class="py-5 bg-light position-relative">
-    <!-- Background Elements -->
-    <div class="position-absolute top-0 start-0 w-100 h-100">
-        <div class="process-bg-pattern"></div>
+<section class="py-5 position-relative how-we-work-section">
+    <!-- 3D Animated Background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100 how-we-work-bg">
+        <div class="how-we-work-gradient"></div>
+        <div class="how-we-work-geometry">
+            <div class="geometry-3d geo-1"></div>
+            <div class="geometry-3d geo-2"></div>
+            <div class="geometry-3d geo-3"></div>
+            <div class="geometry-3d geo-4"></div>
+        </div>
     </div>
     <div class="container position-relative">
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Process</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">How We Work</h2>
-            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We follow a proven, collaborative process to ensure the success of every project we undertake, from concept to deployment.</h4>
+            <h4 class="w-lg-50 mx-auto animate-fade-in-up" data-delay="1" style="color: white;">We follow a proven, collaborative process to ensure the success of every project we undertake, from concept to deployment.</h4>
         </div>
         <div class="process-timeline position-relative">
             <div class="timeline-connector"></div>
@@ -3342,7 +3363,7 @@
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Technologies</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Technology Stack</h2>
-            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We leverage cutting-edge technologies and modern frameworks to deliver high-performance, scalable solutions that drive business growth.</h4>
+            <h4 class="w-lg-50 mx-auto animate-fade-in-up" data-delay="1" style="color: white;">We leverage cutting-edge technologies and modern frameworks to deliver high-performance, scalable solutions that drive business growth.</h4>
         </div>
         <div class="row g-4 justify-content-center stagger-children">
             {% for tech in [
@@ -3387,28 +3408,35 @@
 </section>
 <!-- Portfolio Section -->
 {% if featured_portfolio %}
-<section class="py-5 bg-light position-relative">
-    <!-- Gradient Overlay -->
-    <div class="gradient-overlay-light position-absolute top-0 start-0 w-100 h-100"></div>
+<section class="py-5 position-relative featured-project-section">
+    <!-- 3D Animated Background -->
+    <div class="position-absolute top-0 start-0 w-100 h-100 featured-project-bg">
+        <div class="featured-project-gradient"></div>
+        <div class="featured-project-waves">
+            <div class="wave-3d wave-1"></div>
+            <div class="wave-3d wave-2"></div>
+            <div class="wave-3d wave-3"></div>
+        </div>
+    </div>
     <div class="container position-relative">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-4 mb-lg-0 animate-slide-in-left animate-delay-1">
                 <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Featured Project</span>
                 <h2 class="fw-bold mb-3 text-gradient animate-fade-in-up">{{ featured_portfolio.project_name }}</h2>
-                <h4 class="text-muted mb-4 animate-fade-in-up animate-delay-2">{{ featured_portfolio.description|truncate(250) }}</h4>
+                <h4 class="text-muted mb-4 animate-fade-in-up animate-delay-2" style="color: white !important;">{{ featured_portfolio.description|truncate(250) }}</h4>
                 <ul class="list-unstyled mb-4 animate-fade-in-up animate-delay-3">
                     {% if featured_portfolio.client %}
-                    <li class="mb-2 hover-lift-enhanced">
+                    <li class="mb-2 hover-lift-enhanced" style="color: white;">
                         <i class="fas fa-user-tie text-primary me-2"></i> <strong>Client:</strong> {{ featured_portfolio.client }}
                     </li>
                     {% endif %}
                     {% if featured_portfolio.project_date %}
-                    <li class="mb-2 hover-lift-enhanced">
+                    <li class="mb-2 hover-lift-enhanced" style="color: white;">
                         <i class="far fa-calendar-alt text-primary me-2"></i> <strong>Date:</strong> {{ featured_portfolio.project_date.strftime('%B %Y') }}
                     </li>
                     {% endif %}
                     {% if featured_portfolio.project_url %}
-                    <li class="mb-2 hover-lift-enhanced">
+                    <li class="mb-2 hover-lift-enhanced" style="color: white;">
                         <i class="fas fa-link text-primary me-2"></i> <strong>Website:</strong>
                         <a href="{{ featured_portfolio.project_url }}" target="_blank" class="text-decoration-none hover-scale">
                             {{ featured_portfolio.project_url|replace('https://', '')|replace('http://', '') }}
@@ -3449,7 +3477,7 @@
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Featured Work</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Featured Projects</h2>
-            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Explore our most successful and innovative projects that showcase our expertise and creative excellence.</h4>
+            <h4 class="w-lg-50 mx-auto animate-fade-in-up" data-delay="1" style="color: white;">Explore our most successful and innovative projects that showcase our expertise and creative excellence.</h4>
         </div>
         <div class="row g-4">
             <!-- Featured Project 1 -->
@@ -3522,7 +3550,7 @@
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Team</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Experts</h2>
-            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Our team of talented professionals is dedicated to helping your business succeed with passion and expertise.</h4>
+            <h4 class="w-lg-50 mx-auto animate-fade-in-up" data-delay="1" style="color: white;">Our team of talented professionals is dedicated to helping your business succeed with passion and expertise.</h4>
         </div>
 
         {% if team %}
@@ -3605,26 +3633,26 @@
                     <div class="row text-center">
                         <div class="col-md-3 mb-3 mb-md-0">
                             <div class="stat-item">
-                                <div class="counter text-white" data-target="50">0</div>
-                                <p class="text-white-50 small mb-0">Team Members</p>
+                                <div class="counter text-black" data-target="50">0</div>
+                                <h4 class="text-black-50 small mb-0">Team Members</h4>
                             </div>
                         </div>
                         <div class="col-md-3 mb-3 mb-md-0">
                             <div class="stat-item">
-                                <div class="counter text-white" data-target="15">0</div>
-                                <p class="text-white-50 small mb-0">Countries</p>
+                                <div class="counter text-black" data-target="15">0</div>
+                                <h4 class="text-black-50 small mb-0">Countries</h4>
                             </div>
                         </div>
                         <div class="col-md-3 mb-3 mb-md-0">
                             <div class="stat-item">
-                                <div class="counter text-white" data-target="100">0</div>
-                                <p class="text-white-50 small mb-0">Projects Completed</p>
+                                <div class="counter text-black" data-target="100">0</div>
+                                <h4 class="text-black-50 small mb-0">Projects Completed</h4>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="stat-item">
-                                <div class="counter text-white" data-target="98">0</div>
-                                <p class="text-white-50 small mb-0">Employee Satisfaction %</p>
+                                <div class="counter text-black" data-target="98">0</div>
+                                <h4 class="text-black-50 small mb-0">Employee Satisfaction %</h4>
                             </div>
                         </div>
                     </div>
@@ -3639,7 +3667,7 @@
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Why Choose Us</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Perks & Benefits</h2>
-            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We take care of our team with a comprehensive benefits package and a great work environment.</h4>
+            <h4 class="w-lg-50 mx-auto animate-fade-in-up" data-delay="1" style="color: white;">We take care of our team with a comprehensive benefits package and a great work environment.</h4>
         </div>
         <div class="row g-4 stagger-children">
             <div class="col-md-6 col-lg-4">
@@ -3715,7 +3743,7 @@
     </div>
 </section>
 <!-- Contact Section -->
-<section class="py-5 bg-blue text-white position-relative overflow-hidden" id="contact" style="background-color: #007bff;">
+<section class="py-5 bg-blue text-white position-relative overflow-hidden" id="contact" data-bg-section="contact" style="background-color: #007bff;">
     <div class="position-absolute top-0 start-0 w-100 h-100">
         <div class="cta-bg-animation"></div>
     </div>
@@ -3743,7 +3771,7 @@
                 <i class="fas fa-paper-plane fa-2x"></i>
             </div>
             <h2 class="fw-bold mb-3 animate-slide-in-left">Get in Touch</h2>
-            <h4 class="text-muted animate-fade-in-up" data-delay="1">Have questions about working with us? Send us a message and we'll get back to you soon.</h4>
+            <h4 class="animate-fade-in-up" data-delay="1" style="color: white;">Have questions about working with us? Send us a message and we'll get back to you soon.</h4>
         </div>
         <form class="animate-fade-in-up" data-delay="2">
             <div class="row g-4">
@@ -3790,16 +3818,19 @@
                         <input class="form-control" type="file" id="resume" accept=".pdf,.doc,.docx">
                         <label for="resume">Upload Resume (PDF, DOC, DOCX)</label>
                     </div>
-                    <div class="form-text">Maximum file size: 5MB</div>
+                    <div class="form-text" style="color: white;">Maximum file size: 5MB</div>
                 </div>
                 <div class="col-12">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="privacy" required>
-                        <label class="form-check-label" for="privacy">
-                            I agree to the <a href="#" class="text-decoration-none">Privacy Policy</a> and
-                            <a href="#" class="text-decoration-none">Terms of Service</a>
+                     <div class="form-check">
+                       <input class="form-check-input" type="checkbox" id="privacy" required>
+                       <label class="form-check-label" for="privacy">
+                         <span class="text-red">I agree to</span>
+                         <a href="#" class="text-decoration-none"> Privacy Policy </a>
+                         <span class="text-red">and</span>
+                         <a href="#" class="text-decoration-none"> Terms of Service</a>
                         </label>
-                    </div>
+</div>
+  
                 </div>
                 <div class="col-12 mt-4">
                     <button type="submit" class="btn btn-primary btn-lg px-5 w-100 animate-bounce-in">
@@ -3821,7 +3852,7 @@
                             <i class="fas fa-map-marker-alt fa-2x"></i>
                         </div>
                         <h4 class="h5 fw-bold mb-3">Our Location</h4>
-                        <address class="text-muted mb-0">
+                        <address class="text-muted mb-0 text-primary">
                             {{ company.address if company and company.address else '123 Startup Street\nSan Francisco, CA 94107\nUnited States' }}
                         </address>
                     </div>
@@ -3835,14 +3866,14 @@
                         </div>
                         <h4 class="h5 fw-bold mb-3">Email Us</h4>
                         <p class="text-muted mb-1">General Inquiries:</p>
-                        <p class="mb-0">
-                            <a href="mailto:{{ company.email if company and company.email else 'info@startup.com' }}" class="text-decoration-none">
+                        <p class="mb-0" text-primary>
+                            <a href="mailto:{{ company.email if company and company.email else 'info@startup.com' }}" class="text-decoration-none text-primary">
                                 {{ company.email if company and company.email else 'info@startup.com' }}
                             </a>
                         </p>
                         <p class="text-muted mt-3 mb-1">Support:</p>
                         <p class="mb-0">
-                            <a href="mailto:support@startup.com" class="text-decoration-none">support@startup.com</a>
+                            <a href="mailto:support@startup.com" class="text-decoration-none text-primary">ms305329@gmail.com</a>
                         </p>
                     </div>
                 </div>
@@ -3856,13 +3887,13 @@
                         <h4 class="h5 fw-bold mb-3">Call Us</h4>
                         <p class="text-muted mb-1">Phone:</p>
                         <p class="mb-0">
-                            <a href="tel:+11234567890" class="text-decoration-none">
+                            <a href="tel:+11234567890" class="text-decoration-none text-primary">
                                 {{ company.phone if company and company.phone else '+1 (123) 456-7890' }}
                             </a>
                         </p>
                         <p class="text-muted mt-3 mb-1">Hours:</p>
-                        <p class="mb-0">Monday - Friday: 9:00 AM - 6:00 PM</p>
-                        <p class="mb-0">Saturday - Sunday: Closed</p>
+                        <p class="mb-0 text-primary">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                        <p class="mb-0 text- =primary">Saturday - Sunday: Closed</p>
                     </div>
                 </div>
             </div>
@@ -3886,7 +3917,7 @@
                         </div>
                         <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
                             <div class="timeline-year text-primary fw-bold">2020</div>
-                            <h5 class="fw-bold mb-2">Company Founded</h5>
+                            <h5 class="fw-bold mb-2 text-black">Company Founded</h5>
                             <p class="text-muted mb-0">Started with a vision to revolutionize digital solutions for businesses worldwide.</p>
                         </div>
                     </div>
@@ -3898,7 +3929,7 @@
                         </div>
                         <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
                             <div class="timeline-year text-success fw-bold">2021</div>
-                            <h5 class="fw-bold mb-2">Team Expansion</h5>
+                            <h5 class="fw-bold mb-2 text-black">Team Expansion</h5>
                             <p class="text-muted mb-0">Grew our team to 25 talented professionals across multiple disciplines.</p>
                         </div>
                     </div>
@@ -3910,7 +3941,7 @@
                         </div>
                         <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
                             <div class="timeline-year text-info fw-bold">2022</div>
-                            <h5 class="fw-bold mb-2">100 Projects Milestone</h5>
+                            <h5 class="fw-bold mb-2 text-black">100 Projects Milestone</h5>
                             <p class="text-muted mb-0">Celebrated completing 100 successful projects for clients globally.</p>
                         </div>
                     </div>
@@ -3922,7 +3953,7 @@
                         </div>
                         <div class="timeline-content bg-white p-4 rounded-3 shadow-sm">
                             <div class="timeline-year text-warning fw-bold">2023</div>
-                            <h5 class="fw-bold mb-2">Global Expansion</h5>
+                            <h5 class="fw-bold mb-2 text-black">Global Expansion</h5>
                             <p class="text-muted mb-0">Expanded operations to serve clients in 25+ countries worldwide.</p>
                         </div>
                     </div>
@@ -3940,7 +3971,7 @@
     <div class="container position-relative">
         <div class="row justify-content-center">
             <div class="col-lg-8 text-center animate-fade-in-up">
-                <div class="icon-box bg-white bg-opacity-20 text-white d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
+                <div class="icon-box bg-black bg-opacity-20 text-white d-inline-flex align-items-center justify-content-center mb-4 animate-bounce-in" style="width: 80px; height: 80px;">
                     <i class="fas fa-bell fa-2x"></i>
                 </div>
                 <h2 class="fw-bold mb-3 animate-slide-in-left" data-delay="1">Never Miss an Update</h2>
@@ -4040,6 +4071,291 @@
     </div>
 </section>
 {% endblock %}
+<style>
+/* 3D Animated Backgrounds */
+
+/* Core Values Section - Red/Pink Gradient */
+.core-values-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.core-values-bg {
+  z-index: 1;
+}
+
+.core-values-gradient {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff3838 100%);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: gradientShift 8s ease-in-out infinite;
+}
+
+.core-values-shapes .shape-3d {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float3D 6s ease-in-out infinite;
+}
+
+.core-values-shapes .shape-1 {
+  width: 120px;
+  height: 120px;
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.core-values-shapes .shape-2 {
+  width: 80px;
+  height: 80px;
+  top: 60%;
+  right: 15%;
+  animation-delay: 2s;
+}
+
+.core-values-shapes .shape-3 {
+  width: 60px;
+  height: 60px;
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 4s;
+}
+
+/* Key Features Section - Blue Gradient */
+.key-features-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.key-features-bg {
+  z-index: 1;
+}
+
+.key-features-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #4facfe 100%);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: gradientShift 10s ease-in-out infinite;
+}
+
+.key-features-particles .particle-3d {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  animation: particleFloat 5s ease-in-out infinite;
+}
+
+.key-features-particles .particle-1 {
+  width: 20px;
+  height: 20px;
+  top: 30%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.key-features-particles .particle-2 {
+  width: 15px;
+  height: 15px;
+  top: 70%;
+  right: 25%;
+  animation-delay: 1.5s;
+}
+
+.key-features-particles .particle-3 {
+  width: 25px;
+  height: 25px;
+  bottom: 30%;
+  left: 30%;
+  animation-delay: 3s;
+}
+
+.key-features-particles .particle-4 {
+  width: 18px;
+  height: 18px;
+  top: 20%;
+  right: 10%;
+  animation-delay: 4.5s;
+}
+
+/* How We Work Section - Purple Gradient */
+.how-we-work-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.how-we-work-bg {
+  z-index: 1;
+}
+
+.how-we-work-gradient {
+  background: linear-gradient(135deg, #a855f7 0%, #3b82f6 50%, #8b5cf6 100%);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: gradientShift 12s ease-in-out infinite;
+}
+
+.how-we-work-geometry .geometry-3d {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.12);
+  animation: geometryRotate 8s linear infinite;
+}
+
+.how-we-work-geometry .geo-1 {
+  width: 100px;
+  height: 100px;
+  top: 25%;
+  left: 5%;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation-delay: 0s;
+}
+
+.how-we-work-geometry .geo-2 {
+  width: 70px;
+  height: 70px;
+  top: 50%;
+  right: 10%;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  animation-delay: 2s;
+}
+
+.how-we-work-geometry .geo-3 {
+  width: 50px;
+  height: 50px;
+  bottom: 25%;
+  left: 25%;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation-delay: 4s;
+}
+
+.how-we-work-geometry .geo-4 {
+  width: 90px;
+  height: 90px;
+  bottom: 10%;
+  right: 5%;
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  animation-delay: 6s;
+}
+
+/* Featured Project Section - Orange Gradient */
+.featured-project-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-project-bg {
+  z-index: 1;
+}
+
+.featured-project-gradient {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: gradientShift 14s ease-in-out infinite;
+}
+
+.featured-project-waves .wave-3d {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  animation: wavePulse 7s ease-in-out infinite;
+}
+
+.featured-project-waves .wave-1 {
+  width: 150px;
+  height: 150px;
+  top: 15%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.featured-project-waves .wave-2 {
+  width: 100px;
+  height: 100px;
+  top: 60%;
+  right: 15%;
+  animation-delay: 2.3s;
+}
+
+.featured-project-waves .wave-3 {
+  width: 80px;
+  height: 80px;
+  bottom: 20%;
+  left: 40%;
+  animation-delay: 4.6s;
+}
+
+/* Keyframe Animations */
+@keyframes gradientShift {
+  0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+  25% { transform: translateX(-10px) translateY(-10px) rotate(1deg); }
+  50% { transform: translateX(10px) translateY(10px) rotate(-1deg); }
+  75% { transform: translateX(-5px) translateY(-5px) rotate(0.5deg); }
+}
+
+@keyframes float3D {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) rotateY(0deg);
+  }
+  33% {
+    transform: translateY(-20px) translateX(10px) rotateY(120deg);
+  }
+  66% {
+    transform: translateY(-10px) translateX(-10px) rotateY(240deg);
+  }
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1) rotate(0deg);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(-30px) scale(1.2) rotate(180deg);
+    opacity: 1;
+  }
+}
+
+@keyframes geometryRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(90deg) scale(1.1); }
+  50% { transform: rotate(180deg) scale(0.9); }
+  75% { transform: rotate(270deg) scale(1.05); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes wavePulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.3) rotate(180deg);
+    opacity: 0.9;
+  }
+}
+
+/* Ensure content is above backgrounds */
+.core-values-section .container,
+.key-features-section .container,
+.how-we-work-section .container,
+.featured-project-section .container {
+  position: relative;
+  z-index: 2;
+}
+</style>
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {

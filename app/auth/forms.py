@@ -1,13 +1,20 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
-from app.models import User
+from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
+from app.models import User, MarketingStaff
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+class StaffLoginForm(FlaskForm):
+    """Marketing staff login form for auth blueprint"""
+    phone_number = StringField('Phone Number', validators=[DataRequired(), Length(min=10, max=20)])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember_me = BooleanField('Remember Me')
+    submit = SubmitField('Login as Staff')
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])

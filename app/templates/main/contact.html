@@ -18,7 +18,7 @@
             <div class="col-12 text-center">
                 <div class="animate-fade-in-up">
                     <span class="badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 animate-bounce-in">Get In Touch</span>
-                    <h1 class="fw-bold text-black mb-4 display-4 animate-slide-in-left" data-delay="1">Contact Us</h1>
+                    <h1 class="fw-bold text-white mb-4 display-4 animate-slide-in-left" data-delay="1">Contact Us</h1>
                     <h5 class="lead text-black-100 mb-0 animate-slide-in-right" data-delay="2">Ready to start your project? Let's discuss how we can help you achieve your goals</h5>
                 </div>
 
@@ -29,25 +29,25 @@
                             <div class="row text-center">
                                 <div class="col-md-3 mb-3 mb-md-0">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="24">0</div>
+                                        <div class="counter text-white" data-target="24">0</div>
                                         <h5 class="text-black-100 small mb-0">Hour Response</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-3 mb-md-0">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="98">0</div>
+                                        <div class="counter text-white" data-target="98">0</div>
                                         <h5 class="text-black-100 small mb-0">Client Satisfaction %</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-3 mb-md-0">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="500">0</div>
+                                        <div class="counter text-white" data-target="500">0</div>
                                         <h5 class="text-black-100 small mb-0">Projects Completed</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="5">0</div>
+                                        <div class="counter text-white" data-target="5">0</div>
                                         <h5 class="text-black-100 small mb-0">Years Experience</h5>
                                     </div>
                                 </div>
@@ -102,13 +102,13 @@
                         <div class="email-info">
                             <p class="text-muted mb-2">General Inquiries:</p>
                             <p class="mb-3">
-                                <a href="mailto:{{ company.email if company and company.email else 'info@startup.com' }}" class="text-decoration-none fw-medium">
+                                <a href="mailto:{{ company.email if company and company.email else 'info@startup.com' }}" class="text-decoration-none fw-medium text-primary">
                                     {{ company.email if company and company.email else 'info@startup.com' }}
                                 </a>
                             </p>
                             <p class="text-muted mb-2">Support:</p>
                             <p class="mb-0">
-                                <a href="mailto:ms305329@gmail.com" class="text-decoration-none fw-medium">ms305329@gmail.com</a>
+                                <a href="mailto:ms305329@gmail.com" class="text-decoration-none fw-medium text-primary">ms305329@gmail.com</a>
                             </p>
                         </div>
                     </div>
@@ -128,12 +128,12 @@
                         <div class="phone-info">
                             <p class="text-muted mb-2">Phone:</p>
                             <p class="mb-3">
-                                <a href="tel:{{ company.phone if company and company.phone else '+11234567890' }}" class="text-decoration-none fw-medium">
+                                <a href="tel:{{ company.phone if company and company.phone else '+11234567890' }}" class="text-decoration-none fw-medium text-primary">
                                     {{ company.phone if company and company.phone else '+1 (123) 456-7890' }}
                                 </a>
                             </p>
                             <p class="text-muted mb-2">Business Hours:</p>
-                            <p class="mb-0 small">Monday - Friday: 9:00 AM - 6:00 PM PST</p>
+                            <p class="mb-0 small text-black">Monday - Friday: 9:00 AM - 6:00 PM PST</p>
                             <p class="mb-0 small">Weekend: Emergency Support Only</p>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
             <div class="col-12 text-center">
                 <div class="contact-cta bg-primary bg-opacity-5 rounded-3 p-5">
                     <h3 class="fw-bold mb-3">Need Immediate Assistance?</h3>
-                    <p class="text-muted mb-4">Don't hesitate to reach out. We're here to help you succeed.</p>
+                    <p class="text-black mb-4">Don't hesitate to reach out. We're here to help you succeed.</p>
                     <div class="d-flex justify-content-center gap-3 flex-wrap">
                         <a href="tel:{{ company.phone if company and company.phone else '+11234567890' }}" class="btn btn-primary btn-lg">
                             <i class="fas fa-phone me-2"></i>Call Now
@@ -250,7 +250,7 @@
     <div class="container position-relative">
         <div class="text-center mb-5 animate-fade-in-up">
             <h2 class="fw-bold mb-3 text-gradient">Find Us</h2>
-            <p class="text-muted w-lg-50 mx-auto">Visit our office or schedule a meeting to discuss your project in person.</p>
+            <h4 class="text-muted w-lg-50 mx-auto">Visit our office or schedule a meeting to discuss your project in person.</h4>
         </div>
 
         <div class="row g-4">
@@ -268,7 +268,7 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="office-info animate-fade-in-right">
+                <div class="office-info animate-fade-in-right" style="color: black;">
                     <!-- Office Hours -->
                     <div class="info-card card border-0 shadow-sm mb-4">
                         <div class="card-body p-4">
@@ -276,19 +276,19 @@
                                 <div class="info-icon bg-primary bg-opacity-10 text-primary me-3">
                                     <i class="fas fa-clock fa-lg"></i>
                                 </div>
-                                <h5 class="fw-bold mb-0">Office Hours</h5>
+                                <h5 class="fw-bold mb-0 text-black">Office Hours</h5>
                             </div>
                             <div class="office-hours">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span>Monday - Friday</span>
-                                    <span class="fw-bold">9:00 AM - 6:00 PM</span>
+                                <div class="text-black">
+                                    <span class="text-black">Monday - Friday</span>
+                                    <span class="text-black">9:00 AM - 6:00 PM</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>Saturday</span>
-                                    <span class="fw-bold">10:00 AM - 4:00 PM</span>
+                                    <span class="text-black">Saturday</span>
+                                    <span class="text-black">10:00 AM - 4:00 PM</span>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <span>Sunday</span>
+                                    <span class="text-black">Sunday</span>
                                     <span class="text-muted">Closed</span>
                                 </div>
                             </div>
@@ -302,7 +302,7 @@
                                 <div class="info-icon bg-success bg-opacity-10 text-success me-3">
                                     <i class="fas fa-phone fa-lg"></i>
                                 </div>
-                                <h5 class="fw-bold mb-0">Quick Contact</h5>
+                                <h5 class="fw-bold mb-0 text-black">Quick Contact</h5>
                             </div>
                             <div class="quick-contact">
                                 <a href="tel:{{ company.phone if company and company.phone else '+11234567890' }}" class="btn btn-success w-100 mb-3">
@@ -325,7 +325,7 @@
                                 <div class="info-icon bg-warning bg-opacity-10 text-warning me-3">
                                     <i class="fas fa-share-alt fa-lg"></i>
                                 </div>
-                                <h5 class="fw-bold mb-0">Follow Us</h5>
+                                <h5 class="fw-bold mb-0 text-black">Follow Us</h5>
                             </div>
                             <div class="social-links d-flex justify-content-center gap-3">
                                 {% if company and company.facebook_url %}

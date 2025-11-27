@@ -1,0 +1,328 @@
+{% extends "crm/base.html" %}
+
+{% block title %}{{ title }} - Kodeminds CRM{% endblock %}
+
+{% block sidebar %}
+<nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+    <div class="position-sticky pt-3">
+        <div class="text-center mb-4">
+            <h4 class="text-white"><i class="fas fa-chart-line"></i> Kodeminds CRM</h4>
+            <p class="text-white-50 small">Staff Panel</p>
+        </div>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('crm.staff_dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <a class="nav-link text-danger" href="{{ url_for('crm.staff_logout') }}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+        
+        <div class="mt-4 p-3 bg-white bg-opacity-10 rounded">
+            <p class="text-white small mb-1"><strong>{{ staff.name }}</strong></p>
+            <p class="text-white-50 small mb-0">{{ staff.phone_number }}</p>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block topbar %}
+<div class="topbar d-flex justify-content-between align-items-center">
+    <h3 class="mb-0"><i class="fas fa-user-tie"></i> Lead Details</h3>
+    <div>
+        <a href="{{ url_for('crm.staff_dashboard') }}" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Lead Information -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Lead Information</h5>
+                <a href="{{ url_for('crm.staff_edit_lead', lead_id=lead.id) }}" class="btn btn-sm btn-warning">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Lead Name:</strong></p>
+                        <p class="text-muted">{{ lead.lead_name if lead.lead_name else 'N/A' }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Business Name:</strong></p>
+                        <p class="text-muted">{{ lead.business_name }}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Phone Number:</strong></p>
+                        <p class="text-muted"><i class="fas fa-phone"></i> {{ lead.phone_number }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Email:</strong></p>
+                        <p class="text-muted"><i class="fas fa-envelope"></i> {{ lead.email if lead.email else 'N/A' }}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <p class="mb-2"><strong>Business Address:</strong></p>
+                        <p class="text-muted"><i class="fas fa-map-marker-alt"></i> {{ lead.business_address }}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <p class="mb-2"><strong>Status:</strong></p>
+                        <p>
+                            {% if lead.status == 'new' %}
+                            <span class="badge bg-warning">New</span>
+                            {% elif lead.status == 'contacted' %}
+                            <span class="badge bg-info">Contacted</span>
+                            {% elif lead.status == 'in_progress' %}
+                            <span class="badge bg-primary">In Progress</span>
+                            {% elif lead.status == 'won' %}
+                            <span class="badge bg-success">Won</span>
+                            {% elif lead.status == 'lost' %}
+                            <span class="badge bg-danger">Lost</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-2"><strong>Priority:</strong></p>
+                        <p>
+                            {% if lead.priority == 'high' %}
+                            <span class="badge bg-danger">High</span>
+                            {% elif lead.priority == 'medium' %}
+                            <span class="badge bg-warning">Medium</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Low</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-2"><strong>Source:</strong></p>
+                        <p class="text-muted">{{ lead.source if lead.source else 'N/A' }}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Assigned To:</strong></p>
+                        <p class="text-muted">
+                            {% if lead.assigned_staff %}
+                            <i class="fas fa-user"></i> {{ lead.assigned_staff.name }}
+                            {% else %}
+                            Unassigned
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Follow-up Date:</strong></p>
+                        <p class="text-muted">
+                            {% if lead.follow_up_date %}
+                            <i class="fas fa-calendar"></i> {{ lead.follow_up_date.strftime('%Y-%m-%d %H:%M') }}
+                            {% else %}
+                            Not set
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Created:</strong></p>
+                        <p class="text-muted">{{ lead.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Last Updated:</strong></p>
+                        <p class="text-muted">{{ lead.updated_at.strftime('%Y-%m-%d %H:%M') if lead.updated_at else 'N/A' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notes Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-sticky-note"></i> Notes</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('crm.staff_add_note', lead_id=lead.id) }}" class="mb-4">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <div class="mb-3">
+                        <textarea name="note" class="form-control" rows="3" placeholder="Add a note..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Note
+                    </button>
+                </form>
+                
+                <div class="notes-list">
+                    {% for note in notes %}
+                    <div class="card mb-2">
+                        <div class="card-body py-2">
+                            <p class="mb-1">{{ note.note }}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-user"></i> {{ note.staff.name }} - 
+                                <i class="fas fa-clock"></i> {{ note.created_at.strftime('%Y-%m-%d %H:%M') }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    {% if not notes %}
+                    <p class="text-muted text-center">No notes yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Activity Log -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-history"></i> Activity Log</h5>
+            </div>
+            <div class="card-body">
+                <div class="activity-list">
+                    {% for activity in activities %}
+                    <div class="d-flex mb-3">
+                        <div class="me-3">
+                            {% if activity.activity_type == 'call' %}
+                            <i class="fas fa-phone text-success"></i>
+                            {% elif activity.activity_type == 'whatsapp' %}
+                            <i class="fab fa-whatsapp text-success"></i>
+                            {% elif activity.activity_type == 'sms' %}
+                            <i class="fas fa-sms text-info"></i>
+                            {% elif activity.activity_type == 'email' %}
+                            <i class="fas fa-envelope text-primary"></i>
+                            {% elif activity.activity_type == 'status_change' %}
+                            <i class="fas fa-exchange-alt text-warning"></i>
+                            {% elif activity.activity_type == 'note_added' %}
+                            <i class="fas fa-sticky-note text-info"></i>
+                            {% else %}
+                            <i class="fas fa-circle text-secondary"></i>
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-1">{{ activity.description }}</p>
+                            <small class="text-muted">
+                                {% if activity.staff %}
+                                <i class="fas fa-user"></i> {{ activity.staff.name }} - 
+                                {% endif %}
+                                <i class="fas fa-clock"></i> {{ activity.created_at.strftime('%Y-%m-%d %H:%M') }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    {% if not activities %}
+                    <p class="text-muted text-center">No activities yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="tel:{{ lead.phone_number }}" class="btn btn-success" onclick="logActivity('call')">
+                        <i class="fas fa-phone"></i> Call Lead
+                    </a>
+                    
+                    <a href="https://wa.me/{{ lead.phone_number.replace('+', '').replace(' ', '') }}?text={{ encoded_message }}" 
+                       target="_blank" class="btn btn-success" onclick="logActivity('whatsapp')">
+                        <i class="fab fa-whatsapp"></i> WhatsApp Lead
+                    </a>
+                    
+                    <a href="sms:{{ lead.phone_number }}?body={{ encoded_message }}" 
+                       class="btn btn-info" onclick="logActivity('sms')">
+                        <i class="fas fa-sms"></i> Message Lead
+                    </a>
+                    
+                    {% if lead.email %}
+                    <a href="mailto:{{ lead.email }}" class="btn btn-primary" onclick="logActivity('email')">
+                        <i class="fas fa-envelope"></i> Email Lead
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Update Status -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-tasks"></i> Update Status</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('crm.staff_update_status', lead_id=lead.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    <div class="mb-3">
+                        <select name="status" class="form-select" required>
+                            <option value="new" {% if lead.status == 'new' %}selected{% endif %}>New</option>
+                            <option value="contacted" {% if lead.status == 'contacted' %}selected{% endif %}>Contacted</option>
+                            <option value="in_progress" {% if lead.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                            <option value="won" {% if lead.status == 'won' %}selected{% endif %}>Won</option>
+                            <option value="lost" {% if lead.status == 'lost' %}selected{% endif %}>Lost</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-save"></i> Update Status
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Message Preview -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-comment"></i> Message Preview</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <small>
+                        <strong>Auto-generated message:</strong><br><br>
+                        Hello {{ lead.lead_name if lead.lead_name else lead.business_name }},<br><br>
+                        My name is {{ staff.name }} from Kodeminds Software Solution.<br><br>
+                        We provide all kinds of software-related services including website and business management software for {{ lead.business_name }}.<br><br>
+                        Please contact us at +918458804893 or visit our website https://kodeminds.com
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function logActivity(activityType) {
+    fetch(`/crm/staff/lead/{{ lead.id }}/log-activity`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        },
+        body: `activity_type=${activityType}`
+    });
+}
+</script>
+{% endblock %}

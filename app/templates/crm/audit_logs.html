@@ -1,0 +1,153 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Audit Logs - Kodeminds CRM{% endblock %}
+
+{% block sidebar %}
+<nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+    <div class="position-sticky pt-3">
+        <div class="text-center mb-4">
+            <h4 class="text-white"><i class="fas fa-chart-line"></i> Kodeminds CRM</h4>
+            <p class="text-white-50 small">Admin Panel</p>
+        </div>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('crm.admin_dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('crm.admin_add_lead') }}">
+                    <i class="fas fa-plus-circle"></i> Add Lead
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('crm.admin_analytics') }}">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('crm.admin_templates') }}">
+                    <i class="fas fa-envelope"></i> Message Templates
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('crm.admin_audit_logs') }}">
+                    <i class="fas fa-history"></i> Audit Logs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+                    <i class="fas fa-cog"></i> Main Admin
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{% block topbar %}
+<div class="topbar">
+    <h3 class="mb-0"><i class="fas fa-history"></i> Audit Logs</h3>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i> All Activity Logs
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>User Type</th>
+                                <th>User ID</th>
+                                <th>Action</th>
+                                <th>Entity</th>
+                                <th>Description</th>
+                                <th>IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs.items %}
+                            <tr>
+                                <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    {% if log.user_type == 'admin' %}
+                                    <span class="badge bg-danger">Admin</span>
+                                    {% else %}
+                                    <span class="badge bg-info">Staff</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ log.user_id }}</td>
+                                <td>
+                                    {% if log.action == 'created' %}
+                                    <span class="badge bg-success">Created</span>
+                                    {% elif log.action == 'updated' %}
+                                    <span class="badge bg-warning">Updated</span>
+                                    {% elif log.action == 'deleted' %}
+                                    <span class="badge bg-danger">Deleted</span>
+                                    {% elif log.action == 'viewed' %}
+                                    <span class="badge bg-info">Viewed</span>
+                                    {% elif log.action == 'login' %}
+                                    <span class="badge bg-primary">Login</span>
+                                    {% elif log.action == 'logout' %}
+                                    <span class="badge bg-secondary">Logout</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ log.action }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ log.entity_type }}</td>
+                                <td>{{ log.description if log.description else 'N/A' }}</td>
+                                <td><small>{{ log.ip_address }}</small></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                {% if logs.pages > 1 %}
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center mt-4">
+                        {% if logs.has_prev %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('crm.admin_audit_logs', page=logs.prev_num) }}">Previous</a>
+                        </li>
+                        {% endif %}
+                        
+                        {% for page_num in logs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                            {% if page_num %}
+                                {% if page_num == logs.page %}
+                                <li class="page-item active"><a class="page-link" href="#">{{ page_num }}</a></li>
+                                {% else %}
+                                <li class="page-item"><a class="page-link" href="{{ url_for('crm.admin_audit_logs', page=page_num) }}">{{ page_num }}</a></li>
+                                {% endif %}
+                            {% else %}
+                            <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if logs.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('crm.admin_audit_logs', page=logs.next_num) }}">Next</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

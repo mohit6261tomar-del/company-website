@@ -18,7 +18,7 @@
             <div class="col-12 text-center">
                 <div class="animate-fade-in-up">
                     <span class="badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 animate-bounce-in">Join Our Team</span>
-                    <h1 class="fw-bold text-black mb-4 display-4 animate-slide-in-left" data-delay="1">Build the Future with Us</h1>
+                    <h1 class="fw-bold text-white mb-4 display-4 animate-slide-in-left" data-delay="1">Build the Future with Us</h1>
                     <h4 class="lead text-black-100 mb-0 animate-slide-in-right" data-delay="2">Join our passionate team of innovators and help shape the future of technology</h4>
                 </div>
 
@@ -29,25 +29,25 @@
                             <div class="row text-center">
                                 <div class="col-md-3 mb-3 mb-md-0">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="50">0</div>
+                                        <div class="counter text-white" data-target="50">0</div>
                                         <h5 class="text-black-100 small mb-0">Team Members</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-3 mb-md-0">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="15">0</div>
+                                        <div class="counter text-white" data-target="15">0</div>
                                         <h5 class="text-black-100 small mb-0">Countries</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-3 mb-md-0">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="100">0</div>
+                                        <div class="counter text-white" data-target="100">0</div>
                                         <h5 class="text-black-100 small mb-0">Projects Completed</h5>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="98">0</div>
+                                        <div class="counter text-white" data-target="98">0</div>
                                         <h5 class="text-black-100 small mb-0">Employee Satisfaction %</h5>
                                     </div>
                                 </div>
@@ -71,7 +71,7 @@
                 <div class="animate-fade-in-up">
                     <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Why Join Us</span>
                     <h2 class="fw-bold mb-4 text-gradient animate-slide-in-left">Work With Passionate People</h2>
-                    <p class="lead text-muted mb-4 animate-fade-in-up" data-delay="1">
+                    <p class="lead text-white mb-4 animate-fade-in-up" data-delay="1">
                         At {{ company.name if company else 'our company' }}, we're building more than just software — we're building a better future.
                         Join our team of talented individuals who are passionate about making a difference.
                     </p>
@@ -90,7 +90,7 @@
                                         <i class="fas fa-home"></i>
                                     </div>
                                     <div>
-                                        <h6 class="fw-bold mb-1">Remote Work</h6>
+                                        <h6 class="fw-bold mb-1 text-black">Remote Work</h6>
                                         <p class="text-muted small mb-0">Work from anywhere</p>
                                     </div>
                                 </div>
@@ -101,7 +101,7 @@
                                         <i class="fas fa-heart"></i>
                                     </div>
                                     <div>
-                                        <h6 class="fw-bold mb-1">Health Insurance</h6>
+                                        <h6 class="fw-bold mb-1 text-black">Health Insurance</h6>
                                         <p class="text-muted small mb-0">Comprehensive coverage</p>
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@
                                         <i class="fas fa-graduation-cap"></i>
                                     </div>
                                     <div>
-                                        <h6 class="fw-bold mb-1">Learning Budget</h6>
+                                        <h6 class="fw-bold mb-1 text-black">Learning Budget</h6>
                                         <p class="text-muted small mb-0">Annual development</p>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
                                         <i class="fas fa-umbrella-beach"></i>
                                     </div>
                                     <div>
-                                        <h6 class="fw-bold mb-1">Paid Time Off</h6>
+                                        <h6 class="fw-bold mb-1 text-black">Paid Time Off</h6>
                                         <p class="text-muted small mb-0">Generous vacation</p>
                                     </div>
                                 </div>
@@ -149,45 +149,7 @@
                         <img src="{{ url_for('static', filename='img/career.png') }}" alt="Team Collaboration" class="img-fluid rounded-3 shadow-lg hover-lift">
                         <div class="image-overlay"></div>
 
-                        <!-- Floating Stats Cards -->
-                        <div class="position-absolute top-0 start-0 translate-middle bg-white p-4 rounded-3 shadow-lg animate-bounce-in" data-delay="5" style="width: 220px;">
-                            <div class="d-flex align-items-center">
-                                <div class="stat-badge bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div>
-                                    <h3 class="mb-1 fw-bold text-gradient">50+</h3>
-                                    <p class="mb-0 text-muted small">Team Members</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="position-absolute bottom-0 end-0 translate-middle bg-white p-4 rounded-3 shadow-lg animate-bounce-in" data-delay="6" style="width: 220px;">
-                            <div class="d-flex align-items-center">
-                                <div class="stat-badge bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                    <i class="fas fa-globe"></i>
-                                </div>
-                                <div>
-                                    <h3 class="mb-1 fw-bold text-gradient">15+</h3>
-                                    <p class="mb-0 text-muted small">Countries</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Floating Quote -->
-                        <div class="position-absolute top-50 start-100 translate-middle bg-white p-3 rounded-3 shadow-lg animate-fade-in" data-delay="7" style="width: 250px;">
-                            <div class="text-center">
-                                <i class="fas fa-quote-left text-primary mb-2"></i>
-                                <p class="mb-2 small fw-medium">"Innovation, teamwork, and fun — that’s what defines our culture."</p>
-                                <div class="d-flex align-items-center justify-content-center">
-                                    <img src="{{ url_for('static', filename='img/career.png') }}" alt="KodeMinds" class="rounded-circle me-2" style="width: 30px; height: 30px;">
-                                    <div>
-                                        <p class="mb-0 small fw-bold">KodeMinds</p>
-                                        <p class="mb-0 text-muted" style="font-size: 0.7rem;">Our Company</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
                     </div>
                 </div>
             </div>
@@ -342,7 +304,7 @@
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Join Our Team</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Open Positions</h2>
-            <p class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Check out our current job openings and find the perfect fit for your skills and experience.</p>
+            <h4 class="text-white w-lg-50 mx-auto animate-fade-in-up" data-delay="1">Check out our current job openings and find the perfect fit for your skills and experience.</h4>
         </div>
 
         <div class="row justify-content-center">
@@ -367,18 +329,18 @@
                                     </div>
 
                                     <div class="job-meta d-flex flex-wrap gap-4 text-muted small mb-3">
-                                        <span class="d-flex align-items-center">
+                                        <span class="d-flex align-items-center text-black">
                                             <i class="fas fa-briefcase me-1 text-primary"></i>
                                             {{ job.job_type|default('Full-time') }}
                                         </span>
                                         {% if job.location %}
-                                        <span class="d-flex align-items-center">
+                                        <span class="d-flex align-items-center text-black">
                                             <i class="fas fa-map-marker-alt me-1 text-success"></i>
                                             {{ job.location }}
                                         </span>
                                         {% endif %}
                                         {% if job.salary_range %}
-                                        <span class="d-flex align-items-center">
+                                        <span class="d-flex align-items-center text-black">
                                             <i class="fas fa-dollar-sign me-1 text-info"></i>
                                             {{ job.salary_range }}
                                         </span>
@@ -456,7 +418,7 @@
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Culture</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Life at {{ company.name if company else 'Our Company' }}</h2>
-            <p class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We believe in creating an inclusive and supportive work environment where everyone can thrive.</p>
+            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We believe in creating an inclusive and supportive work environment where everyone can thrive.</h4>
         </div>
 
         <div class="row g-4 stagger-children">
@@ -546,7 +508,7 @@
             <div class="col-lg-6 animate-fade-in-right">
                 <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">Our Process</span>
                 <h2 class="fw-bold mb-4 animate-slide-in-left" data-delay="1">How We Hire</h2>
-                <p class="text-muted mb-4 animate-fade-in-up" data-delay="2">We've designed our hiring process to be transparent, efficient, and respectful of your time while ensuring we find the perfect fit.</p>
+                <p class="text-white mb-4 animate-fade-in-up" data-delay="2">We've designed our hiring process to be transparent, efficient, and respectful of your time while ensuring we find the perfect fit.</p>
 
                 <div class="hiring-timeline">
                     <div class="hiring-step d-flex mb-4 animate-fade-in-up" data-delay="3">
@@ -555,7 +517,7 @@
                         </div>
                         <div>
                             <h5 class="fw-bold mb-2">Application Review</h5>
-                            <p class="text-muted mb-0">We'll review your application and get back to you within 1-2 weeks with feedback.</p>
+                            <p class="text-white mb-0">We'll review your application and get back to you within 1-2 weeks with feedback.</p>
                         </div>
                     </div>
 
@@ -565,7 +527,7 @@
                         </div>
                         <div>
                             <h5 class="fw-bold mb-2">Initial Interview</h5>
-                            <p class="text-muted mb-0">A 30-minute video call with our hiring manager to discuss your experience and the role.</p>
+                            <p class="text-white mb-0">A 30-minute video call with our hiring manager to discuss your experience and the role.</p>
                         </div>
                     </div>
 
@@ -575,7 +537,7 @@
                         </div>
                         <div>
                             <h5 class="fw-bold mb-2">Skills Assessment</h5>
-                            <p class="text-muted mb-0">A practical assignment to assess your skills and problem-solving abilities.</p>
+                            <p class="text-white mb-0">A practical assignment to assess your skills and problem-solving abilities.</p>
                         </div>
                     </div>
 
@@ -585,7 +547,7 @@
                         </div>
                         <div>
                             <h5 class="fw-bold mb-2">Team Interview</h5>
-                            <p class="text-muted mb-0">Meet the team and learn more about our culture and work environment.</p>
+                            <p class="text-white mb-0">Meet the team and learn more about our culture and work environment.</p>
                         </div>
                     </div>
                 </div>

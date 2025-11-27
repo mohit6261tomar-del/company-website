@@ -1,0 +1,120 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-user-plus"></i> Bulk Assign Leads</h2>
+                <a href="{{ url_for('crm.admin_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Assign Unassigned Leads to Staff</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> 
+                                <strong>{{ unassigned_count }}</strong> unassigned leads available. 
+                                Specify how many leads each staff member should receive.
+                            </div>
+
+                            <form method="POST">
+                                {{ form.hidden_tag() }}
+                                
+                                {% for staff in active_staff %}
+                                <div class="mb-3">
+                                    <label for="staff_{{ staff.id }}" class="form-label">
+                                        <strong>{{ staff.name }}</strong> ({{ staff.phone_number }})
+                                    </label>
+                                    <input type="number" name="staff_{{ staff.id }}" id="staff_{{ staff.id }}" 
+                                           class="form-control" min="0" value="0">
+                                    <div class="form-text">
+                                        Number of leads to assign to {{ staff.name }}
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                                <div class="d-grid">
+                                    {{ form.submit(class="btn btn-success btn-lg") }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Active Staff Members</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if active_staff %}
+                                <ul class="list-group list-group-flush">
+                                    {% for staff in active_staff %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ staff.name }}
+                                        <span class="badge bg-primary rounded-pill">{{ staff.leads|length }}</span>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="text-muted mb-0">No active staff members found.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">Quick Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('crm.admin_add_lead') }}" class="btn btn-outline-primary">
+                                    <i class="fas fa-plus"></i> Add New Lead
+                                </a>
+                                <a href="{{ url_for('crm.admin_staff') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-users"></i> Manage Staff
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add some JavaScript to validate the form
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const unassignedCount = {{ unassigned_count }};
+    
+    form.addEventListener('submit', function(e) {
+        const inputs = form.querySelectorAll('input[type="number"]');
+        let total = 0;
+        inputs.forEach(function(input) {
+            total += parseInt(input.value) || 0;
+        });
+        
+        if (total === 0) {
+            e.preventDefault();
+            alert('Please specify at least one lead to assign.');
+            return false;
+        }
+        
+        if (total > unassignedCount) {
+            e.preventDefault();
+            alert('You specified ' + total + ' leads to assign, but only ' + unassignedCount + ' unassigned leads are available.');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

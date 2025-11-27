@@ -1,0 +1,237 @@
+{% extends "crm/base.html" %}
+
+{% block title %}{{ title }} - Kodeminds CRM{% endblock %}
+
+{% block sidebar %}
+<nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+    <div class="position-sticky pt-3">
+        <div class="text-center mb-4">
+            <h4 class="text-white"><i class="fas fa-chart-line"></i> Kodeminds CRM</h4>
+            <p class="text-white-50 small">Admin Panel</p>
+        </div>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('crm.admin_dashboard') }}">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('crm.admin_add_lead') }}">
+                    <i class="fas fa-plus-circle"></i> Add Lead
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('crm.admin_analytics') }}">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('crm.admin_templates') }}">
+                    <i class="fas fa-envelope"></i> Message Templates
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('crm.admin_audit_logs') }}">
+                    <i class="fas fa-history"></i> Audit Logs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('admin.dashboard') }}">
+                    <i class="fas fa-cog"></i> Main Admin
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{% block topbar %}
+<div class="topbar d-flex justify-content-between align-items-center">
+    <h3 class="mb-0"><i class="fas fa-chart-bar"></i> CRM Analytics</h3>
+    <div class="btn-group" role="group">
+        <a href="{{ url_for('crm.admin_analytics', period='day') }}" class="btn btn-sm btn-outline-primary {% if period == 'day' %}active{% endif %}">Day</a>
+        <a href="{{ url_for('crm.admin_analytics', period='week') }}" class="btn btn-sm btn-outline-primary {% if period == 'week' %}active{% endif %}">Week</a>
+        <a href="{{ url_for('crm.admin_analytics', period='month') }}" class="btn btn-sm btn-outline-primary {% if period == 'month' %}active{% endif %}">Month</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Summary Cards -->
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card stat-card info">
+            <div class="card-body">
+                <h6 class="text-info">Total Leads</h6>
+                <h2>{{ total_leads }}</h2>
+                <p class="text-muted mb-0">In selected period</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <h6 class="text-success">Conversion Rate</h6>
+                <h2>{{ "%.1f"|format(conversion_rate) }}%</h2>
+                <p class="text-muted mb-0">Leads converted to Won</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <h6 class="text-warning">Status Distribution</h6>
+                <h2>{{ status_counts|length }}</h2>
+                <p class="text-muted mb-0">Different statuses</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-chart-pie"></i> Lead Status Distribution
+            </div>
+            <div class="card-body">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-users"></i> Staff Performance
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Staff</th>
+                                <th>Total</th>
+                                <th>Contacted</th>
+                                <th>Converted</th>
+                                <th>Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for staff in staff_stats %}
+                            <tr>
+                                <td>{{ staff.name }}</td>
+                                <td>{{ staff.total or 0 }}</td>
+                                <td>{{ staff.contacted or 0 }}</td>
+                                <td>{{ staff.converted or 0 }}</td>
+                                <td>
+                                    {% if staff.total and staff.total > 0 %}
+                                    {{ "%.1f"|format((staff.converted or 0) / staff.total * 100) }}%
+                                    {% else %}
+                                    0%
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed Status Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i> Status Breakdown
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Count</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for status, count in status_counts %}
+                            <tr>
+                                <td>
+                                    {% if status == 'new' %}
+                                    <span class="badge bg-warning">New</span>
+                                    {% elif status == 'contacted' %}
+                                    <span class="badge bg-info">Contacted</span>
+                                    {% elif status == 'in_progress' %}
+                                    <span class="badge bg-primary">In Progress</span>
+                                    {% elif status == 'won' %}
+                                    <span class="badge bg-success">Won</span>
+                                    {% elif status == 'lost' %}
+                                    <span class="badge bg-danger">Lost</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ count }}</td>
+                                <td>
+                                    {% if total_leads > 0 %}
+                                    {{ "%.1f"|format(count / total_leads * 100) }}%
+                                    {% else %}
+                                    0%
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for status, count in status_counts %}
+                '{{ status.title() }}',
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for status, count in status_counts %}
+                    {{ count }},
+                    {% endfor %}
+                ],
+                backgroundColor: ['#f6c23e', '#36b9cc', '#4e73df', '#1cc88a', '#e74a3b']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

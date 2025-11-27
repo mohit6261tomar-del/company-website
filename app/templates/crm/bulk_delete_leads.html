@@ -1,0 +1,321 @@
+{% extends "crm/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-trash-alt"></i> Bulk Delete Leads</h2>
+                <a href="{{ url_for('crm.admin_dashboard') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-4">
+                            <input type="text" name="search" class="form-control" placeholder="Search leads..."
+                                   value="{{ search_query }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="status" class="form-select">
+                                <option value="">All Statuses</option>
+                                <option value="new" {% if status_filter == 'new' %}selected{% endif %}>New</option>
+                                <option value="contacted" {% if status_filter == 'contacted' %}selected{% endif %}>Contacted</option>
+                                <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="won" {% if status_filter == 'won' %}selected{% endif %}>Won</option>
+                                <option value="lost" {% if status_filter == 'lost' %}selected{% endif %}>Lost</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-success" onclick="selectAll()">
+                                    <i class="fas fa-check-square"></i> Select All
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="clearAll()">
+                                    <i class="fas fa-square"></i> Clear All
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bulk Delete Form -->
+            <form id="bulkDeleteForm" method="POST" action="{{ url_for('crm.admin_bulk_delete_leads') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Select Leads to Delete</h5>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="badge bg-secondary" id="selectedCount">0 selected</span>
+                            <button type="button" class="btn btn-outline-danger" id="deleteAllBtn" onclick="confirmDeleteAll()">
+                                <i class="fas fa-trash-alt"></i> Delete All Leads
+                            </button>
+                            <button type="submit" class="btn btn-danger" id="deleteBtn" onclick="return confirmDelete()" disabled>
+                                <i class="fas fa-trash"></i> Delete Selected Leads
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {% if leads.items %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th width="50">
+                                                <input type="checkbox" id="selectAll" onchange="toggleAll(this)">
+                                            </th>
+                                            <th>ID</th>
+                                            <th>Business Name</th>
+                                            <th>Contact</th>
+                                            <th>Status</th>
+                                            <th>Assigned To</th>
+                                            <th>Created</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for lead in leads.items %}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="lead_ids[]" value="{{ lead.id }}"
+                                                       class="lead-checkbox">
+                                            </td>
+                                            <td>{{ lead.id }}</td>
+                                            <td>
+                                                <strong>{{ lead.business_name }}</strong>
+                                                {% if lead.lead_name %}
+                                                <br><small class="text-muted">{{ lead.lead_name }}</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <i class="fas fa-phone"></i> {{ lead.phone_number }}<br>
+                                                {% if lead.email %}
+                                                <small><i class="fas fa-envelope"></i> {{ lead.email }}</small>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if lead.status == 'new' %}
+                                                <span class="badge bg-warning">New</span>
+                                                {% elif lead.status == 'contacted' %}
+                                                <span class="badge bg-info">Contacted</span>
+                                                {% elif lead.status == 'in_progress' %}
+                                                <span class="badge bg-primary">In Progress</span>
+                                                {% elif lead.status == 'won' %}
+                                                <span class="badge bg-success">Won</span>
+                                                {% elif lead.status == 'lost' %}
+                                                <span class="badge bg-danger">Lost</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if lead.assigned_staff %}
+                                                <i class="fas fa-user"></i> {{ lead.assigned_staff.name }}
+                                                {% else %}
+                                                <span class="text-muted">Unassigned</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ lead.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            {% if leads.has_prev or leads.has_next %}
+                            <nav aria-label="Leads pagination" class="mt-4">
+                                <ul class="pagination justify-content-center">
+                                    {% if leads.has_prev %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('crm.admin_bulk_delete_leads', page=leads.prev_num, search=search_query, status=status_filter) }}">
+                                            Previous
+                                        </a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Previous</span>
+                                    </li>
+                                    {% endif %}
+
+                                    {% for page_num in leads.iter_pages() %}
+                                    {% if page_num %}
+                                    <li class="page-item {% if page_num == leads.page %}active{% endif %}">
+                                        <a class="page-link" href="{{ url_for('crm.admin_bulk_delete_leads', page=page_num, search=search_query, status=status_filter) }}">
+                                            {{ page_num }}
+                                        </a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                    {% endif %}
+                                    {% endfor %}
+
+                                    {% if leads.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ url_for('crm.admin_bulk_delete_leads', page=leads.next_num, search=search_query, status=status_filter) }}">
+                                            Next
+                                        </a>
+                                    </li>
+                                    {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </nav>
+                            {% endif %}
+
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No leads found</h5>
+                                <p class="text-muted">
+                                    {% if search_query or status_filter %}
+                                    Try adjusting your search criteria.
+                                    {% else %}
+                                    There are no leads in the system yet.
+                                    {% endif %}
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+
+            <!-- Hidden form for Delete All Leads -->
+            <form id="deleteAllForm" method="POST" action="{{ url_for('crm.admin_delete_all_leads') }}" style="display: none;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            </form>
+            
+            <!-- Hidden data for JavaScript -->
+            <div id="jsData" style="display: none;">
+                <span data-total-leads="{{ leads.total if leads else 0 }}"></span>
+            </div>
+
+            <!-- Warning Card -->
+            <div class="card border-warning mt-4">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-triangle text-warning fa-2x"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="card-title text-warning">Important Warning</h6>
+                            <p class="card-text mb-0">
+                                <strong>Bulk deletion is permanent and cannot be undone.</strong>
+                                When you delete leads, all associated notes and activity logs will also be permanently removed.
+                                Please ensure you have selected the correct leads before proceeding.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Select/Deselect all checkboxes
+function toggleAll(source) {
+    const checkboxes = document.querySelectorAll('.lead-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = source.checked;
+    });
+    updateSelectedCount();
+}
+
+function selectAll() {
+    const checkboxes = document.querySelectorAll('.lead-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+    document.getElementById('selectAll').checked = true;
+    updateSelectedCount();
+}
+
+function clearAll() {
+    const checkboxes = document.querySelectorAll('.lead-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    document.getElementById('selectAll').checked = false;
+    updateSelectedCount();
+}
+
+function updateSelectedCount() {
+    const selectedCount = document.querySelectorAll('.lead-checkbox:checked').length;
+    const selectedCountBadge = document.getElementById('selectedCount');
+    const deleteBtn = document.getElementById('deleteBtn');
+    
+    // Update the badge text and color
+    selectedCountBadge.textContent = `${selectedCount} selected`;
+    if (selectedCount === 0) {
+        selectedCountBadge.className = 'badge bg-secondary';
+    } else if (selectedCount <= 5) {
+        selectedCountBadge.className = 'badge bg-warning';
+    } else {
+        selectedCountBadge.className = 'badge bg-danger';
+    }
+    
+    // Enable/disable delete button
+    deleteBtn.disabled = selectedCount === 0;
+}
+
+function confirmDelete() {
+    const selectedCount = document.querySelectorAll('.lead-checkbox:checked').length;
+
+    if (selectedCount === 0) {
+        alert('Please select at least one lead to delete.');
+        return false;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedCount} lead(s)?\n\nThis action cannot be undone and will permanently remove:\n- Selected leads\n- All associated notes\n- All activity logs\n\nThis action will be logged in the audit trail.`;
+
+    return confirm(confirmMessage);
+}
+
+function confirmDeleteAll() {
+    const totalLeads = parseInt(document.getElementById('jsData').querySelector('span').dataset.totalLeads);
+    
+    if (totalLeads === 0) {
+        alert('There are no leads to delete.');
+        return false;
+    }
+
+    const confirmMessage = `⚠️ DANGER: This will delete ALL ${totalLeads} leads in the system!\n\nThis action cannot be undone and will permanently remove:\n- ALL leads (${totalLeads} total)\n- All associated notes\n- All activity logs\n\nThis action will be logged in the audit trail.\n\nAre you absolutely sure you want to proceed?`;
+
+    if (confirm(confirmMessage)) {
+        // Submit the hidden delete all form
+        document.getElementById('deleteAllForm').submit();
+    }
+}
+
+// Update selected count when individual checkboxes change
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.lead-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const allChecked = document.querySelectorAll('.lead-checkbox:checked').length === checkboxes.length;
+            const someChecked = document.querySelectorAll('.lead-checkbox:checked').length > 0;
+
+            document.getElementById('selectAll').checked = allChecked;
+            document.getElementById('selectAll').indeterminate = someChecked && !allChecked;
+            
+            // Update selected count display
+            updateSelectedCount();
+        });
+    });
+    
+    // Initialize selected count on page load
+    updateSelectedCount();
+});
+</script>
+{% endblock %}

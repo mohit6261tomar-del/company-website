@@ -8,12 +8,12 @@
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
-                <h1 class="fw-bold">{{ career.job_title }}</h1>
+                <h1 class="fw-bold text-primary">{{ career.job_title }}</h1>
                 <p class="lead text-muted">{{ career.job_type|default('Full-time') }} Position</p>
                 <nav aria-label="breadcrumb" class="d-inline-block">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.careers') }}">Careers</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}"class= "text-primary">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.careers') }}"class= "text-primary">Careers</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ career.job_title }}</li>
                     </ol>
                 </nav>
@@ -183,31 +183,31 @@
                 <!-- Job Summary Card -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-body p-4">
-                        <h4 class="fw-bold mb-4">Job Summary</h4>
+                        <h4 class="fw-bold mb-4 text-black">Job Summary</h4>
                         <div class="job-summary">
                             <div class="summary-item d-flex justify-content-between mb-3">
                                 <span class="text-muted">Position:</span>
-                                <span class="fw-medium">{{ career.job_title }}</span>
+                                <span class="text-black">{{ career.job_title }}</span>
                             </div>
                             <div class="summary-item d-flex justify-content-between mb-3">
                                 <span class="text-muted">Department:</span>
-                                <span class="fw-medium">{{ career.department|default('General') }}</span>
+                                <span class="text-black">{{ career.department|default('General') }}</span>
                             </div>
                             {% if career.experience_level %}
                             <div class="summary-item d-flex justify-content-between mb-3">
                                 <span class="text-muted">Experience:</span>
-                                <span class="fw-medium">{{ career.experience_level }}</span>
+                                <span class="text-black">{{ career.experience_level }}</span>
                             </div>
                             {% endif %}
                             {% if career.remote_work %}
                             <div class="summary-item d-flex justify-content-between mb-3">
                                 <span class="text-muted">Remote Work:</span>
-                                <span class="fw-medium">{{ 'Yes' if career.remote_work else 'No' }}</span>
+                                <span class="text-black">{{ 'Yes' if career.remote_work else 'No' }}</span>
                             </div>
                             {% endif %}
                             <div class="summary-item d-flex justify-content-between">
                                 <span class="text-muted">Application Deadline:</span>
-                                <span class="fw-medium">{{ career.application_deadline.strftime('%B %d, %Y') if career.application_deadline else 'Open until filled' }}</span>
+                                <span class="text-black">{{ career.application_deadline.strftime('%B %d, %Y') if career.application_deadline else 'Open until filled' }}</span>
                             </div>
                         </div>
                     </div>
@@ -231,7 +231,7 @@
                 <!-- Share Card -->
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
-                        <h5 class="fw-bold mb-3">Share This Job</h5>
+                        <h5 class="fw-bold mb-3 text-black">Share This Job</h5>
                         <div class="d-flex gap-2">
                             <a href="#" class="btn btn-outline-primary btn-sm flex-fill">
                                 <i class="fab fa-facebook-f me-2"></i>Facebook

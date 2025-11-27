@@ -297,3 +297,132 @@ class BlogComment(db.Model):
 
     def __repr__(self):
         return f'<BlogComment by {self.author_name or "Anonymous"}>'
+
+
+# CRM Models
+class MarketingStaff(db.Model, UserMixin):
+    """Marketing staff users for CRM"""
+    __tablename__ = 'marketing_staff'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    phone_number = db.Column(db.String(20), unique=True, nullable=False, index=True)
+    password_hash = db.Column(db.String(60), nullable=False)
+    email = db.Column(db.String(120))
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    assigned_leads = db.relationship('Lead', backref='assigned_staff', lazy='dynamic', foreign_keys='Lead.assigned_to')
+    notes = db.relationship('LeadNote', backref='staff', lazy='dynamic')
+    activities = db.relationship('LeadActivity', backref='staff', lazy='dynamic')
+    
+    def set_password(self, password):
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+    
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password_hash, password)
+    
+    def ping(self):
+        self.last_seen = datetime.utcnow()
+        db.session.add(self)
+        db.session.commit()
+    
+    def __repr__(self):
+        return f'<MarketingStaff {self.name}>'
+
+
+class Lead(db.Model):
+    """Lead/Customer information"""
+    __tablename__ = 'leads'
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # Basic Information
+    lead_name = db.Column(db.String(100))
+    business_name = db.Column(db.String(200), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False, index=True)
+    email = db.Column(db.String(120))
+    business_address = db.Column(db.Text, nullable=False)
+    
+    # Lead Status
+    status = db.Column(db.String(20), default='new')  # new, contacted, in_progress, won, lost
+    priority = db.Column(db.String(20), default='medium')  # low, medium, high
+    source = db.Column(db.String(50))  # website, referral, cold_call, etc.
+    
+    # Assignment
+    assigned_to = db.Column(db.Integer, db.ForeignKey('marketing_staff.id'))
+    
+    # Follow-up
+    follow_up_date = db.Column(db.DateTime)
+    last_contacted = db.Column(db.DateTime)
+    
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_by_admin = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+    # Relationships
+    notes = db.relationship('LeadNote', backref='lead', lazy='dynamic', cascade='all, delete-orphan')
+    activities = db.relationship('LeadActivity', backref='lead', lazy='dynamic', cascade='all, delete-orphan')
+    
+    def __repr__(self):
+        return f'<Lead {self.business_name}>'
+
+
+class LeadNote(db.Model):
+    """Notes/Comments on leads"""
+    __tablename__ = 'lead_notes'
+    id = db.Column(db.Integer, primary_key=True)
+    lead_id = db.Column(db.Integer, db.ForeignKey('leads.id'), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey('marketing_staff.id'), nullable=False)
+    note = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<LeadNote {self.id}>'
+
+
+class LeadActivity(db.Model):
+    """Activity log for leads"""
+    __tablename__ = 'lead_activities'
+    id = db.Column(db.Integer, primary_key=True)
+    lead_id = db.Column(db.Integer, db.ForeignKey('leads.id'), nullable=False)
+    staff_id = db.Column(db.Integer, db.ForeignKey('marketing_staff.id'))
+    activity_type = db.Column(db.String(50), nullable=False)  # call, whatsapp, sms, email, status_change, note_added
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    
+    def __repr__(self):
+        return f'<LeadActivity {self.activity_type}>'
+
+
+class MessageTemplate(db.Model):
+    """Predefined message templates for SMS/WhatsApp"""
+    __tablename__ = 'message_templates'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    template_type = db.Column(db.String(20), nullable=False)  # sms, whatsapp, email
+    subject = db.Column(db.String(200))  # For email
+    content = db.Column(db.Text, nullable=False)
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<MessageTemplate {self.name}>'
+
+
+class AuditLog(db.Model):
+    """Audit log for tracking all CRM actions"""
+    __tablename__ = 'audit_logs'
+    id = db.Column(db.Integer, primary_key=True)
+    user_type = db.Column(db.String(20), nullable=False)  # admin, staff
+    user_id = db.Column(db.Integer, nullable=False)
+    action = db.Column(db.String(50), nullable=False)  # created, updated, deleted, viewed
+    entity_type = db.Column(db.String(50), nullable=False)  # lead, note, staff
+    entity_id = db.Column(db.Integer)
+    description = db.Column(db.Text)
+    ip_address = db.Column(db.String(50))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    
+    def __repr__(self):
+        return f'<AuditLog {self.action} {self.entity_type}>'

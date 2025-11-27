@@ -53,6 +53,14 @@
                             {{ form.submit(class="btn btn-primary btn-lg") }}
                         </div>
                         
+                        <!-- Staff Login Link -->
+                        <div class="text-center mt-3">
+                            <p class="mb-2 text-muted">Marketing Staff?</p>
+                            <a href="{{ url_for('auth.staff_login') }}" class="btn btn-outline-success btn-lg">
+                                <i class="fas fa-users me-2"></i>Staff Login
+                            </a>
+                        </div>
+                        
                         <!-- Forgot Password Link (Coming Soon) -->
                         <div class="text-center mt-3">
                             <a href="#" class="text-decoration-none text-muted" style="cursor: not-allowed;" title="Password reset coming soon">

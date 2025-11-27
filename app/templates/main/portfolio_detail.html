@@ -8,11 +8,11 @@
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
-                <h1 class="fw-bold">{{ portfolio.project_name }}</h1>
+                <h1 class="fw-bold text-black">{{ portfolio.project_name }}</h1>
                 <nav aria-label="breadcrumb" class="d-inline-block">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.portfolio') }}">Portfolio</a></li>
+                    <ol class="breadcrumb text-primary">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}"class="text-primary">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.portfolio') }}"class="text-primary">Portfolio</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{ portfolio.project_name }}</li>
                     </ol>
                 </nav>
@@ -106,21 +106,21 @@
                             {% if portfolio.client %}
                             <div class="info-item d-flex justify-content-between mb-3">
                                 <span class="text-muted">Client:</span>
-                                <span class="fw-medium">{{ portfolio.client }}</span>
+                                <span class="text-black">{{ portfolio.client }}</span>
                             </div>
                             {% endif %}
 
                             {% if portfolio.project_date %}
                             <div class="info-item d-flex justify-content-between mb-3">
                                 <span class="text-muted">Date:</span>
-                                <span class="fw-medium">{{ portfolio.project_date.strftime('%B %Y') }}</span>
+                                <span class="text-black">{{ portfolio.project_date.strftime('%B %Y') }}</span>
                             </div>
                             {% endif %}
 
                             {% if portfolio.project_url %}
                             <div class="info-item d-flex justify-content-between mb-3">
                                 <span class="text-muted">Website:</span>
-                                <a href="{{ portfolio.project_url }}" target="_blank" class="text-decoration-none">
+                                <a href="{{ portfolio.project_url }}" target="_blank" class="text-decoration-none text-primary">
                                     {{ portfolio.project_url|replace('https://', '')|replace('http://', '') }}
                                 </a>
                             </div>

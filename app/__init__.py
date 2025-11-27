@@ -43,9 +43,13 @@ def timesince(dt, default="just now"):
     
     return default
 
-def create_app():
+def create_app(config_name='default'):
     # Create and configure the app
     app = Flask(__name__)
+    
+    # Load configuration
+    from config import config
+    app.config.from_object(config[config_name])
     
     # Add custom Jinja2 filters
     app.jinja_env.filters['timesince'] = timesince
@@ -53,12 +57,6 @@ def create_app():
     
     # Load environment variables
     load_dotenv()
-    
-    # Configuration
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-123')
-    # Use SQLite for development
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///site.db')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # Initialize extensions with app
     db.init_app(app)
@@ -76,6 +74,8 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix='/auth')
     from app.admin import bp as admin_bp
     app.register_blueprint(admin_bp, url_prefix='/admin')
+    from app.crm import bp as crm_bp
+    app.register_blueprint(crm_bp, url_prefix='/crm')
     
     # Create database tables
     with app.app_context():
@@ -109,5 +109,3 @@ def create_app():
         }
     
     return app
-
-from app import models

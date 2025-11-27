@@ -8,11 +8,11 @@
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
-                <h1 class="fw-bold">Blog</h1>
+                <h1 class="fw-bold text-primary">Blog</h1>
                 <nav aria-label="breadcrumb" class="d-inline-block">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ url_for('main.blog') }}">Blog</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}"class = "text-primary">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.blog') }}"class = "text-primary">Blog</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Post</li>
                     </ol>
                 </nav>
@@ -35,17 +35,17 @@
                             <span>By {{ post.author.username }}</span>
                         </div>
                         <div class="d-flex align-items-center me-4 mb-2">
-                            <i class="far fa-calendar-alt me-2"></i>
-                            <time datetime="{{ post.created_at.strftime('%Y-%m-%d') }}">
+                            <i class="far fa-calendar-alt me-2 text-primary "></i>
+                            <time class="text-white" datetime="{{ post.created_at.strftime('%Y-%m-%d') }}">
                                 {{ post.created_at.strftime('%B %d, %Y') }}
                             </time>
                         </div>
                         <div class="d-flex align-items-center me-4 mb-2">
-                            <i class="far fa-clock me-2"></i>
+                            <i class="far fa-clock me-2 text-primary"></i>
                             <span>5 min read</span>
                         </div>
                         <div class="d-flex align-items-center mb-2">
-                            <i class="far fa-comment me-2"></i>
+                            <i class="far fa-comment me-2 text-primary"></i>
                             <span>12 Comments</span>
                         </div>
                     </div>
@@ -57,7 +57,7 @@
                 </header>
                 
                 <!-- Post Content -->
-                <div class="post-content mb-5">
+                <div class="post-content mb-5 text-white">
                     {{ post.content|safe }}
                 </div>
                 
@@ -75,7 +75,7 @@
                 
                 <!-- Post Share -->
                 <div class="post-share d-flex align-items-center mb-5 p-4 bg-light rounded-3">
-                    <span class="fw-bold me-3">Share:</span>
+                    <span class="fw-bold me-3 text-black">Share:</span>
                     {% set share_url = url_for('main.blog_post', slug=post.slug, _external=True) %}
                     <div class="d-flex gap-3">
                         <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url|urlencode }}" class="text-dark" target="_blank" rel="noopener" aria-label="Share on Facebook"><i class="fab fa-facebook-f fa-lg"></i></a>
@@ -174,25 +174,25 @@
                         <form>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label for="name" class="form-label">Name *</label>
+                                    <label for="name" class="text-white">Name *</label>
                                     <input type="text" class="form-control" id="name" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="email" class="form-label">Email *</label>
+                                    <label for="email" class="text-white">Email *</label>
                                     <input type="email" class="form-control" id="email" required>
                                 </div>
                                 <div class="col-12">
-                                    <label for="website" class="form-label">Website</label>
+                                    <label for="website" class="text-white">Website</label>
                                     <input type="url" class="form-control" id="website">
                                 </div>
                                 <div class="col-12">
-                                    <label for="comment" class="form-label">Comment *</label>
+                                    <label for="comment" class="text-white">Comment *</label>
                                     <textarea class="form-control" id="comment" rows="5" required></textarea>
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="save-info" checked>
-                                        <label class="form-check-label" for="save-info">
+                                        <label class="form-check-label text-white" for="save-info">
                                             Save my name, email, and website in this browser for the next time I comment.
                                         </label>
                                     </div>

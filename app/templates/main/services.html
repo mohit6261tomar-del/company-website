@@ -96,7 +96,7 @@
 .service-card:hover {
     transform: translateY(-16px) scale(1.04);
     box-shadow: 
-        0 25px 70px rgba(102, 126, 234, 0.35),
+        0 25px 70px rgba(116, 131, 197, 0.35),
         0 12px 28px rgba(0, 0, 0, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     border-color: rgba(102, 126, 234, 0.4);
@@ -456,7 +456,7 @@
 }
 
 .service-card .card-body .service-text {
-    color: #000000;
+    color: #3f3b3b;
     transition: color 0.3s ease;
     text-shadow: none;
     filter: none;
@@ -485,7 +485,7 @@
 .service-card h4 {
     font-size: 1.8rem;
     font-weight: 900;
-    color: #000000 !important;
+    color: #000000 ;
     text-shadow: none;
     letter-spacing: 0.8px;
     filter: none;
@@ -502,7 +502,7 @@
 
 /* Service card h3 headings */
 .service-card h3 {
-    color: #000000 !important;
+    color: #000000 ;
     text-shadow: none;
     filter: none;
     transition: color 0.3s ease;
@@ -974,7 +974,7 @@
             <div class="col-12 text-center">
                 <div class="animate-fade-in-up">
                     <span class="badge bg-white bg-opacity-20 text-white mb-3 px-3 py-2 animate-bounce-in">Our Expertise</span>
-                    <h1 class="fw-bold text-black mb-4 display-4 animate-slide-in-left" data-delay="1">Our Services</h1>
+                    <h1 class="fw-bold text-white mb-4 display-4 animate-slide-in-left" data-delay="1">Our Services</h1>
                     <h4 class="lead text-black-100 mb-0 animate-slide-in-right" data-delay="2";>Comprehensive digital solutions tailored to transform your business and drive exceptional results</h4>
                 </div>
 
@@ -985,25 +985,25 @@
                             <div class="row text-center">
                                 <div class="col-6 col-md-3 mb-3 mb-md-0">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="500">0</div>
+                                        <div class="counter text-white" data-target="500">0</div>
                                         <h5 class="text-white-100 small mb-0">Projects Delivered</h5>
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-3 mb-3 mb-md-0">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="98">0</div>
+                                        <div class="counter text-white" data-target="98">0</div>
                                         <h5 class="text-black-100 small mb-0">Client Satisfaction %</h5>
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-3 mb-3 mb-md-0">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="50">0</div>
+                                        <div class="counter text-white" data-target="50">0</div>
                                         <h5 class="text-black-100 small mb-0">Expert Team</h5>
                                     </div>
                                 </div>
                                 <div class="col-6 col-md-3">
                                     <div class="stat-item">
-                                        <div class="counter text-black" data-target="24">0</div>
+                                        <div class="counter text-white" data-target="24">0</div>
                                         <h5 class="text-black-100 small mb-0">Support Hours</h5>
                                     </div>
                                 </div>
@@ -1025,7 +1025,7 @@
         <div class="text-center mb-5 animate-fade-in-up">
             <span class="badge bg-primary bg-opacity-10 text-primary mb-3 animate-bounce-in">What We Offer</span>
             <h2 class="fw-bold mb-3 text-gradient animate-slide-in-left">Our Comprehensive Services</h2>
-            <h4 class="text-muted w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We provide a wide range of professional services to help your business grow and succeed in the digital world with cutting-edge technology and innovative solutions.</h4>
+            <h4 class="text-white w-lg-50 mx-auto animate-fade-in-up" data-delay="1">We provide a wide range of professional services to help your business grow and succeed in the digital world with cutting-edge technology and innovative solutions.</h4>
         </div>
 
         <div class="services-grid">
@@ -1057,12 +1057,12 @@
                                 </div>
                                 
                                 <!-- Service Title & Description -->
-                                <h3 class="h4 fw-bold mb-3 text-white">{{ service.title }}</h3>
+                                <h3 class="text-white h4 fw-bold mb-3">{{ service.title }}</h3>
                                 <p class="text-white-75 mb-4 flex-grow-1">{{ service.description }}</p>
 
                                 <!-- Progress Bar -->
                                 <div class="service-progress mb-4">
-                                    <div class="d-flex justify-content-between mb-2">
+                                    <div class="text-white">
                                         <span class="small text-white-50">Service Quality</span>
                                         <span class="small fw-bold text-white">{{ service.rating|default('95') }}%</span>
                                     </div>
@@ -1072,7 +1072,7 @@
                             </div>
 
                             <!-- Service Features -->
-                            <div class="service-features mb-4">
+                            <div class="service-features mb-4 text-white">
                                 <div class="row g-2">
                                     <div class="col-6">
                                         <div class="feature-item d-flex align-items-center">
@@ -1342,7 +1342,7 @@
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-2">Lightning-Fast Delivery</h6>
+                                <h6 class="fw-bold mb-2 text-primary">Lightning-Fast Delivery</h6>
                                 <p class="text-muted mb-0">We pride ourselves on delivering projects on time without compromising quality, ensuring your business stays ahead of the competition.</p>
                             </div>
                         </div>
@@ -1352,7 +1352,7 @@
                                 <i class="fas fa-shield-alt"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-2">100% Secure & Reliable</h6>
+                                <h6 class="fw-bold mb-2 text-primary">100% Secure & Reliable</h6>
                                 <p class="text-muted mb-0">Our solutions are built with security as a priority, ensuring your data and applications are protected against modern threats.</p>
                             </div>
                         </div>
@@ -1362,7 +1362,7 @@
                                 <i class="fas fa-headset"></i>
                             </div>
                             <div>
-                                <h6 class="fw-bold mb-2">24/7 Premium Support</h6>
+                                <h6 class="fw-bold mb-2 text-primary">24/7 Premium Support</h6>
                                 <p class="text-muted mb-0">Our dedicated support team is available round-the-clock to ensure your applications run smoothly and issues are resolved quickly.</p>
                             </div>
                         </div>

@@ -1,22 +1,17 @@
-from app import create_app, db
-from app.models import User, CompanyInfo, Team, Service, Portfolio, Blog, Career, ContactMessage, JobApplication
-
-app = create_app()
-
-@app.shell_context_processor
-def make_shell_context():
-    return {
-        'db': db,
-        'User': User,
-        'CompanyInfo': CompanyInfo,
-        'Team': Team,
-        'Service': Service,
-        'Portfolio': Portfolio,
-        'Blog': Blog,
-        'Career': Career,
-        'ContactMessage': ContactMessage,
-        'JobApplication': JobApplication
-    }
+#!/usr/bin/env python
+"""
+Development server startup script
+"""
+import os
+from application import app
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Set environment to development
+    os.environ.setdefault('FLASK_ENV', 'development')
+    
+    # Run development server
+    app.run(
+        host='0.0.0.0',
+        port=5000,
+        debug=True
+    )
