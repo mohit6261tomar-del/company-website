@@ -30,7 +30,7 @@ class ProductionConfig(Config):
     
     # Use MySQL/PostgreSQL in production
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+pymysql://root:Mohit%40123@localhost/company_db'
+        'mysql+pymysql://root:Mohit%40123@127.0.0.1/kodeminds'
     
     # Alternative PostgreSQL connection
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
